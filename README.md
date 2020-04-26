@@ -22,7 +22,7 @@
 5. 在线接口文档说明
 
     1. 启动项目，在浏览器输入接口文档地址**http://localhost:8080/doc.html**
-    2. 输入用户名和密码 *admin/123456*
+    2. 输入用户名和密码 *admin/abcd1234*
     3. 在*文档管理-个性化设置*中将**启用SwaggerBootstrapUi提供的增强功能**选项打勾，保存后刷新页面
     4. 点击*Authorization*，在*Authorization(apiKey)*的参数值中输入**Basic emhhbmdzYW46MTIzNDU2**，并点击保存
     5. 查看接口并测试
