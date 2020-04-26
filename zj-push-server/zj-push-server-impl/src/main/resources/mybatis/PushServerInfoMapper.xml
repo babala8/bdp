@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.pushserver.repository.PushServerInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.pushserver.po.PushServerInfoPO" >
+    <id column="NO" property="no" jdbcType="VARCHAR" />
+    <result column="TIME" property="time" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="MESSAGE" property="message" jdbcType="VARCHAR" />
+	  <result column="NOTICE_WAY" property="noticeWay" jdbcType="INTEGER" />
+	  <result column="NOTICE_CATEGORY" property="noticeCategory" jdbcType="VARCHAR" />
+	  <result column="NOTICE_CATEGORY_DESCRIPTION" property="noticeCategoryDescription" jdbcType="VARCHAR" />
+	  <result column="NOTICE_TITLE" property="noticeTitle" jdbcType="VARCHAR" />
+	  <result column="NOTICE_ADDRESS" property="noticeAddress" jdbcType="VARCHAR" />
+	  <result column="NOTICE_FLAG" property="noticeFlag" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    NO, TIME, NAME, MESSAGE, NOTICE_WAY, NOTICE_CATEGORY, NOTICE_TITLE, NOTICE_ADDRESS, NOTICE_FLAG, NOTICE_CATEGORY_DESCRIPTION
+  </sql>
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.pushserver.po.PushServerInfoPO" >
+    insert into PUSH_SERVER_INFO (NO, TIME, NAME, MESSAGE, NOTICE_WAY,NOTICE_CATEGORY,NOTICE_TITLE,NOTICE_ADDRESS,NOTICE_FLAG,NOTICE_CATEGORY_DESCRIPTION
+      )
+    values (#{no,jdbcType=VARCHAR}, #{time,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{message,jdbcType=VARCHAR},#{noticeWay,jdbcType=INTEGER},#{noticeCategory,jdbcType=VARCHAR},#{noticeTitle,jdbcType=VARCHAR},#{noticeAddress,jdbcType=VARCHAR},
+      #{noticeFlag,jdbcType=INTEGER}, #{noticeCategoryDescription,jdbcType=VARCHAR})
+  </insert>
+
+	<insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false" >
+		insert into PUSH_SERVER_INFO
+		(NO, TIME, NAME, MESSAGE, NOTICE_WAY,NOTICE_CATEGORY,NOTICE_TITLE,NOTICE_ADDRESS,NOTICE_FLAG,NOTICE_CATEGORY_DESCRIPTION
+		)
+		<foreach close=")" collection="list" item="item" index="index" open="(" separator="union all">
+			select
+			#{item.no,jdbcType=VARCHAR},
+			#{item.time,jdbcType=VARCHAR},
+			#{item.name,jdbcType=VARCHAR},
+			#{item.message,jdbcType=VARCHAR},
+			#{item.noticeWay,jdbcType=DECIMAL},
+			#{item.noticeCategory,jdbcType=VARCHAR},
+			#{item.noticeTitle,jdbcType=VARCHAR},
+			#{item.noticeAddress,jdbcType=VARCHAR},
+			#{item.noticeFlag,jdbcType=DECIMAL},
+			#{item.noticeCategoryDescription,jdbcType=VARCHAR}
+			from dual
+		</foreach>
+	</insert>
+	<select id="qryTotalRow" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from PUSH_SERVER_INFO t
+		<where>
+			<if test="time != null and time !=''">
+				and t.TIME like '%' || #{time,jdbcType=VARCHAR} || '%'
+			</if>
+				and t.NAME = #{name,jdbcType=VARCHAR}
+			<if test="noticeWay != null and noticeWay !=''">
+				and t.NOTICE_WAY like '%' || #{noticeWay,jdbcType=INTEGER} || '%'
+			</if>
+			<if test="noticeCategoryDescription != null and noticeCategoryDescription !=''">
+				and t.NOTICE_CATEGORY_DESCRIPTION like '%' || #{NOTICE_CATEGORY_DESCRIPTION,jdbcType=VARCHAR} || '%'
+			</if>
+			<if test="noticeFlag != null and noticeFlag !=''">
+				and t.NOTICE_FLAG like '%' || #{noticeFlag,jdbcType=VARCHAR} || '%'
+			</if>
+		</where>
+	</select>
+
+	<select id="queryPushServerInfoByPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select t.*
+		from (
+		select rownum rn,
+		<include refid="Base_Column_List"/>
+		from PUSH_SERVER_INFO o
+		<where>
+			<if test="time != null and time !=''">
+				and o.TIME like '%' || #{time,jdbcType=VARCHAR} || '%'
+			</if>
+			and o.NAME = #{name,jdbcType=VARCHAR}
+			<if test="noticeWay != null and noticeWay !=''">
+				and o.NOTICE_WAY like '%' || #{noticeWay,jdbcType=INTEGER} || '%'
+			</if>
+			<if test="noticeCategoryDescription != null and noticeCategoryDescription !=''">
+				and t.NOTICE_CATEGORY_DESCRIPTION like '%' || #{NOTICE_CATEGORY_DESCRIPTION,jdbcType=VARCHAR} || '%'
+			</if>
+		</where>
+		) t
+		where t.rn &gt; #{startRow,jdbcType=NUMERIC} and t.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<insert id="updateNoticeFlag" parameterType="java.lang.String" >
+    update PUSH_SERVER_INFO set NOTICE_FLAG = 1
+    where no = #{no,jdbcType=VARCHAR}
+  </insert>
+
+	<update id="updateNoticeFlagBatch" parameterType="java.util.List">
+		update PUSH_SERVER_INFO
+		set  NOTICE_FLAG = 1
+		where NO in
+		<foreach collection="list" index="index" item="item"
+				 separator="," open="(" close=")">
+			#{item,jdbcType=BIGINT}
+		</foreach>
+	</update>
+
+	<select id="qryPushInfo" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from PUSH_SERVER_INFO where to_date(TIME,'yy-mm-dd hh24:mi:ss') between (sysdate-2) and sysdate and NOTICE_FLAG = 0
+	</select>
+
+	<select id="qryInfoByNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select <include refid="Base_Column_List"/>
+		from PUSH_SERVER_INFO where no = #{no,jdbcType=VARCHAR}
+	</select>
+</mapper>

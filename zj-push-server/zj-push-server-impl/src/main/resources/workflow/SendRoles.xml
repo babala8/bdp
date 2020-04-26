@@ -1,0 +1,16 @@
+<zj-orchestration id="sendRoles" name="推送消息给角色"
+				  requestObject="java.util.HashMap"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="g4i442u6t2g0">
+	</zj-component>
+	<zj-component id="g4i442u6t2g0" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.pushserver.component.SendInfoComponent.sendInfo2Roles"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

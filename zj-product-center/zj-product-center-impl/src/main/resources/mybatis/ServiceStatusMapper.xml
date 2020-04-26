@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.productcenter.repository.ServiceStatusMapper">
+
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.productcenter.po.ServiceStatusPO">
+		<id column="SERVICE_NO" jdbcType="DECIMAL" property="serviceNo"/>
+		<result column="STATUS" jdbcType="DECIMAL" property="status"/>
+		<result column="NAME" jdbcType="VARCHAR" property="name"/>
+		<result column="NOTE" jdbcType="VARCHAR" property="note"/>
+		<result column="WEAK_NODE" jdbcType="VARCHAR" property="weakNode"/>
+		<result column="OPERATE_TYPE" jdbcType="VARCHAR" property="operateType"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+   		 SERVICE_NO,STATUS,NAME,NOTE,WEAK_NODE
+ 	</sql>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.productcenter.po.ServiceStatusPO">
+		insert into SERVICE_STATUS (SERVICE_NO,NAME,NOTE,STATUS,WEAK_NODE)
+		values (#{serviceNo,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL}, #{weakNode,jdbcType=DECIMAL})
+    </insert>
+	<delete id="deleteByProductNo" parameterType="java.lang.Integer">
+		delete from SERVICE_STATUS
+		where SERVICE_NO = #{serviceNo,jdbcType=DECIMAL}
+    </delete>
+
+	<select id="qryByServiceNo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />,OPERATE_TYPE
+		from SERVICE_STATUS pss
+		LEFT JOIN SERVICE_STATUS_EXPAND pse
+		ON pss.STATUS = pse.NEXT_STATUS
+		where SERVICE_NO = #{serviceNo,jdbcType=DECIMAL}
+	</select>
+
+</mapper>

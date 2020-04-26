@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.business.repository.AddnotesPlanMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlan" >
+    <id column="ADDNOTES_PLAN_NO" property="addnotesPlanNo" jdbcType="VARCHAR" />
+    <result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR" />
+    <result column="PLAN_ADDNOTES_DATE" property="planAddnotesDate" jdbcType="VARCHAR" />
+    <result column="PLAN_START_TIME" property="planStartTime" jdbcType="VARCHAR" />
+    <result column="LASTEST_END_TIME" property="lastestEndTime" jdbcType="VARCHAR" />
+    <result column="PLAN_DEV_COUNT" property="planDevCount" jdbcType="INTEGER" />
+    <result column="PLAN_ADDNOTES_AMT" property="planAddnotesAmt" jdbcType="DECIMAL" />
+    <result column="PLAN_GEN_MODE" property="planGenMode" jdbcType="INTEGER" />
+    <result column="PLAN_GEN_OP_NO" property="planGenOpNo" jdbcType="VARCHAR" />
+    <result column="PLAN_GEN_DATE" property="planGenDate" jdbcType="VARCHAR" />
+    <result column="PLAN_GEN_TIME" property="planGenTime" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="SUBMIT_OP_NO" property="submitOpNo" jdbcType="VARCHAR" />
+    <result column="SUBMIT_DATE" property="submitDate" jdbcType="VARCHAR" />
+    <result column="SUBMIT_TIME" property="submitTime" jdbcType="VARCHAR" />
+    <result column="MOD_OP_NO" property="modOpNo" jdbcType="VARCHAR" />
+    <result column="MOD_DATE" property="modDate" jdbcType="VARCHAR" />
+    <result column="MOD_TIME" property="modTime" jdbcType="VARCHAR" />
+    <result column="LINE_MODE" property="lineMode" jdbcType="INTEGER" />
+    <result column="LINE_NO" property="lineNo" jdbcType="VARCHAR" />
+    <result column="AUDIT_OP_NO" property="auditOpNo" jdbcType="VARCHAR" />
+    <result column="AUDIT_DATE" property="auditDate" jdbcType="VARCHAR" />
+    <result column="AUDIT_TIME" property="auditTime" jdbcType="VARCHAR" />
+    <result column="REFUSE_SUGGESTION" property="refuseSuggestion" jdbcType="VARCHAR" />
+    <result column="NOTE" property="note" jdbcType="VARCHAR" />
+    <result column="IS_URGENCY" property="isUrgency" jdbcType="DECIMAL" />
+  </resultMap>
+
+  <resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlan" extends="BaseResultMap">
+	  <result column="CLR_CENTER_NAME" property="clrCenterName" jdbcType="VARCHAR" />
+	  <result column="PLAN_GEN_OP_NAME" property="planGenOpName" jdbcType="VARCHAR" />
+	  <result column="AUDIT_OP_NAME" property="auditOpName" jdbcType="VARCHAR" />
+	  <!--<association property="clrCenterTable" column="CLR_CENTER_NO"-->
+				   <!--javaType="com.zjft.microservice.treasurybrain.common.domain.ClrCenterTable"-->
+				   <!--select="com.zjft.microservice.treasurybrain.channelcenter.repository.ClrCenterTableMapper.selectByPrimaryKey"></association>-->
+	  <!--<association property="planGenUser" column="PLAN_GEN_OP_NO"-->
+	  <!--javaType="com.zjft.microservice.treasurybrain.common.domain.SysUserDO"-->
+	  <!--select="com.zjft.microservice.treasurybrain.usercenter.repository.SysUserMapper.selectInfoByPrimaryKey"></association>-->
+	  <!--<association property="auditOpUser" column="AUDIT_OP_NO"-->
+				   <!--javaType="com.zjft.microservice.treasurybrain.common.domain.SysUserDO"-->
+				   <!--select="com.zjft.microservice.treasurybrain.usercenter.repository.SysUserMapper.selectInfoByPrimaryKey"></association>-->
+	  <!--	  	<association property="addnoteLineList" column="LINE_NO"-->
+	  <!--					 javaType="java.util.List"-->
+	  <!--				   select="com.zjft.microservice.treasurybrain.addnotesplan.repository.AddnoteLineMapper.getLineListByLineNo"></association>-->
+
+	</resultMap>
+
+  <sql id="Base_Column_List" >
+    ADDNOTES_PLAN_NO, CLR_CENTER_NO, PLAN_ADDNOTES_DATE, PLAN_START_TIME, LASTEST_END_TIME, 
+    PLAN_DEV_COUNT, PLAN_ADDNOTES_AMT, PLAN_GEN_MODE, PLAN_GEN_OP_NO, PLAN_GEN_DATE, 
+    PLAN_GEN_TIME, STATUS, SUBMIT_OP_NO, SUBMIT_DATE, SUBMIT_TIME, MOD_OP_NO, MOD_DATE, 
+    MOD_TIME, LINE_MODE, LINE_NO, AUDIT_OP_NO, AUDIT_DATE, AUDIT_TIME, REFUSE_SUGGESTION, 
+    NOTE, IS_URGENCY
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from addnotes_plan
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="selectDetailByPrimaryKey" resultMap="DetailMap" parameterType="java.lang.String" >
+    select 
+    o.ADDNOTES_PLAN_NO, o.CLR_CENTER_NO, o.PLAN_ADDNOTES_DATE, o.PLAN_START_TIME, o.LASTEST_END_TIME, o.PLAN_DEV_COUNT, o.PLAN_ADDNOTES_AMT, o.PLAN_GEN_MODE, o.PLAN_GEN_OP_NO, o.PLAN_GEN_DATE, o.PLAN_GEN_TIME, o.STATUS, o.SUBMIT_OP_NO, o.SUBMIT_DATE, o.SUBMIT_TIME, o.MOD_OP_NO, o.MOD_DATE, o.MOD_TIME, o.LINE_MODE, o.LINE_NO, o.AUDIT_OP_NO, o.AUDIT_DATE, o.AUDIT_TIME, o.REFUSE_SUGGESTION, o.NOTE, o.IS_URGENCY ,
+	  CLR_CENTER_TABLE.CENTER_NAME AS CLR_CENTER_NAME,
+	  U1.NAME AS PLAN_GEN_OP_NAME,
+	  U2.NAME AS AUDIT_OP_NAME
+    from addnotes_plan o
+	LEFT JOIN CLR_CENTER_TABLE ON CLR_CENTER_TABLE.CLR_CENTER_NO = o.CLR_CENTER_NO
+    LEFT JOIN SYS_USER U1 ON U1.USERNAME = o.PLAN_GEN_OP_NO
+    LEFT JOIN SYS_USER U2 ON U2.USERNAME = o.AUDIT_OP_NO
+    where o.ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from addnotes_plan
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlan" >
+    insert into addnotes_plan (ADDNOTES_PLAN_NO, CLR_CENTER_NO, PLAN_ADDNOTES_DATE, 
+      PLAN_START_TIME, LASTEST_END_TIME, PLAN_DEV_COUNT, 
+      PLAN_ADDNOTES_AMT, PLAN_GEN_MODE, PLAN_GEN_OP_NO, 
+      PLAN_GEN_DATE, PLAN_GEN_TIME, STATUS, 
+      SUBMIT_OP_NO, SUBMIT_DATE, SUBMIT_TIME, 
+      LINE_MODE, LINE_NO, MOD_OP_NO, 
+      MOD_DATE, MOD_TIME, NOTE)
+    values (#{addnotesPlanNo,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR}, #{planAddnotesDate,jdbcType=VARCHAR}, 
+      #{planStartTime,jdbcType=VARCHAR}, #{lastestEndTime,jdbcType=VARCHAR}, #{planDevCount,jdbcType=INTEGER}, 
+      #{planAddnotesAmt,jdbcType=DECIMAL}, #{planGenMode,jdbcType=INTEGER}, #{planGenOpNo,jdbcType=VARCHAR}, 
+      #{planGenDate,jdbcType=VARCHAR}, #{planGenTime,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{submitOpNo,jdbcType=VARCHAR}, #{submitDate,jdbcType=VARCHAR}, #{submitTime,jdbcType=VARCHAR}, 
+      #{lineMode,jdbcType=INTEGER}, #{lineNo,jdbcType=VARCHAR}, #{modOpNo,jdbcType=VARCHAR}, 
+      #{modDate,jdbcType=VARCHAR}, #{modTime,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlan" >
+    insert into addnotes_plan
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="addnotesPlanNo != null" >
+        ADDNOTES_PLAN_NO,
+      </if>
+      <if test="clrCenterNo != null" >
+        CLR_CENTER_NO,
+      </if>
+      <if test="planAddnotesDate != null" >
+        PLAN_ADDNOTES_DATE,
+      </if>
+      <if test="planStartTime != null" >
+        PLAN_START_TIME,
+      </if>
+      <if test="lastestEndTime != null" >
+        LASTEST_END_TIME,
+      </if>
+      <if test="planDevCount != null" >
+        PLAN_DEV_COUNT,
+      </if>
+      <if test="planAddnotesAmt != null" >
+        PLAN_ADDNOTES_AMT,
+      </if>
+      <if test="planGenMode != null" >
+        PLAN_GEN_MODE,
+      </if>
+      <if test="planGenOpNo != null" >
+        PLAN_GEN_OP_NO,
+      </if>
+      <if test="planGenDate != null" >
+        PLAN_GEN_DATE,
+      </if>
+      <if test="planGenTime != null" >
+        PLAN_GEN_TIME,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="submitOpNo != null" >
+        SUBMIT_OP_NO,
+      </if>
+      <if test="submitDate != null" >
+        SUBMIT_DATE,
+      </if>
+      <if test="submitTime != null" >
+        SUBMIT_TIME,
+      </if>
+      <if test="modOpNo != null" >
+        MOD_OP_NO,
+      </if>
+      <if test="modDate != null" >
+        MOD_DATE,
+      </if>
+      <if test="modTime != null" >
+        MOD_TIME,
+      </if>
+      <if test="lineMode != null" >
+        LINE_MODE,
+      </if>
+      <if test="lineNo != null" >
+        LINE_NO,
+      </if>
+      <if test="auditOpNo != null" >
+        AUDIT_OP_NO,
+      </if>
+      <if test="auditDate != null" >
+        AUDIT_DATE,
+      </if>
+      <if test="auditTime != null" >
+        AUDIT_TIME,
+      </if>
+      <if test="refuseSuggestion != null" >
+        REFUSE_SUGGESTION,
+      </if>
+      <if test="note != null" >
+        NOTE,
+      </if>
+      <if test="isUrgency != null" >
+        IS_URGENCY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="addnotesPlanNo != null" >
+        #{addnotesPlanNo,jdbcType=VARCHAR},
+      </if>
+      <if test="clrCenterNo != null" >
+        #{clrCenterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="planAddnotesDate != null" >
+        #{planAddnotesDate,jdbcType=VARCHAR},
+      </if>
+      <if test="planStartTime != null" >
+        #{planStartTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lastestEndTime != null" >
+        #{lastestEndTime,jdbcType=VARCHAR},
+      </if>
+      <if test="planDevCount != null" >
+        #{planDevCount,jdbcType=INTEGER},
+      </if>
+      <if test="planAddnotesAmt != null" >
+        #{planAddnotesAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="planGenMode != null" >
+        #{planGenMode,jdbcType=INTEGER},
+      </if>
+      <if test="planGenOpNo != null" >
+        #{planGenOpNo,jdbcType=VARCHAR},
+      </if>
+      <if test="planGenDate != null" >
+        #{planGenDate,jdbcType=VARCHAR},
+      </if>
+      <if test="planGenTime != null" >
+        #{planGenTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="submitOpNo != null" >
+        #{submitOpNo,jdbcType=VARCHAR},
+      </if>
+      <if test="submitDate != null" >
+        #{submitDate,jdbcType=VARCHAR},
+      </if>
+      <if test="submitTime != null" >
+        #{submitTime,jdbcType=VARCHAR},
+      </if>
+      <if test="modOpNo != null" >
+        #{modOpNo,jdbcType=VARCHAR},
+      </if>
+      <if test="modDate != null" >
+        #{modDate,jdbcType=VARCHAR},
+      </if>
+      <if test="modTime != null" >
+        #{modTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lineMode != null" >
+        #{lineMode,jdbcType=INTEGER},
+      </if>
+      <if test="lineNo != null" >
+        #{lineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="auditOpNo != null" >
+        #{auditOpNo,jdbcType=VARCHAR},
+      </if>
+      <if test="auditDate != null" >
+        #{auditDate,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseSuggestion != null" >
+        #{refuseSuggestion,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="isUrgency != null" >
+        #{isUrgency,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlan" >
+    update addnotes_plan
+    <set >
+      <if test="clrCenterNo != null" >
+        CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="planAddnotesDate != null" >
+        PLAN_ADDNOTES_DATE = #{planAddnotesDate,jdbcType=VARCHAR},
+      </if>
+      <if test="planStartTime != null" >
+        PLAN_START_TIME = #{planStartTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lastestEndTime != null" >
+        LASTEST_END_TIME = #{lastestEndTime,jdbcType=VARCHAR},
+      </if>
+      <if test="planDevCount != null" >
+        PLAN_DEV_COUNT = #{planDevCount,jdbcType=INTEGER},
+      </if>
+      <if test="planAddnotesAmt != null" >
+        PLAN_ADDNOTES_AMT = #{planAddnotesAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="planGenMode != null" >
+        PLAN_GEN_MODE = #{planGenMode,jdbcType=INTEGER},
+      </if>
+      <if test="planGenOpNo != null" >
+        PLAN_GEN_OP_NO = #{planGenOpNo,jdbcType=VARCHAR},
+      </if>
+      <if test="planGenDate != null" >
+        PLAN_GEN_DATE = #{planGenDate,jdbcType=VARCHAR},
+      </if>
+      <if test="planGenTime != null" >
+        PLAN_GEN_TIME = #{planGenTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="submitOpNo != null" >
+        SUBMIT_OP_NO = #{submitOpNo,jdbcType=VARCHAR},
+      </if>
+      <if test="submitDate != null" >
+        SUBMIT_DATE = #{submitDate,jdbcType=VARCHAR},
+      </if>
+      <if test="submitTime != null" >
+        SUBMIT_TIME = #{submitTime,jdbcType=VARCHAR},
+      </if>
+      <if test="modOpNo != null" >
+        MOD_OP_NO = #{modOpNo,jdbcType=VARCHAR},
+      </if>
+      <if test="modDate != null" >
+        MOD_DATE = #{modDate,jdbcType=VARCHAR},
+      </if>
+      <if test="modTime != null" >
+        MOD_TIME = #{modTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lineMode != null" >
+        LINE_MODE = #{lineMode,jdbcType=INTEGER},
+      </if>
+      <if test="lineNo != null" >
+        LINE_NO = #{lineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="auditOpNo != null" >
+        AUDIT_OP_NO = #{auditOpNo,jdbcType=VARCHAR},
+      </if>
+      <if test="auditDate != null" >
+        AUDIT_DATE = #{auditDate,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        AUDIT_TIME = #{auditTime,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseSuggestion != null" >
+        REFUSE_SUGGESTION = #{refuseSuggestion,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        NOTE = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="isUrgency != null" >
+        IS_URGENCY = #{isUrgency,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlan" >
+    update addnotes_plan
+    set CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+      PLAN_ADDNOTES_DATE = #{planAddnotesDate,jdbcType=VARCHAR},
+      PLAN_START_TIME = #{planStartTime,jdbcType=VARCHAR},
+      LASTEST_END_TIME = #{lastestEndTime,jdbcType=VARCHAR},
+      PLAN_DEV_COUNT = #{planDevCount,jdbcType=INTEGER},
+      PLAN_ADDNOTES_AMT = #{planAddnotesAmt,jdbcType=DECIMAL},
+      PLAN_GEN_MODE = #{planGenMode,jdbcType=INTEGER},
+      PLAN_GEN_OP_NO = #{planGenOpNo,jdbcType=VARCHAR},
+      PLAN_GEN_DATE = #{planGenDate,jdbcType=VARCHAR},
+      PLAN_GEN_TIME = #{planGenTime,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=INTEGER},
+      SUBMIT_OP_NO = #{submitOpNo,jdbcType=VARCHAR},
+      SUBMIT_DATE = #{submitDate,jdbcType=VARCHAR},
+      SUBMIT_TIME = #{submitTime,jdbcType=VARCHAR},
+      MOD_OP_NO = #{modOpNo,jdbcType=VARCHAR},
+      MOD_DATE = #{modDate,jdbcType=VARCHAR},
+      MOD_TIME = #{modTime,jdbcType=VARCHAR},
+      LINE_MODE = #{lineMode,jdbcType=INTEGER},
+      LINE_NO = #{lineNo,jdbcType=VARCHAR},
+      AUDIT_OP_NO = #{auditOpNo,jdbcType=VARCHAR},
+      AUDIT_DATE = #{auditDate,jdbcType=VARCHAR},
+      AUDIT_TIME = #{auditTime,jdbcType=VARCHAR},
+      REFUSE_SUGGESTION = #{refuseSuggestion,jdbcType=VARCHAR},
+      NOTE = #{note,jdbcType=VARCHAR},
+      IS_URGENCY = #{isUrgency,jdbcType=INTEGER}
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="qryTotalRowPlan"  parameterType="java.util.Map"  resultType="java.lang.Integer">
+	select
+	count(distinct o.ADDNOTES_PLAN_NO)
+	from addnotes_plan o
+	  LEFT JOIN CLR_CENTER_TABLE clr ON clr.CLR_CENTER_NO = o.CLR_CENTER_NO
+
+	  <if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag != 1 and orgGradeNo != 5">
+		  LEFT JOIN SYS_ORG tOrg on tOrg.no = #{orgNo,jdbcType=VARCHAR}
+		  LEFT JOIN SYS_ORG t on t.CLR_CENTER_NO = clr.CLR_CENTER_NO
+	  </if>
+
+	<where>
+		<if test="clrCenterNo != null and clrCenterNo != ''" >
+			AND o.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag == 1">
+			AND clr.BANK_ORG_NO = #{orgNo,jdbcType=VARCHAR}
+		</if>
+		<if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag != 1 and orgGradeNo != 5">
+			AND t.left > tOrg.LEFT and t.right &lt; tOrg.RIGHT
+		</if>
+
+		<if test="status != null and status != -1">
+			AND o.STATUS = #{status,jdbcType=NUMERIC}
+		</if>
+		<if test="urgencyFlag != null and urgencyFlag != -1">
+			AND o.IS_URGENCY = #{urgencyFlag,jdbcType=NUMERIC}
+		</if>
+		<if test="planStartDate != null and planStartDate != ''">
+			AND o.PLAN_ADDNOTES_DATE &gt;= #{planStartDate,jdbcType=VARCHAR}
+		</if>
+		<if test="planEndDate != null and planEndDate != ''">
+			AND o.PLAN_ADDNOTES_DATE &lt;= #{planEndDate,jdbcType=VARCHAR}
+		</if>
+		<if test="lineNo != null and lineNo != ''">
+			AND o.LINE_NO like concat(concat('%',#{lineNo,jdbcType=VARCHAR}),'%')
+		</if>
+	</where>
+  </select>
+  <select id="qryAddnotesPlan" resultMap="DetailMap">
+	select tt.* from (select t.*, rownum as rn from (
+		select distinct
+	  o.ADDNOTES_PLAN_NO, o.CLR_CENTER_NO, o.PLAN_ADDNOTES_DATE, o.PLAN_START_TIME, o.LASTEST_END_TIME, o.PLAN_DEV_COUNT, o.PLAN_ADDNOTES_AMT, o.PLAN_GEN_MODE, o.PLAN_GEN_OP_NO, o.PLAN_GEN_DATE, o.PLAN_GEN_TIME, o.STATUS, o.SUBMIT_OP_NO, o.SUBMIT_DATE, o.SUBMIT_TIME, o.MOD_OP_NO, o.MOD_DATE, o.MOD_TIME, o.LINE_MODE, o.LINE_NO, o.AUDIT_OP_NO, o.AUDIT_DATE, o.AUDIT_TIME, o.REFUSE_SUGGESTION, o.NOTE, o.IS_URGENCY ,
+	  clr.CENTER_NAME AS CLR_CENTER_NAME,
+	  U1.NAME AS PLAN_GEN_OP_NAME,
+	  U2.NAME AS AUDIT_OP_NAME
+	  from addnotes_plan o
+	  LEFT JOIN CLR_CENTER_TABLE clr ON clr.CLR_CENTER_NO = o.CLR_CENTER_NO
+	  LEFT JOIN SYS_USER U1 ON U1.USERNAME = o.PLAN_GEN_OP_NO
+	  LEFT JOIN SYS_USER U2 ON U2.USERNAME = o.AUDIT_OP_NO
+	  <if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag != 1 and orgGradeNo != 5">
+		  LEFT JOIN SYS_ORG tOrg on tOrg.no = #{orgNo,jdbcType=VARCHAR}
+		  LEFT JOIN SYS_ORG t on t.CLR_CENTER_NO = clr.CLR_CENTER_NO
+	  </if>
+
+		<where>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND o.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+
+			<if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag == 1">
+				AND clr.BANK_ORG_NO = #{orgNo,jdbcType=VARCHAR}
+			</if>
+			<if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag != 1 and orgGradeNo != 5">
+				AND t.left > tOrg.LEFT and t.right &lt; tOrg.RIGHT
+			</if>
+
+			<if test="status != null and status != -1">
+				AND o.STATUS = #{status,jdbcType=NUMERIC}
+			</if>
+			<if test="urgencyFlag != null and urgencyFlag != -1">
+				AND o.IS_URGENCY = #{urgencyFlag,jdbcType=NUMERIC}
+			</if>
+			<if test="planStartDate != null and planStartDate != ''">
+				AND o.PLAN_ADDNOTES_DATE &gt;= #{planStartDate,jdbcType=VARCHAR}
+			</if>
+			<if test="planEndDate != null and planEndDate != ''">
+				AND o.PLAN_ADDNOTES_DATE &lt;= #{planEndDate,jdbcType=VARCHAR}
+			</if>
+			<if test="lineNo != null and lineNo != ''">
+				AND o.LINE_NO like concat(concat('%',#{lineNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<!--将加钞计划开放给每个机构后，用于处理每个机构仅能查询当前机构下的加钞计划（每个网点仅能看见自己生成的计划安排）-->
+			<if test="genOpNo != null and genOpNo != '' and genOpNo !='admin'">
+				AND o.PLAN_GEN_OP_NO = #{genOpNo,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by o.ADDNOTES_PLAN_NO desc
+	) t ) tt
+	where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+  </select>
+	
+  <select id="selectMaxNo" resultType="java.lang.String">
+   select max(ADDNOTES_PLAN_NO) 
+   from addnotes_plan where CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR} and PLAN_ADDNOTES_DATE = #{planAddnotesDate,jdbcType=VARCHAR}
+  </select>
+
+	<select id="selectWaitVerifyCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		select count (1)
+		from addnotes_plan
+		where STATUS = #{status,jdbcType=INTEGER}
+	</select>
+
+	<select id="qryOrgGradeNoByOrgNo" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select ORG_GRADE_NO as orgGradeNo
+		from SYS_ORG
+		where NO = #{orgNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryClrCenterFlag" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select CLR_CENTER_FLAG as clrCenterFlag
+		from SYS_ORG
+		where NO = #{orgNo,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateByPrimaryKeyByMap" parameterType="java.util.Map" >
+    update addnotes_plan
+    set CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+      PLAN_ADDNOTES_DATE = #{planAddnotesDate,jdbcType=VARCHAR},
+      PLAN_START_TIME = #{planStartTime,jdbcType=VARCHAR},
+      LASTEST_END_TIME = #{lastestEndTime,jdbcType=VARCHAR},
+      PLAN_DEV_COUNT = #{planDevCount,jdbcType=INTEGER},
+      PLAN_ADDNOTES_AMT = #{planAddnotesAmt,jdbcType=DECIMAL},
+      PLAN_GEN_MODE = #{planGenMode,jdbcType=INTEGER},
+      PLAN_GEN_OP_NO = #{planGenOpNo,jdbcType=VARCHAR},
+      PLAN_GEN_DATE = #{planGenDate,jdbcType=VARCHAR},
+      PLAN_GEN_TIME = #{planGenTime,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=INTEGER},
+      SUBMIT_OP_NO = #{submitOpNo,jdbcType=VARCHAR},
+      SUBMIT_DATE = #{submitDate,jdbcType=VARCHAR},
+      SUBMIT_TIME = #{submitTime,jdbcType=VARCHAR},
+      MOD_OP_NO = #{modOpNo,jdbcType=VARCHAR},
+      MOD_DATE = #{modDate,jdbcType=VARCHAR},
+      MOD_TIME = #{modTime,jdbcType=VARCHAR},
+      LINE_MODE = #{lineMode,jdbcType=INTEGER},
+      LINE_NO = #{lineNo,jdbcType=VARCHAR},
+      AUDIT_OP_NO = #{auditOpNo,jdbcType=VARCHAR},
+      AUDIT_DATE = #{auditDate,jdbcType=VARCHAR},
+      AUDIT_TIME = #{auditTime,jdbcType=VARCHAR},
+      REFUSE_SUGGESTION = #{refuseSuggestion,jdbcType=VARCHAR},
+      NOTE = #{note,jdbcType=VARCHAR},
+      IS_URGENCY = #{isUrgency,jdbcType=INTEGER}
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

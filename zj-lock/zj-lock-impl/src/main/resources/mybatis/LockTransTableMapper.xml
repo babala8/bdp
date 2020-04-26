@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.lock.repository.LockTransTableMapper" >
+
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.lock.domain.LockTransTableDO" >
+		<id column="SERIALNO" property="serialNo" jdbcType="VARCHAR" />
+		<result column="DEVNO" property="devNo" jdbcType="VARCHAR" />
+		<result column="LOCKCODE" property="lockCode" jdbcType="VARCHAR" />
+		<result column="TRANDATE" property="tranDate" jdbcType="VARCHAR" />
+		<result column="TRANTIME" property="tranTime" jdbcType="VARCHAR" />
+		<result column="TRANTYPE" property="tranType" jdbcType="VARCHAR" />
+		<result column="ENCRYPTCODE" property="encryptCode" jdbcType="VARCHAR" />
+		<result column="ESBCODE" property="esbCode" jdbcType="VARCHAR" />
+		<result column="RETCODE" property="retCode" jdbcType="VARCHAR" />
+		<result column="RETMSG" property="retMsg" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+   		lc.SERIALNO, lc.DEVNO, lc.LOCKCODE,lc.TRANDATE, lc.TRANTIME, lc.TRANTYPE,
+   		lc.ENCRYPTCODE, lc.ESBCODE, lc.RETCODE, lc.RETMSG
+	</sql>
+
+	<select id="qryTotalRowLock" resultType="Integer" parameterType="java.util.Map" >
+		select
+		count (1)
+		from LOCK_TRANS_TABLE lc
+		<where>
+			<if test="null != serialNo and '' != serialNo">
+				and lc.SERIALNO LIKE concat(concat('%',#{serialNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="null != devNo and '' != devNo">
+				and lc.DEVNO LIKE concat(concat('%',#{devNo,jdbcType=INTEGER}),'%')
+			</if>
+			<if test="null != lockCode and '' != lockCode">
+				and lc.LOCKCODE LIKE concat(concat('%',#{lockCode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="null != tranStartDate and '' != tranStartDate">
+				and lc.TRANDATE &gt;= #{tranStartDate,jdbcType=VARCHAR}
+			</if>
+			<if test="null != tranEndDate and '' != tranEndDate">
+				and lc.TRANDATE &lt;= #{tranEndDate,jdbcType=VARCHAR}
+			</if>
+			<!--<if test="null != tranTime and '' != tranTime">
+				and lc.TRANTIME = #{tranTime,jdbcType=VARCHAR}
+			</if>-->
+			<if test="null != tranType and '' != tranType">
+				and lc.TRANTYPE = #{tranType,jdbcType=VARCHAR}
+			</if>
+			<if test="null != encryptCode and '' != encryptCode">
+				and lc.ENCRYPTCODE = #{encryptCode,jdbcType=VARCHAR}
+			</if>
+			<if test="null != esbCode and '' != esbCode">
+				and lc.ESBCODE = #{esbCode,jdbcType=VARCHAR}
+			</if>
+			<if test="null != retCode and '' != retCode">
+				and lc.RETCODE = #{retCode,jdbcType=VARCHAR}
+			</if>
+			<if test="null != retMsg and '' != retMsg">
+				and lc.RETMSG = #{retMsg,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="qryLockTransByPage" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		select tt.* from (select t.*, rownum as rn from (
+		select
+		<include refid="Base_Column_List" />
+		from LOCK_TRANS_TABLE lc
+		<where>
+			<if test="null != serialNo and '' != serialNo">
+				and lc.SERIALNO LIKE concat(concat('%',#{serialNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="null != devNo and '' != devNo">
+				and lc.DEVNO LIKE concat(concat('%',#{devNo,jdbcType=INTEGER}),'%')
+			</if>
+			<if test="null != lockCode and '' != lockCode">
+				and lc.LOCKCODE LIKE concat(concat('%',#{lockCode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="null != tranStartDate and '' != tranStartDate">
+				and lc.TRANDATE &gt;= #{tranStartDate,jdbcType=VARCHAR}
+			</if>
+			<if test="null != tranEndDate and '' != tranEndDate">
+				and lc.TRANDATE &lt;= #{tranEndDate,jdbcType=VARCHAR}
+			</if>
+			<!--<if test="null != tranTime and '' != tranTime">
+				and lc.TRANTIME = #{tranTime,jdbcType=VARCHAR}
+			</if>-->
+			<if test="null != tranType and '' != tranType">
+				and lc.TRANTYPE = #{tranType,jdbcType=VARCHAR}
+			</if>
+			<if test="null != encryptCode and '' != encryptCode">
+				and lc.ENCRYPTCODE = #{encryptCode,jdbcType=VARCHAR}
+			</if>
+			<if test="null != esbCode and '' != esbCode">
+				and lc.ESBCODE = #{esbCode,jdbcType=VARCHAR}
+			</if>
+			<if test="null != retCode and '' != retCode">
+				and lc.RETCODE = #{retCode,jdbcType=VARCHAR}
+			</if>
+			<if test="null != retMsg and '' != retMsg">
+				and lc.RETMSG = #{retMsg,jdbcType=VARCHAR}
+			</if>
+		</where>
+		) t ) tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+</mapper>

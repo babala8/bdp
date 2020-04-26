@@ -1,0 +1,20 @@
+<zj-orchestration id="convoyOut" name="经警接库"
+				  requestObject="com.zjft.microservice.treasurybrain.common.dto.TaskTransferDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.ObjectDTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="@Transactional(rollbackFor &#x3D; Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="11jtcv2b337k0">
+	</zj-component>
+	<zj-component id="11jtcv2b337k0" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.tauro.component.ConvoyOutComponent.recover" next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="1ut63yjsr65fk"/>
+	</zj-component>
+	<zj-component id="1ut63yjsr65fk" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.tauro.component.ConvoyOutComponent.convoyOutFail"
+				  next="">
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

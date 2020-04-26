@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.param.repository.DevChsKeyEventMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.param.domain.DevChsKeyEvent" >
+    <id column="EVENT_NO" property="eventNo" jdbcType="VARCHAR" />
+    <id column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR" />
+    <result column="EVENT_NAME" property="eventName" jdbcType="VARCHAR" />
+    <result column="EVENT_DESP" property="eventDesp" jdbcType="VARCHAR" />
+    <result column="IS_VALID" property="isValid" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    EVENT_NO, CLR_CENTER_NO, EVENT_NAME, EVENT_DESP, IS_VALID
+  </sql>
+  
+ 
+  <select id="getKeyEventByClrNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from dev_chs_key_event
+    where 1=1
+    <if test="_parameter != null and _parameter != ''">
+    and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevChsKeyEventKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from dev_chs_key_event
+    where EVENT_NO = #{eventNo,jdbcType=VARCHAR}
+      and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevChsKeyEventKey" >
+    delete from dev_chs_key_event
+    where EVENT_NO = #{eventNo,jdbcType=VARCHAR}
+      and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevChsKeyEvent" >
+    insert into dev_chs_key_event (EVENT_NO, CLR_CENTER_NO, EVENT_NAME, 
+      EVENT_DESP, IS_VALID)
+    values (#{eventNo,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR}, #{eventName,jdbcType=VARCHAR}, 
+      #{eventDesp,jdbcType=VARCHAR}, #{isValid,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevChsKeyEvent" >
+    insert into dev_chs_key_event
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="eventNo != null" >
+        EVENT_NO,
+      </if>
+      <if test="clrCenterNo != null" >
+        CLR_CENTER_NO,
+      </if>
+      <if test="eventName != null" >
+        EVENT_NAME,
+      </if>
+      <if test="eventDesp != null" >
+        EVENT_DESP,
+      </if>
+      <if test="isValid != null" >
+        IS_VALID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="eventNo != null" >
+        #{eventNo,jdbcType=VARCHAR},
+      </if>
+      <if test="clrCenterNo != null" >
+        #{clrCenterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="eventName != null" >
+        #{eventName,jdbcType=VARCHAR},
+      </if>
+      <if test="eventDesp != null" >
+        #{eventDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevChsKeyEvent" >
+    update dev_chs_key_event
+    <set >
+      <if test="eventName != null" >
+        EVENT_NAME = #{eventName,jdbcType=VARCHAR},
+      </if>
+      <if test="eventDesp != null" >
+        EVENT_DESP = #{eventDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        IS_VALID = #{isValid,jdbcType=TINYINT},
+      </if>
+    </set>
+    where EVENT_NO = #{eventNo,jdbcType=VARCHAR}
+      and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevChsKeyEvent" >
+    update dev_chs_key_event
+    set EVENT_NAME = #{eventName,jdbcType=VARCHAR},
+      EVENT_DESP = #{eventDesp,jdbcType=VARCHAR},
+      IS_VALID = #{isValid,jdbcType=TINYINT}
+    where EVENT_NO = #{eventNo,jdbcType=VARCHAR}
+      and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </update>
+   <select id="selectPostponeKeyEventByClrNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from dev_chs_key_event
+    where EVENT_NO = '007'
+      and IS_VALID = 1	
+      and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </select>
+    <select id="selectKeyEventsByClrNo" resultMap="BaseResultMap"  parameterType="java.lang.String" >
+    select 
+     <include refid="Base_Column_List" />
+    from dev_chs_key_event
+    where EVENT_NO != '007'
+      and IS_VALID = 1	
+      and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+    order by EVENT_NO  
+  </select>
+  
+</mapper>

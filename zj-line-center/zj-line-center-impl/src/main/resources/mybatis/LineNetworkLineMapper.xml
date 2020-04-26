@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.linecenter.repository.LineNetworkLineMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLine" >
+    <id column="LINE_NO" property="networkLineNo" jdbcType="VARCHAR" />
+    <result column="LINE_NAME" property="networkLineName" jdbcType="VARCHAR" />
+    <result column="ADD_CLR_PERIOD" property="addClrPeriod" jdbcType="DECIMAL" />
+    <result column="NOTE" property="note" jdbcType="VARCHAR" />
+    <result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    LINE_NO, LINE_NAME, ADD_CLR_PERIOD, NOTE, CLR_CENTER_NO
+  </sql>
+
+
+	<select id="getAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from addnotes_line_table
+	</select>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from addnotes_line_table
+    where LINE_NO = #{networkLineNo,jdbcType=VARCHAR}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from addnotes_line_table
+    where LINE_NO = #{networkLineNo,jdbcType=VARCHAR}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLine" >
+    insert into ADDNOTES_LINE_TABLE (LINE_NO, LINE_NAME, ADD_CLR_PERIOD, 
+      NOTE, CLR_CENTER_NO)
+    values (#{networkLineNo,jdbcType=VARCHAR}, #{networkLineName,jdbcType=VARCHAR}, #{addClrPeriod,jdbcType=DECIMAL},
+      #{note,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLine" >
+    insert into addnotes_line_table
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="networkLineNo != null" >
+        LINE_NO,
+      </if>
+      <if test="networkLineName != null" >
+        LINE_NAME,
+      </if>
+      <if test="addClrPeriod != null" >
+        ADD_CLR_PERIOD,
+      </if>
+      <if test="note != null" >
+        NOTE,
+      </if>
+      <if test="clrCenterNo != null" >
+        CLR_CENTER_NO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="networkLineNo != null" >
+        #{networkLineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="networkLineName != null" >
+        #{networkLineName,jdbcType=VARCHAR},
+      </if>
+      <if test="addClrPeriod != null" >
+        #{addClrPeriod,jdbcType=DECIMAL},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="clrCenterNo != null" >
+        #{clrCenterNo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLine" >
+    update addnotes_line_table
+    <set >
+      <if test="networkLineName != null" >
+        LINE_NAME = #{networkLineName,jdbcType=VARCHAR},
+      </if>
+      <if test="addClrPeriod != null" >
+        ADD_CLR_PERIOD = #{addClrPeriod,jdbcType=DECIMAL},
+      </if>
+      <if test="note != null" >
+        NOTE = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="clrCenterNo != null" >
+        CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where LINE_NO = #{networkLineNo,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLine" >
+    update ADDNOTES_LINE_TABLE
+    set LINE_NAME = #{networkLineName,jdbcType=VARCHAR},
+      ADD_CLR_PERIOD = #{addClrPeriod,jdbcType=DECIMAL},
+      NOTE = #{note,jdbcType=VARCHAR},
+      CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+    where LINE_NO = #{networkLineNo,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="getNetworkLineListByClrNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	select t.line_no, t.LINE_NAME
+	from addnotes_line_table t
+	where t.clr_center_no = #{clrCenterNo,jdbcType=VARCHAR}
+	order by t.line_no
+  </select>
+
+
+	<select id="getNetworkLineListByNetworkLineNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	select t.line_no, t.LINE_NAME
+	from addnotes_line_table t
+	where t.line_no in (
+		replace(replace(#{clrCenterNo,jdbcType=VARCHAR},'[',''),']','')
+	)
+	order by t.line_no
+  </select>
+
+
+  <select id="getNetworkLineListByDateAndClrNo" resultMap="BaseResultMap" >
+	select t.line_no, t.LINE_NAME
+	 from addnotes_line_table t
+	 where t.clr_center_no = #{clrCenterNo,jdbcType=VARCHAR}
+    	and t.line_no in (
+		select distinct r.LINE_NO from LINE_RUN_INFO r
+		where r.the_year_month = substr(#{lineDate,jdbcType=VARCHAR}, 0, 7)
+		and r.the_day = substr(#{lineDate,jdbcType=VARCHAR}, 9)
+		)
+    	order by t.line_no
+  </select>
+
+
+  <select id="qryTotalRowPlan"  parameterType="java.util.Map"  resultType="java.lang.Integer">
+	 select
+	 count(1)
+	 from ADDNOTES_LINE_TABLE t
+	 <where>
+		 <if test="clrCenterNo != null and clrCenterNo != ''" >
+		     AND t.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+		 </if>
+		 <if test="networkLineName != null and networkLineName != ''">
+             AND t.LINE_Name like concat(concat('%',#{networkLineName,jdbcType=VARCHAR}),'%')
+		 </if>
+	 </where>
+ </select>
+
+ <select id="qryNetworkLine" resultMap="BaseResultMap">
+	 select tt.* from (select t.*, rownum as rn from (
+	 select
+	 <include refid="Base_Column_List"/>
+	 from ADDNOTES_LINE_TABLE o
+	 <where>
+		 <if test="clrCenterNo != null and clrCenterNo != ''">
+			 AND o.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+		 </if>
+		 <if test="networkLineName != null and networkLineName != ''">
+			 AND o.LINE_Name like concat(concat('%',#{networkLineName,jdbcType=VARCHAR}),'%')
+		 </if>
+	 </where>
+	 order by o.LINE_NO asc
+	 ) t ) tt
+	 where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+ </select>
+
+
+ <select id="getNetworkLineNoMax" resultType="string">
+    select max(LINE_NO) from ADDNOTES_LINE_TABLE
+ </select>
+
+	<select id="rowSetList" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from addnotes_line_table
+		WHERE LINE_NO LIKE concat((#{clrCenterNo,jdbcType=VARCHAR}),'%')
+		AND LINE_TYPE = 1
+	</select>
+
+	<select id="rowSetList1" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from addnotes_line_table
+		WHERE LINE_NO = #{networkLineNo,jdbcType=VARCHAR}
+	</select>
+</mapper>

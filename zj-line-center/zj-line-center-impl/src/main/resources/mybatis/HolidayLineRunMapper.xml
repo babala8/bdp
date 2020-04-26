@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjft.microservice.treasurybrain.linecenter.repository.HolidayLineRunMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLine" >
+		<id column="LINE_NO" property="networkLineNo" jdbcType="VARCHAR" />
+		<result column="LINE_NAME" property="networkLineName" jdbcType="VARCHAR" />
+		<result column="ADD_CLR_PERIOD" property="addClrPeriod" jdbcType="DECIMAL" />
+		<result column="NOTE" property="note" jdbcType="VARCHAR" />
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<select id="selectExistsFlag"  resultType="INTEGER">
+		select count(0) existsFlag from LINE_WORK_TABLE r
+		where r.THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR} and r.LINE_NO=#{lineNo,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteLine"  >
+		delete from LINE_SCHEDULE r where r.LINE_WORK_ID &gt;=#{startLineRunNo,jdbcType=VARCHAR} and r.LINE_WORK_ID &lt;=#{endLineRunNo,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insertLineRunNetDeatil" parameterType="java.util.List">
+ insert into LINE_SCHEDULE(LINE_WORK_ID,CUSTOMER_NO,CUSTOMER_TYPE,SORT_NO)
+
+		<foreach collection="list" item="item" index="index" separator="union all">
+			select
+			#{item.lineWorkId,jdbcType=VARCHAR},#{item.customerNo,jdbcType=VARCHAR},#{item.customerType,jdbcType=INTEGER},#{item.sortNo,jdbcType=INTEGER}
+			from dual
+		</foreach>
+
+	</insert>
+	
+	<update id="updateNetCount">
+		update LINE_WORK_TABLE r
+		set r.COSTOMER_ACCOUNT=(select count(0) from LINE_SCHEDULE rd where rd.LINE_WORK_ID=r.LINE_WORK_ID)
+		where r.LINE_WORK_ID &gt;=#{startLineRunNo,jdbcType=VARCHAR} and r.LINE_WORK_ID &lt;=#{endLineRunNo,jdbcType=VARCHAR}
+	</update>
+</mapper>

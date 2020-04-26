@@ -1,0 +1,15 @@
+<zj-orchestration id="addDevCountInfo" name="清分机信息插入"
+				  requestObject="com.zjft.microservice.treasurybrain.channelcenter.dto.DevCountDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="1f25xiqy5va80">
+	</zj-component>
+	<zj-component id="1f25xiqy5va80" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.channelcenter.component.DevComponent.addDevCountInfo" next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

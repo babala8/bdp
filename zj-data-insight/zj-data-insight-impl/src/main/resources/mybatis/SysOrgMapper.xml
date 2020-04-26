@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.datainsight.repository.SysOrgMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.common.domain.SysOrg">
+		<id column="NO" property="no" jdbcType="VARCHAR"/>
+		<result column="NAME" property="name" jdbcType="VARCHAR"/>
+		<result column="PARENT_ORG" property="parentOrgNo" jdbcType="VARCHAR"/>
+		<result column="LEFT" property="left" jdbcType="DECIMAL"/>
+		<result column="RIGHT" property="right" jdbcType="DECIMAL"/>
+		<result column="ORG_GRADE_NO" property="orgGradeNo" jdbcType="DECIMAL"/>
+		<result column="MONEYORG_FLAG" property="moneyorgFlag" jdbcType="VARCHAR"/>
+		<result column="X" property="x" jdbcType="VARCHAR"/>
+		<result column="Y" property="y" jdbcType="VARCHAR"/>
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+		<result column="LINKMAN" property="linkman" jdbcType="VARCHAR"/>
+		<result column="TELEPHONE" property="telephone" jdbcType="VARCHAR"/>
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR"/>
+		<result column="FAX" property="fax" jdbcType="VARCHAR"/>
+		<result column="EMAIL" property="email" jdbcType="VARCHAR"/>
+		<result column="BUSINESS_RANGE" property="businessRange" jdbcType="VARCHAR"/>
+		<result column="CUP_AREA_CODE" property="cupAreaCode" jdbcType="VARCHAR"/>
+		<result column="ADDRESS_CODE" property="addressCode" jdbcType="VARCHAR"/>
+		<result column="AREA_NO" property="areaNo" jdbcType="VARCHAR"/>
+		<result column="AREA_TYPE" property="areaType" jdbcType="VARCHAR"/>
+		<result column="ORG_PHYSICS_CATALOG" property="orgPhysicsCatalog" jdbcType="VARCHAR"/>
+		<result column="NOTE" property="note" jdbcType="VARCHAR"/>
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR"/>
+		<result column="CITY" property="city" jdbcType="VARCHAR"/>
+		<result column="REGION" property="region" jdbcType="VARCHAR"/>
+		<result column="STATUS" property="status" jdbcType="DECIMAL"/>
+		<result column="CLR_CENTER_FLAG" property="clrCenterFlag" jdbcType="DECIMAL"/>
+		<result column="ORG_NO" property="orgNo" jdbcType="VARCHAR"/>
+		<result column="SHORT_NAME" property="shortName" jdbcType="VARCHAR"/>
+		<result column="FULL_NAME" property="fullName" jdbcType="VARCHAR"/>
+		<result column="AWAY_FLAG" property="awayFlag" jdbcType="DECIMAL"/>
+		<result column="CLR_CENTER_NO_CASH" property="clrCenterNoCash" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.common.domain.SysOrg" extends="BaseResultMap">
+		<!--<association property="sysOrgGrade" column="ORG_GRADE_NO" javaType="com.zjft.microservice.treasurybrain.common.domain.SysOrgGrade" select="com.zjft.microservice.treasurybrain.addnotesplan.repository.SysOrgGradeMapper.selectByPrimaryKey">-->
+		<!--</association>-->
+		<!--<association property="supOrg" column="PARENT_ORG_NO" javaType="com.zjft.microservice.treasurybrain.common.domain.SysOrg" select="selectDetailByPrimaryKey">-->
+		<!--</association>-->
+		<!--<association property="clrCenterTable" column="CLR_CENTER_NO" javaType="com.zjft.microservice.treasurybrain.addnotesplan.domain.ClrCenterTable" select="com.zjft.microservice.treasurybrain.addnotesplan.repository.ClrCenterTableMapper.selectByPrimaryKey">-->
+		<!--</association>-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+    NO, NAME, PARENT_ORG, LEFT, RIGHT, ORG_GRADE_NO, MONEYORG_FLAG, X, Y, ADDRESS, LINKMAN,
+    TELEPHONE, MOBILE, FAX, EMAIL, BUSINESS_RANGE, CUP_AREA_CODE, ADDRESS_CODE, AREA_NO,
+    AREA_TYPE, ORG_PHYSICS_CATALOG, NOTE, CLR_CENTER_NO, CITY, REGION, STATUS, CLR_CENTER_FLAG,
+    ORG_NO, SHORT_NAME, FULL_NAME, AWAY_FLAG, CLR_CENTER_NO_CASH
+  	</sql>
+
+	<select id="qryTotalRowOrg" parameterType="java.util.Map" resultType="_int">
+		select count(1)
+		from SYS_ORG o
+		<where>
+			<if test="orgNo!= null and orgNo!=''">
+				AND o.NO like CONCAT('%',#{orgNo,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="orgName!= null and orgName!=''">
+				AND o.NAME like CONCAT('%',#{orgName,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="orgGrade!= null and orgGrade!=''">
+				AND o.ORG_GRADE_NO = #{orgGrade,jdbcType=NUMERIC}
+			</if>
+			<if test="userOrgNo!= null and userOrgNo!= ''">
+				AND exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{userOrgNo,jdbcType=VARCHAR} and o.left
+				&gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+			</if>
+		</where>
+	</select>
+
+	<select id="qryMessageForRegion" resultType="java.util.Map">
+  	select t.region ,count(1) as count
+  	from SYS_ORG t
+  	where t.region is not null group by t.region
+   	</select>
+
+
+	<select id="qryMessageForCity" resultType="java.util.Map">
+  	select t.city ,count(1) as count
+  	from SYS_ORG t
+  	where t.city is not null group by t.city
+  	</select>
+
+
+	<!-- DetailMap 已被注释 -->
+	<select id="qryOrgByCity" parameterType="java.lang.String" resultMap="DetailMap">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_ORG t
+		where t.city= #{cityName,jdbcType=VARCHAR}
+	</select>
+
+
+	<select id="qryOrgDevsForMap" resultType="java.util.Map">
+		select s.city,count(1) as orgNums,(select count(1) from dev_base_info where ORG_NO in (select no from SYS_ORG where CITY = s.city)) as devNums from SYS_ORG s where s.city is not null GROUP BY s.city
+  	</select>
+
+
+	<select id="qryOrgListByCityName" parameterType="java.lang.String" resultType="java.util.Map">
+		select
+		<include refid="Base_Column_List"/>
+		, (select total
+			from(select m.no as no, sum(m.aaa) as total
+					from (select o.no as no,
+							(select sum(amount_cdm)
+							from BIZTXLOG_INIT t
+					where t.termid = d.no
+					and substr(t.trandate, 0, 7) = to_char(sysdate,'yyyy-mm')) as aaa
+				from dev_base_info d, sys_org o
+				where d.org_no = o.no) m
+			group by m.no)
+		where no = SYS_ORG.no)  as transTotal
+		from SYS_ORG
+		where CITY = #{cityName,jdbcType=VARCHAR}
+		and X is not null
+		and Y is not null
+	</select>
+
+
+	<select id="qryChildrenMap" resultType="java.util.Map">
+  	 select m.no as masterOrgNo, s.no as childrenOrgNo
+  	 from SYS_ORG m left join SYS_ORG s
+  	 on s.no=m.no or s.upper1=m.no or s.upper2=m.no or s.upper3=m.no or s.upper4=m.no or s.upper5=m.no
+    </select>
+
+
+	<select id="qryOrgRegion" parameterType="java.lang.String" resultType="java.lang.String">
+  		select o.CITY from SYS_ORG o where o.NO = #{orgNo, jdbcType = VARCHAR}
+    </select>
+
+</mapper>

@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.linecenter.repository.LineWorkMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.LineWorkDO" >
+    <id column="LINE_WORK_ID" property="lineWorkId" jdbcType="VARCHAR" />
+    <result column="LINE_NO" property="lineNo" jdbcType="VARCHAR" />
+    <result column="OP_NO1" property="opNo1" jdbcType="VARCHAR" />
+    <result column="OP_NO2" property="opNo2" jdbcType="VARCHAR" />
+    <result column="CAR_NO" property="carNo" jdbcType="VARCHAR" />
+    <result column="PLAN_DISTANCE" property="planDistance" jdbcType="DECIMAL" />
+    <result column="PLAN_TIME_COST" property="planTimeCost" jdbcType="DECIMAL" />
+    <result column="START_LNG" property="startLng" jdbcType="VARCHAR" />
+    <result column="START_LAT" property="startLat" jdbcType="VARCHAR" />
+    <result column="END_LNG" property="endLng" jdbcType="VARCHAR" />
+    <result column="END_LAT" property="endLat" jdbcType="VARCHAR" />
+    <result column="THE_YEAR_MONTH" property="theYearMonth" jdbcType="VARCHAR" />
+    <result column="THE_DAY" property="theDay" jdbcType="VARCHAR" />
+	  <result column="CUSTOMER_COUNT" property="customerCount" jdbcType="INTEGER"/>
+  </resultMap>
+	<resultMap id="ExtandMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.LineWorkDO"
+			   extends="BaseResultMap">
+		<result column="LINE_NAME" property="lineName" jdbcType="VARCHAR"/>
+		<collection property="detailList"
+					ofType="com.zjft.microservice.treasurybrain.linecenter.domain.LineScheduleDO" >
+			<!-- 加入lineRunNo，mybatis处理collection时即使实际上的detail为空，也会因为查询到一条数据，使得detail含一条空的结果	-->
+			<id column="CUSTOMER_NO" property="customerNo" jdbcType="VARCHAR"/>
+			<result column="CUSTOMER_SHORT_NAME" property="customerName" jdbcType="VARCHAR"/>
+			<result column="ARRIVAL_TIME" property="arrivalTime" jdbcType="VARCHAR"/>
+		</collection>
+	</resultMap>
+	<resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.LineWorkDO"
+			   extends="BaseResultMap">
+		<association property="detailList" column="LINE_WORK_ID"
+					 javaType="java.util.List"
+					 select="com.zjft.microservice.treasurybrain.linecenter.repository.LineScheduleMapper.selectDetailByPrimaryKey"></association>
+
+	</resultMap>
+  <sql id="Base_Column_List" >
+    d.LINE_WORK_ID,d.LINE_NO, d.OP_NO1, d.OP_NO2, d.CAR_NO,d.PLAN_DISTANCE, d.PLAN_TIME_COST, d.START_LNG,
+    d.START_LAT, d.END_LNG, d.END_LAT, d.THE_YEAR_MONTH, d.THE_DAY,d.CUSTOMER_COUNT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LINE_WORK_TABLE d
+    where LINE_WORK_ID = #{lineWorkId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LINE_WORK_TABLE
+    where LINE_WORK_ID = #{lineWorkId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineWorkDO" >
+    insert into LINE_WORK_TABLE (LINE_WORK_ID, LINE_NO, OP_NO1, 
+      OP_NO2, CAR_NO, PLAN_DISTANCE, 
+      PLAN_TIME_COST, START_LNG, START_LAT, 
+      END_LNG, END_LAT, THE_YEAR_MONTH, 
+      THE_DAY,CUSTOMER_COUNT)
+    values (#{lineWorkId,jdbcType=VARCHAR}, #{lineNo,jdbcType=VARCHAR}, #{opNo1,jdbcType=VARCHAR}, 
+      #{opNo2,jdbcType=VARCHAR}, #{carNo,jdbcType=VARCHAR}, #{planDistance,jdbcType=DECIMAL}, 
+      #{planTimeCost,jdbcType=DECIMAL}, #{startLng,jdbcType=VARCHAR}, #{startLat,jdbcType=VARCHAR}, 
+      #{endLng,jdbcType=VARCHAR}, #{endLat,jdbcType=VARCHAR}, #{theYearMonth,jdbcType=VARCHAR}, 
+      #{theDay,jdbcType=VARCHAR},#{customerCount,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineWorkDO" >
+    insert into LINE_WORK_TABLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="lineWorkId != null" >
+        LINE_WORK_ID,
+      </if>
+      <if test="lineNo != null" >
+        LINE_NO,
+      </if>
+      <if test="opNo1 != null" >
+        OP_NO1,
+      </if>
+      <if test="opNo2 != null" >
+        OP_NO2,
+      </if>
+      <if test="carNo != null" >
+        CAR_NO,
+      </if>
+      <if test="planDistance != null" >
+        PLAN_DISTANCE,
+      </if>
+      <if test="planTimeCost != null" >
+        PLAN_TIME_COST,
+      </if>
+      <if test="startLng != null" >
+        START_LNG,
+      </if>
+      <if test="startLat != null" >
+        START_LAT,
+      </if>
+      <if test="endLng != null" >
+        END_LNG,
+      </if>
+      <if test="endLat != null" >
+        END_LAT,
+      </if>
+      <if test="theYearMonth != null" >
+        THE_YEAR_MONTH,
+      </if>
+      <if test="theDay != null" >
+        THE_DAY,
+      </if>
+		<if test="customerCount != null" >
+			CUSTOMER_COUNT,
+		</if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="lineWorkId != null" >
+        #{lineWorkId,jdbcType=VARCHAR},
+      </if>
+      <if test="lineNo != null" >
+        #{lineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="opNo1 != null" >
+        #{opNo1,jdbcType=VARCHAR},
+      </if>
+      <if test="opNo2 != null" >
+        #{opNo2,jdbcType=VARCHAR},
+      </if>
+      <if test="carNo != null" >
+        #{carNo,jdbcType=VARCHAR},
+      </if>
+      <if test="planDistance != null" >
+        #{planDistance,jdbcType=DECIMAL},
+      </if>
+      <if test="planTimeCost != null" >
+        #{planTimeCost,jdbcType=DECIMAL},
+      </if>
+      <if test="startLng != null" >
+        #{startLng,jdbcType=VARCHAR},
+      </if>
+      <if test="startLat != null" >
+        #{startLat,jdbcType=VARCHAR},
+      </if>
+      <if test="endLng != null" >
+        #{endLng,jdbcType=VARCHAR},
+      </if>
+      <if test="endLat != null" >
+        #{endLat,jdbcType=VARCHAR},
+      </if>
+      <if test="theYearMonth != null" >
+        #{theYearMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="theDay != null" >
+        #{theDay,jdbcType=VARCHAR},
+      </if>
+		<if test="customerCount != null" >
+			#{customerCount,jdbcType=INTEGER},
+		</if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineWorkDO" >
+    update LINE_WORK_TABLE
+    <set >
+      <if test="lineNo != null" >
+        LINE_NO = #{lineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="opNo1 != null" >
+        OP_NO1 = #{opNo1,jdbcType=VARCHAR},
+      </if>
+      <if test="opNo2 != null" >
+        OP_NO2 = #{opNo2,jdbcType=VARCHAR},
+      </if>
+      <if test="carNo != null" >
+        CAR_NO = #{carNo,jdbcType=VARCHAR},
+      </if>
+      <if test="planDistance != null" >
+        PLAN_DISTANCE = #{planDistance,jdbcType=DECIMAL},
+      </if>
+      <if test="planTimeCost != null" >
+        PLAN_TIME_COST = #{planTimeCost,jdbcType=DECIMAL},
+      </if>
+      <if test="startLng != null" >
+        START_LNG = #{startLng,jdbcType=VARCHAR},
+      </if>
+      <if test="startLat != null" >
+        START_LAT = #{startLat,jdbcType=VARCHAR},
+      </if>
+      <if test="endLng != null" >
+        END_LNG = #{endLng,jdbcType=VARCHAR},
+      </if>
+      <if test="endLat != null" >
+        END_LAT = #{endLat,jdbcType=VARCHAR},
+      </if>
+      <if test="theYearMonth != null" >
+        THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="theDay != null" >
+        THE_DAY = #{theDay,jdbcType=VARCHAR},
+      </if>
+		<if test="customerCount != null" >
+			CUSTOMER_COUNT = #{customerCount,jdbcType=VARCHAR},
+		</if>
+    </set>
+    where LINE_WORK_ID = #{lineWorkId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineWorkDO" >
+    update LINE_WORK_TABLE
+    set LINE_NO = #{lineNo,jdbcType=VARCHAR},
+      OP_NO1 = #{opNo1,jdbcType=VARCHAR},
+      OP_NO2 = #{opNo2,jdbcType=VARCHAR},
+      CAR_NO = #{carNo,jdbcType=VARCHAR},
+      PLAN_DISTANCE = #{planDistance,jdbcType=DECIMAL},
+      PLAN_TIME_COST = #{planTimeCost,jdbcType=DECIMAL},
+      START_LNG = #{startLng,jdbcType=VARCHAR},
+      START_LAT = #{startLat,jdbcType=VARCHAR},
+      END_LNG = #{endLng,jdbcType=VARCHAR},
+      END_LAT = #{endLat,jdbcType=VARCHAR},
+      THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR},
+      THE_DAY = #{theDay,jdbcType=VARCHAR},
+      CUSTOMER_COUNT = #{customerCount,jdbcType=VARCHAR}
+    where LINE_WORK_ID = #{lineWorkId,jdbcType=VARCHAR}
+  </update>
+	<select id="qryLineHasMapWithDate" resultType="string" parameterType="map">
+		select distinct r.LINE_NO from (
+		(select dl.LINE_NO from LINE_WORK_TABLE dl
+		where dl.THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR}  and dl.THE_DAY= #{day,jdbcType = VARCHAR} )
+		) r
+		where r.LINE_NO  in <foreach collection="lineNos" item="item" separator="," open="(" close=")" index="index"> #{item} </foreach>
+	</select>
+
+	<update id="updateCustomerNumByNo" parameterType="string">
+		update LINE_WORK_TABLE c
+		set c.CUSTOMER_COUNT = (select count(0) from LINE_SCHEDULE cd
+									 where cd.LINE_WORK_ID=#{lineWorkId,jdbcType = VARCHAR})
+		where c.LINE_WORK_ID = #{lineWorkId,jdbcType=VARCHAR}
+	</update>
+	<select id="qryDayCordAndDetails" resultMap="ExtandMap" parameterType="map">
+		select
+		c.LINE_WORK_ID,c.LINE_NO,l.LINE_NAME,c.THE_YEAR_MONTH,c.CUSTOMER_COUNT,c.THE_DAY,
+		d.CUSTOMER_NO,cc.CUSTOMER_SHORT_NAME,d.ARRIVAL_TIME
+		from LINE_WORK_TABLE c
+		left join LINE_TABLE l on c.LINE_NO = l.LINE_NO and l.LINE_TYPE = #{ lineType,jdbcType = VARCHAR}
+		left join LINE_SCHEDULE d on d.LINE_WORK_ID = c.LINE_WORK_ID
+		left join CALL_CUSTOMER_TABLE cc on cc.CUSTOMER_NO = d.CUSTOMER_NO
+		where c.LINE_NO = #{lineNo,jdbcType=VARCHAR} and c.THE_YEAR_MONTH = #{theYearMonth,jdbcType = VARCHAR}
+		order by c.THE_DAY asc,c.LINE_NO asc,d.ARRIVAL_TIME asc
+	</select>
+	<insert id="insertSelectiveByMap" parameterType="java.util.Map" >
+		insert into LINE_WORK_TABLE
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="lineWorkId != null" >
+				LINE_WORK_ID,
+			</if>
+			<if test="lineNo != null" >
+				LINE_NO,
+			</if>
+			<if test="opNo1 != null" >
+				OP_NO1,
+			</if>
+			<if test="opNo2 != null" >
+				OP_NO2,
+			</if>
+			<if test="carNo != null" >
+				CAR_NO,
+			</if>
+			<if test="customerCount != null" >
+				CUSTOMER_COUNT,
+			</if>
+			<if test="planDistance != null" >
+				PLAN_DISTANCE,
+			</if>
+			<if test="planTimeCost != null" >
+				PLAN_TIME_COST,
+			</if>
+			<if test="startLng != null" >
+				START_LNG,
+			</if>
+			<if test="startLat != null" >
+				START_LAT,
+			</if>
+			<if test="endLng != null" >
+				END_LNG,
+			</if>
+			<if test="endLat != null" >
+				END_LAT,
+			</if>
+			<if test="theYearMonth != null" >
+				THE_YEAR_MONTH,
+			</if>
+			<if test="theDay != null" >
+				THE_DAY,
+			</if>
+			<if test="customerCount != null" >
+				CUSTOMER_COUNT,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="lineWorkId != null" >
+				#{lineWorkId,jdbcType=VARCHAR},
+			</if>
+			<if test="lineNo != null" >
+				#{lineNo,jdbcType=VARCHAR},
+			</if>
+			<if test="opNo1 != null" >
+				#{opNo1,jdbcType=VARCHAR},
+			</if>
+			<if test="opNo2 != null" >
+				#{opNo2,jdbcType=VARCHAR},
+			</if>
+			<if test="carNo != null" >
+				#{carNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerCount != null" >
+				#{customerCount,jdbcType=INTEGER},
+			</if>
+			<if test="planDistance != null" >
+				#{planDistance,jdbcType=DECIMAL},
+			</if>
+			<if test="planTimeCost != null" >
+				#{planTimeCost,jdbcType=DECIMAL},
+			</if>
+			<if test="startLng != null" >
+				#{startLng,jdbcType=VARCHAR},
+			</if>
+			<if test="startLat != null" >
+				#{startLat,jdbcType=VARCHAR},
+			</if>
+			<if test="endLng != null" >
+				#{endLng,jdbcType=VARCHAR},
+			</if>
+			<if test="endLat != null" >
+				#{endLat,jdbcType=VARCHAR},
+			</if>
+			<if test="theYearMonth != null" >
+				#{theYearMonth,jdbcType=VARCHAR},
+			</if>
+			<if test="theDay != null" >
+				#{theDay,jdbcType=VARCHAR},
+			</if>
+			<if test="customerCount != null" >
+				#{customerCount,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<delete id="deleteLine" parameterType="java.util.Map" >
+   DELETE FROM LINE_WORK_TABLE WHERE LINE_NO = #{lineNo,jdbcType=VARCHAR}
+   AND THE_YEAR_MONTH =#{theYearMonth,jdbcType=VARCHAR}
+  </delete>
+	<select id="selectTheYearMonthByLineNo" resultType="java.lang.String" parameterType="java.lang.String">
+	  select distinct THE_YEAR_MONTH from LINE_WORK_TABLE where LINE_NO =#{lineNo,jdbcType=VARCHAR}
+      and THE_YEAR_MONTH &gt;= #{theYearMonth,jdbcType=VARCHAR}
+	</select>
+	<select id="qryTotalRowForMonth" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)  from (
+		SELECT d.THE_YEAR_MONTH,
+		d.LINE_NO,
+		count(d.CUSTOMER_COUNT) as networkCount,
+		o.LINE_NAME as lineName
+		FROM LINE_WORK_TABLE d LEFT OUTER JOIN LINE_TABLE o ON d.LINE_NO=o.LINE_NO
+		WHERE 1=1
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND o.CLR_CENTER_NO  = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="lineNo != null and lineNo != ''">
+			AND d.LINE_NO  = #{lineNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="startMonth != null and startMonth != ''">
+			AND d.THE_YEAR_MONTH &gt;= #{startMonth,jdbcType=VARCHAR}
+		</if>
+		<if test="endMonth != null and endMonth != ''">
+			AND d.THE_YEAR_MONTH &lt;= #{endMonth,jdbcType=VARCHAR}
+		</if>
+		<if test="lineType != null and lineType != ''">
+			AND o.LINE_TYPE = #{lineType,jdbcType=VARCHAR}
+		</if>
+		group by  d.THE_YEAR_MONTH, d.LINE_NO ,o.LINE_NAME ) t
+	</select>
+	<select id="qryLineRunMapForMonth" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		select tt.* from (select t.*, rownum as rn from (
+
+		SELECT
+		d.THE_YEAR_MONTH, d.LINE_NO,
+		sum(d.CUSTOMER_COUNT) as CUSTOMER_COUNT,o.LINE_NAME as lineName
+		FROM LINE_WORK_TABLE d LEFT OUTER JOIN LINE_TABLE o ON d.LINE_NO=o.LINE_NO
+
+		WHERE 1=1
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND o.CLR_CENTER_NO  = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="lineNo != null and lineNo != ''">
+			AND d.LINE_NO  = #{lineNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="startMonth != null and startMonth != ''">
+			AND d.THE_YEAR_MONTH &gt;= #{startMonth,jdbcType=VARCHAR}
+		</if>
+		<if test="endMonth != null and endMonth != ''">
+			AND d.THE_YEAR_MONTH &lt;= #{endMonth,jdbcType=VARCHAR}
+		</if>
+		<if test="lineType != null and lineType != ''">
+			AND o.LINE_TYPE = #{lineType,jdbcType=INTEGER}
+		</if>
+		group by  d.THE_YEAR_MONTH, d.LINE_NO ,o.LINE_NAME
+		order by d.THE_YEAR_MONTH desc)t)tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+	<select id="qryLineRunMapDetail" resultMap="DetailMap" parameterType="java.util.Map" >
+		SELECT
+		<include refid="Base_Column_List" />,o.LINE_NAME as lineName
+		FROM LINE_WORK_TABLE d LEFT OUTER JOIN LINE_TABLE o ON d.LINE_NO=o.LINE_NO
+		WHERE 1=1
+		<if test="lineNo != null and lineNo != ''">
+			AND d.LINE_NO = #{lineNo,jdbcType=VARCHAR}
+		</if>
+		<if test="theYearMonth != null and theYearMonth != ''">
+			AND d.THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectNetAcountList" parameterType="java.lang.String" resultType="java.lang.String" >
+     select distinct d.CUSTOMER_COUNT from LINE_WORK_TABLE d left join
+     LINE_SCHEDULE dd on d.LINE_WORK_ID = d.LINE_WORK_ID where d.LINE_NO=#{lineNo,jdbcType=VARCHAR}
+     order by d.CUSTOMER_COUNT desc
+	</select>
+	<select id="qryNetworkLineRunMapDetail" resultMap="DetailMap" parameterType="java.util.Map" >
+		SELECT
+		<include refid="Base_Column_List" />,o.LINE_NAME as networkLineName
+		FROM LINE_WORK_TABLE d LEFT OUTER JOIN LINE_TABLE o ON d.LINE_NO=o.LINE_NO
+		WHERE 1=1
+		<if test="networkLineNo != null and networkLineNo != ''">
+			AND d.LINE_NO = #{networkLineNo,jdbcType=VARCHAR}
+		</if>
+		<if test="theYearMonth != null and theYearMonth != ''">
+			AND d.THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="qryMonthTotalRow" resultType="int" parameterType="java.util.Map">
+		select count(0) from(
+		select *
+		from LINE_WORK_TABLE c left join LINE_TABLE l on c.LINE_NO=l.LINE_NO
+		where 1 = 1
+		<if test="null!=startMonth and ''!=startMonth ">
+			and c.THE_YEAR_MONTH &gt;= #{startMonth,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=endMonth and ''!=endMonth ">
+			and c.THE_YEAR_MONTH &lt;= #{endMonth,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=lineNo and ''!=lineNo">
+			and c.LINE_NO = #{lineNo,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=lineType and ''!=lineType">
+			and l.LINE_TYPE = #{lineType,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=clrCenterNo and ''!=clrCenterNo">
+			and c.LINE_NO in (select l.LINE_NO from LINE_TABLE l
+			where l.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			and l.line_type = #{lineType,jdbcType=INTEGER})
+		</if>
+		group by c.LINE_NO,c.THE_YEAR_MONTH)
+	</select>
+	<select id="qryMonthByPage" resultMap="ExtandMap" parameterType="map">
+		select t.* from (
+		select r.*,l1.LINE_NAME,ROWNUM rn from (
+		select c.LINE_NO,c.THE_YEAR_MONTH,sum(c.CUSTOMER_COUNT) CUSTOMER_COUNT
+		from LINE_WORK_TABLE c
+		where 1=1
+		<if test="null!=startMonth and ''!=startMonth ">
+			and c.THE_YEAR_MONTH &gt;= #{startMonth,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=endMonth and ''!=endMonth ">
+			and c.THE_YEAR_MONTH &lt;= #{endMonth,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=lineNo and ''!=lineNo">
+			and c.LINE_NO = #{lineNo,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=clrCenterNo and ''!=clrCenterNo">
+			and c.LINE_NO in (select l.LINE_NO from LINE_TABLE l
+			where l.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			and l.line_type = #{lineType,jdbcType=INTEGER})
+		</if>
+		group by c.LINE_NO,c.THE_YEAR_MONTH
+		order by c.THE_YEAR_MONTH,c.LINE_NO) r
+		left join LINE_TABLE l1 on l1.LINE_NO = r.LINE_NO where l1.LINE_TYPE = #{lineType,jdbcType = INTEGER}) t
+		where t.rn &gt;=#{startRow,jdbcType = INTEGER } and t.rn &lt; =#{endRow,jdbcType = INTEGER }
+	</select>
+	<select id="getNosWithYearMonthAndLineNos" parameterType="map" resultType="string">
+		select cl.LINE_WORK_ID
+		from LINE_WORK_TABLE cl
+		where cl.THE_YEAR_MONTH = #{theYearMonth,jdbcType = VARCHAR}
+		and cl.LINE_NO in
+		<foreach collection="lineNos" index="i" open="(" close=")" separator="," item="item">
+			#{item,jdbcType = VARCHAR}
+		</foreach>
+	</select>
+
+	<select id="qryTaskNoByLineNo" parameterType="map" resultType="string">
+		select distinct TASK_NO from TASK_LINE where LINE_WORK_ID in
+		<foreach collection="lineWorkIdList" index="i" open="(" close=")" separator="," item="item">
+			#{item,jdbcType = VARCHAR}
+		</foreach>
+	</select>
+
+	<select id="qryLineWorkId" parameterType="map" resultType="string">
+		select  LINE_WORK_ID from LINE_WORK_TABLE where LINE_NO = #{lineNo,jdbcType = VARCHAR}
+		and THE_YEAR_MONTH =#{theYearMonth,jdbcType = INTEGER}   AND THE_DAY = #{theDay,jdbcType = INTEGER}
+	</select>
+
+</mapper>

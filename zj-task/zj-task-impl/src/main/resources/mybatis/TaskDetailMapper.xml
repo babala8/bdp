@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.task.repository.TaskDetailMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.task.domain.TaskDetail">
+		<result column="ID" property="id" jdbcType="VARCHAR"/>
+		<result column="TASK_NO" property="taskNo" jdbcType="VARCHAR"/>
+		<result column="PRODUCT_NO" property="productNo" jdbcType="VARCHAR"/>
+		<result column="DIRECTION" property="direction" jdbcType="INTEGER"/>
+		<result column="AMOUNT" property="amount" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<resultMap id="ResultToExport" type="com.zjft.microservice.treasurybrain.task.domain.TaskDetailToExportDO"
+			   extends="BaseResultMap">
+		<result column="KEY_EVENT_DETAIL" property="keyEventDetail" jdbcType="VARCHAR"/>
+		<result column="LINE_MODE" property="addnotesMode" jdbcType="VARCHAR"/>
+		<result column="OP_NO1" property="opName1" jdbcType="VARCHAR"/>
+		<result column="addnotesName1" property="opName1" jdbcType="VARCHAR"/>
+		<result column="OP_NO2" property="opName2" jdbcType="VARCHAR"/>
+		<result column="addnotesName2" property="opName2" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="CustomerInfoMap" type="com.zjft.microservice.treasurybrain.task.dto.CustomerInfoDTO">
+		<result column="CUSTOMER_NO" jdbcType="VARCHAR" property="customerNo"/>
+		<result column="CUSTOMER_TYPE" jdbcType="INTEGER" property="customerType"/>
+		<result column="CUSTOMER_NAME" jdbcType="VARCHAR" property="customerName"/>
+		<result column="POSITION_X" jdbcType="VARCHAR" property="positionX"/>
+		<result column="POSITION_Y" jdbcType="VARCHAR" property="positionY"/>
+		<result column="STATUS" jdbcType="INTEGER" property="status"/>
+		<result column="ADDRESS" jdbcType="VARCHAR" property="address"/>
+		<result column="SORT_NO" property="sortNo" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<resultMap id="CustomerMap" type="com.zjft.microservice.treasurybrain.task.domain.CustomerNoList">
+		<result column="TASK_NO" jdbcType="VARCHAR" property="taskNo"/>
+		<result column="CUSTOMER_NO" jdbcType="VARCHAR" property="customerNo"/>
+		<result column="CUSTOMER_TYPE" jdbcType="VARCHAR" property="customerType"/>
+		<result column="SORT" jdbcType="VARCHAR" property="sort"/>
+		<result column="STATUS" jdbcType="VARCHAR" property="status"/>
+		<result column="NOTE" jdbcType="VARCHAR" property="note"/>
+		<result column="ADDRESS" jdbcType="VARCHAR" property="address"/>
+		<result column="ORG_NO" jdbcType="VARCHAR" property="orgNo"/>
+		<result column="NAME" jdbcType="VARCHAR" property="name"/>
+		<result column="ORG_NAME" jdbcType="VARCHAR" property="orgName"/>
+		<result column="ORG_ADDRESS" jdbcType="VARCHAR" property="orgAddress"/>
+		<result column="PLAN_ADDNOTES_AMT" jdbcType="DECIMAL" property="planAddnotesATM"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+    	ID, TASK_NO, PRODUCT_NO, DIRECTION, AMOUNT
+  	</sql>
+
+	<select id="getDetailList" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select t.ID,t.TASK_NO, t.PRODUCT_NO, t.DIRECTION, t.AMOUNT
+		from TASK_DETAIL_TABLE t
+		where t.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+
+  	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+			parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskDetail">
+		select
+		<include refid="Base_Column_List"/>
+		from TASK_DETAIL_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		and CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskDetail">
+		delete from TASK_DETAIL_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		  and CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+  	</delete>
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskDetail">
+		insert into TASK_DETAIL_TABLE (TASK_NO, CUSTOMER_NO, CUSTOMER_TYPE,
+		  SORT, ADDRESS, STATUS,
+		  NOTE)
+		values (#{taskNo,jdbcType=VARCHAR}, #{customerNo,jdbcType=VARCHAR}, #{customerType,jdbcType=DECIMAL},
+		  #{sort,jdbcType=DECIMAL}, #{address,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL},
+		  #{note,jdbcType=VARCHAR})
+  	</insert>
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskDetail">
+		insert into TASK_DETAIL_TABLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="taskNo != null">
+				TASK_NO,
+			</if>
+			<if test="customerNo != null">
+				CUSTOMER_NO,
+			</if>
+			<if test="customerType != null">
+				CUSTOMER_TYPE,
+			</if>
+			<if test="sort != null">
+				SORT,
+			</if>
+			<if test="address != null">
+				ADDRESS,
+			</if>
+			<if test="note != null">
+				NOTE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="taskNo != null">
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerNo != null">
+				#{customerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerType != null">
+				#{customerType,jdbcType=DECIMAL},
+			</if>
+			<if test="sort != null">
+				#{sort,jdbcType=DECIMAL},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null">
+				#{note,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<insert id="insertSelectiveByMap" parameterType="java.util.Map">
+		insert into TASK_DETAIL_TABLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id !=''">
+				ID,
+			</if>
+			<if test="taskNo != null and taskNo !=''">
+				TASK_NO,
+			</if>
+			<if test="productNo != null and productNo !=''">
+				PRODUCT_NO,
+			</if>
+			<if test="direction != null and direction !=''">
+				DIRECTION,
+			</if>
+			<if test="amount != null and amount !=''">
+				AMOUNT,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id !=''">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="taskNo != null and taskNo !=''">
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="productNo != null and productNo !=''">
+				#{productNo,jdbcType=VARCHAR},
+			</if>
+			<if test="direction != null and direction !=''">
+				#{direction,jdbcType=DECIMAL},
+			</if>
+			<if test="amount != null and amount !=''">
+				#{amount,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskDetail">
+		update TASK_DETAIL_TABLE
+		<set>
+			<if test="customerType != null">
+				CUSTOMER_TYPE = #{customerType,jdbcType=DECIMAL},
+			</if>
+			<if test="sort != null">
+				SORT = #{sort,jdbcType=DECIMAL},
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=DECIMAL},
+			</if>
+			<if test="note != null">
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		and CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskDetail">
+		update TASK_DETAIL_TABLE
+		set CUSTOMER_TYPE = #{customerType,jdbcType=DECIMAL},
+		  SORT = #{sort,jdbcType=DECIMAL},
+		  ADDRESS = #{address,jdbcType=VARCHAR},
+		  STATUS = #{status,jdbcType=DECIMAL},
+		  NOTE = #{note,jdbcType=VARCHAR}
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		  and CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+  	</update>
+
+
+	<update id="updateByTaskNo" parameterType="java.util.Map">
+		update TASK_DETAIL_TABLE
+		set STATUS = #{status,jdbcType=INTEGER}
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  	</update>
+
+	<update id="updateByPrimaryKeyMap" parameterType="java.util.Map">
+		update TASK_DETAIL_TABLE
+		<set>
+			<if test="customerType != null and customerType !=''">
+				CUSTOMER_TYPE = #{customerType,jdbcType=DECIMAL},
+			</if>
+			<if test="sort != null and sort !=''">
+				SORT = #{sort,jdbcType=DECIMAL},
+			</if>
+			<if test="address != null and address !=''">
+				ADDRESS = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null and status !=''">
+				STATUS = #{status,jdbcType=DECIMAL},
+			</if>
+			<if test="note != null and note !=''">
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		and CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+	</update>
+
+	<select id="getSortNoList" parameterType="java.lang.String" resultType="java.lang.Object">
+		select distinct(SORT)
+		from TASK_DETAIL_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		order by SORT
+  	</select>
+
+	<select id="selectDetailWithSortNo" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		t1.TASK_NO
+		,t1.CUSTOMER_NO
+		,t1.SORT
+		,t1.NOTE
+		,t2.PLAN_ADDNOTES_AMT as AMOUNT
+		,dbi.org_no ORG_NO
+		,sys_org.name ORG_NAME
+		,sys_org.address ADDRESS
+		,dtt.name DEV_TYPE_NAME
+		,dct.name DEV_CATALOG_NAME
+		,dvt.name DEV_VENDOR_NAME
+		,a.LINE_NAME
+		,t3.LINE_NO
+		from TASK_DETAIL_TABLE t1
+		left join dev_base_info dbi on t1.CUSTOMER_NO = dbi.no
+		left join sys_org on dbi.org_no = sys_org.no
+		left join dev_type_table dtt on dbi.dev_type = dtt.no
+		left join dev_catalog_table dct on dtt.dev_catalog = dct.no
+		left join dev_vendor_table dvt on dtt.dev_vendor = dvt.no
+		left join TASK_TABLE t3 on t1.TASK_NO = t3.TASK_NO
+		left join LINE_TABLE a on t3.LINE_NO = a.LINE_NO
+		LEFT JOIN ADDNOTES_PLAN_DETAIL t2
+		ON t1.CUSTOMER_NO = t2.DEV_NO and t3.ADDNOTES_PLAN_NO = t2.ADDNOTES_PLAN_NO
+		where t1.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		<choose>
+			<when test="addnotesSortNo != null">
+				AND SORT = #{addnotesSortNo,jdbcType=INTEGER}
+			</when>
+			<otherwise>
+				AND SORT is null
+			</otherwise>
+		</choose>
+		order by t1.CUSTOMER_NO
+	</select>
+
+	<!--	导出任务单没有部分数据，只能联表查询-->
+	<select id="getDetailToExportList" parameterType="java.lang.String" resultMap="ResultToExport">
+		select td.TASK_NO, td.PRODUCT_NO, db.ADDRESS, td.DIRECTION ,t.NOTE,ad.PLAN_ADDNOTES_AMT AMOUNT , ad.KEY_EVENT_DETAIL ,
+		ap.LINE_MODE , u1.NAME addnotesName1,u2.NAME addnotesName2,t.OP_NO1,t.OP_NO2,lwt.LINE_NO
+		from TASK_DETAIL_TABLE td
+		 left join TASK_TABLE t on t.TASK_NO = td.TASK_NO
+		 left join DEV_BASE_INFO db on db.NO = t.CUSTOMER_NO
+		 left join ADDNOTES_PLAN_DETAIL ad on ad.ADDNOTES_PLAN_NO = t.ADDNOTES_PLAN_NO and t.CUSTOMER_NO = ad.DEV_NO
+		 left join ADDNOTES_PLAN ap on ap.ADDNOTES_PLAN_NO = t.ADDNOTES_PLAN_NO
+		 left join sys_user u1 on u1.USERNAME = t.OP_NO1
+		 left join sys_user u2 on u2.USERNAME = t.OP_NO2
+		 left join TASK_LINE tl on t.TASK_NO = tl.TASK_NO
+		 left join LINE_WORK_TABLE lwt on lwt.LINE_WORK_ID = tl.LINE_WORK_ID
+		where t.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+
+  	</select>
+
+	<select id="qryByTaskNo" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from TASK_DETAIL_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByTaskNo" parameterType="java.lang.String">
+		delete from TASK_DETAIL_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  	</delete>
+
+	<select id="selectCustomerCount" resultType="integer" parameterType="java.lang.String">
+		select count(1) from TASK_DETAIL_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+    </select>
+
+	<select id="selectByTaskNo" resultMap="BaseResultMap" parameterType="String">
+		select
+		<include refid="Base_Column_List"/>
+		from TASK_DETAIL_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+
+	<select id="qryCustomerInfo" parameterType="java.lang.String" resultMap="CustomerInfoMap">
+		select tt.* ,ct.NAME as CUSTOMER_NAME,dbi.X as POSITION_X,dbi.Y as POSITION_Y,tt.STATUS as STATUS,dbi.ADDRESS as ADDRESS,apd.SORT_NO from
+			(select t.CUSTOMER_NO, t.CUSTOMER_TYPE, t.STATUS
+			from TASK_DETAIL_TABLE t
+			where t.TASK_NO = #{taskNo,jdbcType=VARCHAR})tt
+		left join DEV_BASE_INFO dbi on tt.CUSTOMER_NO = dbi.NO
+		left join PRODUCT_CUSTOMER_TYPE ct on tt.CUSTOMER_TYPE = ct.CUSTOMER_TYPE
+		left join TASK_TABLE tab on tab.TASK_NO= #{taskNo,jdbcType=VARCHAR}
+		left join ADDNOTES_PLAN_DETAIL apd on tt.CUSTOMER_NO=apd.DEV_NO and tab.ADDNOTES_PLAN_NO=apd.ADDNOTES_PLAN_NO
+		order by SORT_NO
+	</select>
+
+	<select id="selectCustomerNoList" parameterType="java.util.Map" resultMap="CustomerMap">
+		select t.TASK_NO,t.CUSTOMER_NO,t.CUSTOMER_TYPE,t.SORT,t.NOTE, t.STATUS ,tt.ADDRESS  ,tt.ORG_NO ,s.name,
+		t2.PLAN_ADDNOTES_AMT,ss.NAME ORG_NAME,ss.ADDRESS ORG_ADDRESS , p.NAME as customerTypeName,
+		c.customer_short_name as customerName
+		from TASK_DETAIL_TABLE t
+                left join DEV_BASE_INFO  tt on tt.NO = t.CUSTOMER_NO
+                left join SYS_ORG s on tt.ORG_NO = s.No
+                 left join SYS_ORG ss
+                 on ss.NO = t.CUSTOMER_NO
+                left join TASK_TABLE d on t.TASK_NO=d.TASK_NO
+                left join PRODUCT_CUSTOMER_TYPE p on p.CUSTOMER_TYPE = t.CUSTOMER_TYPE
+                left join CALL_CUSTOMER_TABLE c on c.customer_no  = t.customer_no
+				left join ADDNOTES_PLAN_DETAIL t2 on t.CUSTOMER_NO=t2.DEV_NO and d.ADDNOTES_PLAN_NO = t2.ADDNOTES_PLAN_NO
+		where t.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<!--	查询任务单下未配钞设备数-->
+	<select id="qryDevNumToLoad" parameterType="String" resultType="int">
+		select count(1)
+		from TASK_DETAIL_TABLE tdt
+		where not exists(select * from TASK_ENTITY_TABLE tet
+			where tdt.TASK_NO = tet.TASK_NO and tet.CUSTOMER_NO=tdt.CUSTOMER_NO)
+		and tdt.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectCount" resultType="integer" parameterType="java.util.Map">
+		select count(1) from TASK_DETAIL_TABLE
+		where 1=1
+		<if test="taskNo != null and taskNo !=''">
+			AND TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status !=''">
+			AND STATUS = #{status,jdbcType=DECIMAL}
+		</if>
+	</select>
+
+
+	<select id="selectSumAmount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select  sum(AMOUNT) from TASK_DETAIL_TABLE where TASK_NO =  #{taskNo,jdbcType=VARCHAR} and DIRECTION = #{direction,jdbcType=VARCHAR}
+
+	</select>
+</mapper>

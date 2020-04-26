@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.business.repository.AddnotesPlanDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlanDetail" >
+    <id column="ADDNOTES_PLAN_NO" property="addnotesPlanNo" jdbcType="VARCHAR" />
+    <id column="DEV_NO" property="devNo" jdbcType="VARCHAR" />
+    <result column="KEY_EVENT" property="keyEvent" jdbcType="VARCHAR" />
+    <result column="CHS_EST_SCORE" property="chsEstScore" jdbcType="DECIMAL" />
+    <result column="CHS_AUX_SCORE" property="chsAuxScore" jdbcType="DECIMAL" />
+    <result column="SORT_NO" property="sortNo" jdbcType="INTEGER" />
+    <result column="CASH_REQ_AMT" property="cashReqAmt" jdbcType="INTEGER" />
+    <result column="PLAN_PREDICT_AMT" property="planPredictAmt" jdbcType="INTEGER" />
+    <result column="PLAN_ADDNOTES_AMT" property="planAddnotesAmt" jdbcType="INTEGER" />
+    <result column="KEY_EVENT_DETAIL" property="keyEventDetail" jdbcType="VARCHAR" />
+    <result column="LINE_NO" property="lineNo" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="NOTE" property="note" jdbcType="VARCHAR" />
+    <result column="USEDAYS" property="useDays" jdbcType="INTEGER" />
+  </resultMap>
+
+  <resultMap  id="DetailMap" type="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlanDetail" extends="BaseResultMap">
+	  <result column="DEV_CATALOG_NAME" property="devCatalogName" jdbcType="VARCHAR" />
+	  <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+	  <result column="DEV_LINE_NAME" property="devLineName" jdbcType="VARCHAR" />
+	  <result column="ORG_NAME" property="orgName" jdbcType="VARCHAR" />
+	  <result column="DEV_STATUS_DEV_NO" property="devStatusDevNo" jdbcType="VARCHAR" />
+	  <result column="AVAILABLE_AMT" property="availableAmt" jdbcType="INTEGER" />
+	  <result column="LAST_ADDNOTE_DATE" property="lastAddnoteDate" jdbcType="VARCHAR" />
+	  <result column="ADD_CLR_PERIOD" property="addClrPeriod" jdbcType="NUMERIC" />
+	  <result column="DEV_CATALOG_TABLE_NO" property="devCatalogTableNo" jdbcType="NUMERIC" />
+	  <result column="CYCLE_FLAG" property="cycleFlag" jdbcType="NUMERIC" />
+	  <result column="DEV_STANTARD_SIZE" property="devStantardSize" jdbcType="NUMERIC" />
+	  <result column="SYS_ORG_NO" property="sysOrgNo" jdbcType="VARCHAR" />
+	  <result column="TASK_NO" property="taskNo" jdbcType="VARCHAR" />
+	  <!--<association property="devBaseInfo" column="DEV_NO" javaType="com.zjft.microservice.treasurybrain.common.domain.DevBaseInfo" select="com.zjft.microservice.treasurybrain.channelcenter.repository.DevBaseInfoMapper.selectDetailByPrimaryKey">-->
+  <!--</association>-->
+  	<!--<association property="addnoteLine" column="LINE_NO" javaType="com.zjft.microservice.treasurybrain.addnotesplan.domain.AddnoteLine" select="com.zjft.microservice.treasurybrain.addnotesplan.repository.AddnoteLineMapper.selectByPrimaryKey">
+  	</association>-->
+  	<!--<association property="devStatusTable" column="DEV_NO" javaType="com.zjft.microservice.treasurybrain.common.domain.DevStatusTable" select="com.zjft.microservice.treasurybrain.channelcenter.repository.DevStatusTableMapper.selectByPrimaryKey">-->
+  	<!--</association>-->
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    ADDNOTES_PLAN_NO, DEV_NO, KEY_EVENT, CHS_EST_SCORE, CHS_AUX_SCORE, SORT_NO, CASH_REQ_AMT, 
+    PLAN_PREDICT_AMT, PLAN_ADDNOTES_AMT, KEY_EVENT_DETAIL, LINE_NO, STATUS, NOTE, USEDAYS
+  </sql>
+
+  <sql id="Base_Column_List_DEV" >
+    ADDNOTES_PLAN_NO, DEV_NO, KEY_EVENT, CHS_EST_SCORE, CHS_AUX_SCORE, SORT_NO, CASH_REQ_AMT,
+    PLAN_PREDICT_AMT, PLAN_ADDNOTES_AMT, KEY_EVENT_DETAIL, LINE_NO, a.STATUS, NOTE
+  </sql>
+
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlanDetailKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from addnotes_plan_detail
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+      and DEV_NO = #{devNo,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlanDetailKey" >
+    delete from addnotes_plan_detail
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+      and DEV_NO = #{devNo,jdbcType=VARCHAR}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlanDetail" >
+    insert into addnotes_plan_detail (ADDNOTES_PLAN_NO, DEV_NO, KEY_EVENT, 
+      CHS_EST_SCORE, CHS_AUX_SCORE, SORT_NO, 
+      CASH_REQ_AMT, PLAN_PREDICT_AMT, PLAN_ADDNOTES_AMT, 
+      KEY_EVENT_DETAIL, LINE_NO, STATUS, 
+      NOTE,USEDAYS)
+    values (#{addnotesPlanNo,jdbcType=VARCHAR}, #{devNo,jdbcType=VARCHAR}, #{keyEvent,jdbcType=VARCHAR}, 
+      #{chsEstScore,jdbcType=DECIMAL}, #{chsAuxScore,jdbcType=DECIMAL}, #{sortNo,jdbcType=INTEGER}, 
+      #{cashReqAmt,jdbcType=INTEGER}, #{planPredictAmt,jdbcType=INTEGER}, #{planAddnotesAmt,jdbcType=INTEGER}, 
+      #{keyEventDetail,jdbcType=VARCHAR}, #{lineNo,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{note,jdbcType=VARCHAR}, #{useDays,jdbcType=INTEGER})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlanDetail" >
+    insert into addnotes_plan_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="addnotesPlanNo != null" >
+        ADDNOTES_PLAN_NO,
+      </if>
+      <if test="devNo != null" >
+        DEV_NO,
+      </if>
+      <if test="keyEvent != null" >
+        KEY_EVENT,
+      </if>
+      <if test="chsEstScore != null" >
+        CHS_EST_SCORE,
+      </if>
+      <if test="chsAuxScore != null" >
+        CHS_AUX_SCORE,
+      </if>
+      <if test="sortNo != null" >
+        SORT_NO,
+      </if>
+      <if test="cashReqAmt != null" >
+        CASH_REQ_AMT,
+      </if>
+      <if test="planPredictAmt != null" >
+        PLAN_PREDICT_AMT,
+      </if>
+      <if test="planAddnotesAmt != null" >
+        PLAN_ADDNOTES_AMT,
+      </if>
+      <if test="keyEventDetail != null" >
+        KEY_EVENT_DETAIL,
+      </if>
+      <if test="lineNo != null" >
+        LINE_NO,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="note != null" >
+        NOTE,
+      </if>
+      <if test="useDays != null" >
+        USEDAYS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="addnotesPlanNo != null" >
+        #{addnotesPlanNo,jdbcType=VARCHAR},
+      </if>
+      <if test="devNo != null" >
+        #{devNo,jdbcType=VARCHAR},
+      </if>
+      <if test="keyEvent != null" >
+        #{keyEvent,jdbcType=VARCHAR},
+      </if>
+      <if test="chsEstScore != null" >
+        #{chsEstScore,jdbcType=DECIMAL},
+      </if>
+      <if test="chsAuxScore != null" >
+        #{chsAuxScore,jdbcType=DECIMAL},
+      </if>
+      <if test="sortNo != null" >
+        #{sortNo,jdbcType=INTEGER},
+      </if>
+      <if test="cashReqAmt != null" >
+        #{cashReqAmt,jdbcType=INTEGER},
+      </if>
+      <if test="planPredictAmt != null" >
+        #{planPredictAmt,jdbcType=INTEGER},
+      </if>
+      <if test="planAddnotesAmt != null" >
+        #{planAddnotesAmt,jdbcType=INTEGER},
+      </if>
+      <if test="keyEventDetail != null" >
+        #{keyEventDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="lineNo != null" >
+        #{lineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="useDays != null" >
+        #{useDays,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlanDetail" >
+    update addnotes_plan_detail
+    <set >
+      <if test="keyEvent != null" >
+        KEY_EVENT = #{keyEvent,jdbcType=VARCHAR},
+      </if>
+      <if test="chsEstScore != null" >
+        CHS_EST_SCORE = #{chsEstScore,jdbcType=DECIMAL},
+      </if>
+      <if test="chsAuxScore != null" >
+        CHS_AUX_SCORE = #{chsAuxScore,jdbcType=DECIMAL},
+      </if>
+      <if test="sortNo != null" >
+        SORT_NO = #{sortNo,jdbcType=INTEGER},
+      </if>
+      <if test="cashReqAmt != null" >
+        CASH_REQ_AMT = #{cashReqAmt,jdbcType=INTEGER},
+      </if>
+      <if test="planPredictAmt != null" >
+        PLAN_PREDICT_AMT = #{planPredictAmt,jdbcType=INTEGER},
+      </if>
+      <if test="planAddnotesAmt != null" >
+        PLAN_ADDNOTES_AMT = #{planAddnotesAmt,jdbcType=INTEGER},
+      </if>
+      <if test="keyEventDetail != null" >
+        KEY_EVENT_DETAIL = #{keyEventDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="lineNo != null" >
+        LINE_NO = #{lineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="note != null" >
+        NOTE = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="useDays != null" >
+        USEDAYS = #{useDays,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+      and DEV_NO = #{devNo,jdbcType=VARCHAR}
+  </update>
+	<update id="updateByMapSelective" parameterType="java.util.Map" >
+		update addnotes_plan_detail
+		<set >
+			<if test="keyEvent != null" >
+				KEY_EVENT = #{keyEvent,jdbcType=VARCHAR},
+			</if>
+			<if test="chsEstScore != null" >
+				CHS_EST_SCORE = #{chsEstScore,jdbcType=DECIMAL},
+			</if>
+			<if test="chsAuxScore != null" >
+				CHS_AUX_SCORE = #{chsAuxScore,jdbcType=DECIMAL},
+			</if>
+			<if test="sortNo != null" >
+				SORT_NO = #{sortNo,jdbcType=INTEGER},
+			</if>
+			<if test="cashReqAmt != null" >
+				CASH_REQ_AMT = #{cashReqAmt,jdbcType=INTEGER},
+			</if>
+			<if test="planPredictAmt != null" >
+				PLAN_PREDICT_AMT = #{planPredictAmt,jdbcType=INTEGER},
+			</if>
+			<if test="planAddnotesAmt != null" >
+				PLAN_ADDNOTES_AMT = #{planAddnotesAmt,jdbcType=INTEGER},
+			</if>
+			<if test="keyEventDetail != null" >
+				KEY_EVENT_DETAIL = #{keyEventDetail,jdbcType=VARCHAR},
+			</if>
+			<if test="lineNo != null" >
+				LINE_NO = #{lineNo,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null" >
+				STATUS = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="note != null" >
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+			<if test="useDays != null" >
+				USEDAYS = #{useDays,jdbcType=INTEGER},
+			</if>
+		</set>
+		where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+		and DEV_NO = #{devNo,jdbcType=VARCHAR}
+	</update>
+
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlanDetail" >
+    update addnotes_plan_detail
+    set KEY_EVENT = #{keyEvent,jdbcType=VARCHAR},
+      CHS_EST_SCORE = #{chsEstScore,jdbcType=DECIMAL},
+      CHS_AUX_SCORE = #{chsAuxScore,jdbcType=DECIMAL},
+      SORT_NO = #{sortNo,jdbcType=INTEGER},
+      CASH_REQ_AMT = #{cashReqAmt,jdbcType=INTEGER},
+      PLAN_PREDICT_AMT = #{planPredictAmt,jdbcType=INTEGER},
+      PLAN_ADDNOTES_AMT = #{planAddnotesAmt,jdbcType=INTEGER},
+      KEY_EVENT_DETAIL = #{keyEventDetail,jdbcType=VARCHAR},
+      LINE_NO = #{lineNo,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=INTEGER},
+      NOTE = #{note,jdbcType=VARCHAR},
+      USEDAYS = #{useDays,jdbcType=INTEGER}
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+      and DEV_NO = #{devNo,jdbcType=VARCHAR}
+  </update>
+
+
+  <delete id="deleteByAddnotesPlanNo" parameterType="java.lang.String" >
+    delete from addnotes_plan_detail
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+  </delete>
+
+
+  <select id="qryAddNotesPlanDetailByNo" resultMap="DetailMap" parameterType="java.lang.String">
+   select TASK_NO, o.ADDNOTES_PLAN_NO, o.DEV_NO, KEY_EVENT, CHS_EST_SCORE, CHS_AUX_SCORE, SORT_NO, CASH_REQ_AMT, PLAN_PREDICT_AMT, PLAN_ADDNOTES_AMT, KEY_EVENT_DETAIL, o.LINE_NO, o.STATUS, o.NOTE, USEDAYS, DEV_CATALOG_TABLE.NAME as DEV_CATALOG_NAME, DEV_CATALOG_TABLE.NO AS DEV_CATALOG_TABLE_NO, DEV_BASE_INFO.ADDRESS, LINE_TABLE.LINE_NAME AS DEV_LINE_NAME, DEV_BASE_INFO.ADD_CLR_PERIOD,DEV_BASE_INFO.CYCLE_FLAG,DEV_BASE_INFO.DEV_STANTARD_SIZE, SYS_ORG.NAME AS ORG_NAME,SYS_ORG.NO AS SYS_ORG_NO,DEV_STATUS_TABLE.AVAILABLE_AMT, DEV_STATUS_TABLE.LAST_ADDNOTE_DATE,DEV_STATUS_TABLE.DEV_NO AS DEV_STATUS_DEV_NO
+	 FROM addnotes_plan_detail o
+	 LEFT JOIN DEV_BASE_INFO
+	 ON o.DEV_NO= DEV_BASE_INFO.NO
+	 LEFT JOIN DEV_TYPE_TABLE
+	 ON DEV_BASE_INFO.DEV_TYPE = DEV_TYPE_TABLE.NO
+	 LEFT JOIN DEV_CATALOG_TABLE
+	 ON DEV_TYPE_TABLE.DEV_CATALOG = DEV_CATALOG_TABLE.NO
+	 LEFT JOIN SYS_ORG
+	 ON DEV_BASE_INFO.ORG_NO = SYS_ORG.NO
+	 LEFT JOIN DEV_STATUS_TABLE
+	 ON o.DEV_NO = DEV_STATUS_TABLE.DEV_NO
+	 LEFT JOIN LINE_TABLE
+	 ON o.LINE_NO = LINE_TABLE.LINE_NO
+	 LEFT JOIN TASK_TABLE
+	 ON o.ADDNOTES_PLAN_NO = TASK_TABLE.ADDNOTES_PLAN_NO
+    where o.ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+    order by o.LINE_NO, o.SORT_NO
+  </select>
+
+
+   <select id="getDayAvgAmtList" resultType="java.util.Map" >
+  	select 
+  	  a.DEV_NO as "devNo" ,ceil(AVG(a.AVERAGE_CASH_AMOUNT))as "avgAmount"
+  	from addnotes_plan_detail d ,addclear_notes_table a
+  	where 1=1
+  	     and d.DEV_NO = a.DEV_NO 
+  	     and d.ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+  	     and a.AVERAGE_CASH_AMOUNT != 0
+  	     <if test="startDate != null and startDate != ''">
+			and a.ADDNOTES_OPERATE_DATE &gt;= #{startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			and a.ADDNOTES_OPERATE_DATE &lt;= #{endDate,jdbcType=VARCHAR}
+		</if>
+	group by d.DEV_NO	
+  </select>
+
+
+  <select id="getNetpointNum" resultType="int" parameterType="java.lang.String" >
+    select count(distinct d.ORG_NO)
+    from addnotes_plan_detail a, dev_base_info d
+    where a.ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+    	and a.DEV_NO = d.no
+    	order by d.ORG_NO
+  </select>
+
+
+  <select id="getNetPointsNotGroup" resultType="java.util.Map" parameterType="java.lang.String" >
+    select distinct d.no as "devNo", o.no as "orgNo", o.name as "orgName", o.address as "address", o.x as "x", o.y as "y", a.sort_no as "sortNo" , a.KEY_EVENT_DETAIL as "keyEventDetail",a.PLAN_ADDNOTES_AMT as "planAddnotesAmt"
+    from addnotes_plan_detail a, dev_base_info d, SYS_ORG o
+    where a.dev_no = d.no
+        and d.org_no = o.no
+        and a.ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+        and a.line_no is null
+    	order by a.sort_no, o.no, d.no
+  </select>
+
+
+  <update id="deleteGroup" parameterType="java.lang.String" >
+    update addnotes_plan_detail
+    set SORT_NO = null,
+      LINE_NO = null
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+  </update>
+
+  
+  <select id="getNetpointList" resultType="java.lang.String" parameterType="java.util.Map" >
+    select distinct d.ORG_NO
+    from addnotes_plan_detail a, dev_base_info d
+    where a.ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+    	<if test="lineNo != null and lineNo != ''">
+			and a.LINE_NO = #{lineNo,jdbcType=VARCHAR}
+		</if>
+    	and a.DEV_NO = d.no
+    	order by d.ORG_NO
+  </select>
+
+  <select id="getDevPointList" resultType="java.lang.String" parameterType="java.util.Map" >
+	 select distinct a.DEV_NO
+	 from addnotes_plan_detail a
+	 where a.ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+	  <if test="lineNo != null and lineNo != ''">
+		and a.LINE_NO = #{lineNo,jdbcType=VARCHAR}
+	 </if>
+	 order by a.DEV_NO
+  </select>
+  
+  <select id="qryDetailByNetPoint" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from addnotes_plan_detail
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+      and DEV_NO in (
+      	  select no 
+      	  from DEV_BASE_INFO
+      	  where org_no in
+      		 <foreach item="item" index="index" collection="netpointNos" open="(" separator="," close=")">  
+               #{item}
+             </foreach>
+          )
+      order by DEV_NO
+  </select>
+
+  <select id="qryDetailByDevPoint" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		select
+		<include refid="Base_Column_List" />
+		from addnotes_plan_detail
+		where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+		and DEV_NO in
+			<foreach item="item" index="index" collection="netpointNos" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		order by DEV_NO
+  </select>
+
+  <update id="updateSortNoNull" parameterType="java.util.Map" >
+    update addnotes_plan_detail
+    set SORT_NO = null
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+    and LINE_NO = #{lineNo,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateSortNoByNetPoint" parameterType="java.util.Map" >
+    update addnotes_plan_detail
+    set SORT_NO = #{sortNo,jdbcType=INTEGER}
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+    and LINE_NO = #{lineNo,jdbcType=VARCHAR}
+    and DEV_NO in(
+    select distinct no from dev_base_info
+    where org_no = #{pointNo,jdbcType=VARCHAR}
+    )
+  </update>
+
+  <update id="updateSortNoByDevNo" parameterType="java.util.Map" >
+    update addnotes_plan_detail
+    set SORT_NO = #{sortNo,jdbcType=INTEGER}
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+    and LINE_NO = #{lineNo,jdbcType=VARCHAR}
+    and DEV_NO = #{pointNo,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="getNetPointsWithGroup" resultType="java.util.Map" parameterType="java.util.Map" >
+    select distinct d.no as "devNo", o.no as "orgNo", o.name as "orgName", o.address as "address", o.x as "x", o.y as "y", a.sort_no as "sortNo" , a.KEY_EVENT_DETAIL as "keyEventDetail",a.PLAN_ADDNOTES_AMT as "planAddnotesAmt"
+    from addnotes_plan_detail a, dev_base_info d, SYS_ORG o
+    where a.dev_no = d.no
+        and d.org_no = o.no
+        and a.ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+        and a.line_no = #{lineNo,jdbcType=VARCHAR}
+    	order by a.sort_no, o.no, d.no
+  </select>
+  
+  <update id="updateByGroupNo" parameterType="java.util.Map" >
+    update addnotes_plan_detail
+    set SORT_NO = null,
+      LINE_NO = null
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+    and LINE_NO = #{lineNo,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateSortByGroupNo" parameterType="java.util.Map" >
+    update addnotes_plan_detail
+    set SORT_NO = null
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+    and LINE_NO = #{lineNo,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="qryDetailByNetPointGroup" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List_DEV" />
+    from addnotes_plan_detail a, dev_base_info d
+    where a.ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+      and a.dev_no = d.no
+      and (LINE_NO is null or LINE_NO = #{lineNo,jdbcType=VARCHAR})
+      and d.org_no in
+      	 <foreach item="item" index="index" collection="netpointNos" open="(" separator="," close=")">  
+            #{item}
+         </foreach>
+  </select>
+
+	<select id="qryDetailByDevPointGroup" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		select
+		<include refid="Base_Column_List_DEV" />
+		from addnotes_plan_detail a
+		where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+		and (LINE_NO is null or LINE_NO = #{lineNo,jdbcType=VARCHAR})
+		and a.DEV_NO in
+		<foreach item="item" index="index" collection="netpointNos" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+  
+  <select id="getNetPointsOrderBySortNo" resultType="java.util.Map" parameterType="java.util.Map" >
+    select distinct d.org_no as "orgNo", a.sort_no as "sortNo"
+    from addnotes_plan_detail a, dev_base_info d
+    where a.dev_no = d.no
+        and a.ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+        and a.line_no = #{lineNo,jdbcType=VARCHAR}
+    	order by a.sort_no
+  </select>
+  
+  <select id="getGroupNos" resultType="java.lang.String" parameterType="java.lang.String" >
+    select distinct(LINE_NO) from ADDNOTES_PLAN_DETAIL 
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+        and LINE_NO is not null
+  </select>
+  
+  <select id="selectByLineNo" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from addnotes_plan_detail
+    where ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+      and LINE_NO = #{lineNo,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getPlanGroupNetpoints" resultType="java.util.Map" parameterType="java.util.Map" >
+    select distinct a.sort_no as "sortNo", o.no as "orgNo", o.name as "orgName", o.x as "x", o.y as "y",a.DEV_NO as "devNo"
+    from addnotes_plan_detail a, dev_base_info d, SYS_ORG o
+    where a.dev_no = d.no
+        and d.org_no = o.no
+        and a.ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+        and a.line_no = #{groupNo,jdbcType=VARCHAR}
+    	order by a.sort_no, o.no
+  </select>
+
+
+  <select id="getLineMsgList" resultType="java.util.Map" parameterType="java.util.Map" >
+    select d.ADDNOTES_LINE as "lineNo" ,a.dev_NO as "devNo" ,d.ORG_NO as "orgNo"
+    from addnotes_plan_detail a, dev_base_info d
+    where a.ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+    	<if test="lineNo != null and lineNo != ''">
+			and a.LINE_NO = #{lineNo,jdbcType=VARCHAR}
+		</if>
+    	and a.DEV_NO = d.no
+    	order by d.ORG_NO
+  </select>
+
+	<select id="getDevCountEachGroup" parameterType="java.lang.String" resultType="java.util.Map">
+
+			select t.line_no as lineNo, count(1) as devNum
+			from ADDNOTES_PLAN_DETAIL t
+			where t.addnotes_plan_no=#{addnotesPlanNo,jdbcType=VARCHAR}
+			group by t.line_no
+	</select>
+
+	<select id="getNetCountInGroup" parameterType="com.zjft.microservice.treasurybrain.business.domain.AddnotesPlanDetail" resultType="int">
+		select count(db.org_no) as netNum
+  		from ADDNOTES_PLAN_DETAIL t, dev_base_info db
+ 		where db.no = t.dev_no
+   			and t.addnotes_plan_no = #{addnotesPlanNo,jdbcType=VARCHAR}
+   			and t.line_no = #{lineNo,jdbcType=VARCHAR}
+ 		group by t.line_no
+	</select>
+
+	<select id="getNetCountInGroupByMap" parameterType="java.util.Map" resultType="int">
+		select count(db.org_no) as netNum
+  		from ADDNOTES_PLAN_DETAIL t, dev_base_info db
+ 		where db.no = t.dev_no
+   			and t.addnotes_plan_no = #{addnotesPlanNo,jdbcType=VARCHAR}
+   			and t.line_no = #{lineNo,jdbcType=VARCHAR}
+ 		group by t.line_no
+	</select>
+
+	<select id="selectSumAddnoteAmount" parameterType="String" resultType="double">
+		select NVL(sum(PLAN_ADDNOTES_AMT) ,0) from ADDNOTES_PLAN_DETAIL where ADDNOTES_PLAN_NO=#{addnotesPlanNo,jdbcType=VARCHAR}
+	</select>
+  
+</mapper>

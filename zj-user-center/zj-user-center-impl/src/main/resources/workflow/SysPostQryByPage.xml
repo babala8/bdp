@@ -1,0 +1,17 @@
+<zj-orchestration id="qryPostInfoBypage" name="分页查询岗位信息"
+                  requestObject="java.util.HashMap"
+                  returnObject="com.zjft.microservice.treasurybrain.common.dto.PageDTO"
+                  tempObject="java.lang.String"
+                  transaction="@Transactional(rollbackFor = Exception.class)">
+    <zj-component id="start" type="start"
+                  handler="" next="1">
+    </zj-component>
+
+    <zj-component id="1" type="activity"
+                  handler="com.zjft.microservice.treasurybrain.usercenter.component.SysPostComponent.qryPostByPage" next="">
+
+        <exit path="ok" next="end"/>
+        <exit path="fail" next="end"/>
+    </zj-component>
+
+</zj-orchestration>

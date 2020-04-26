@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.usercenter.repository.PostSchedulePlanMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.usercenter.po.PostSchedulePlanPO" >
+    <id column="PLAN_NO" property="planNo" jdbcType="VARCHAR" />
+    <id column="OP_NO" property="opNo" jdbcType="VARCHAR" />
+    <id column="PLAN_DATE" property="planDate" jdbcType="VARCHAR" />
+    <id column="CLASSES_NO" property="classesNo" jdbcType="VARCHAR" />
+    <id column="SCHEDULE_MONTH" property="scheduleMonth" jdbcType="VARCHAR" />
+  </resultMap>
+	<resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.usercenter.domain.PostSchedulePlanDO" extends="BaseResultMap">
+		<id column="CLASSES_NAME" property="classesName" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="OpMap" type="com.zjft.microservice.treasurybrain.usercenter.domain.PostScheduleMouldOpDO">
+		<id column="OP_NAME" property="opName" jdbcType="VARCHAR" />
+		<id column="OP_NO" property="opNo" jdbcType="VARCHAR"/>
+	</resultMap>
+  <sql id="Base_Column_List" >
+    PLAN_NO, OP_NO, PLAN_DATE, CLASSES_NO, SCHEDULE_MONTH
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.usercenter.po.PostSchedulePlanPO" >
+    select 
+    <include refid="Base_Column_List" />
+    from POST_SCHEDULE_PLAN_TABLE
+    where PLAN_NO = #{planNo,jdbcType=VARCHAR}
+      and OP_NO = #{opNo,jdbcType=VARCHAR}
+      and PLAN_DATE = #{planDate,jdbcType=VARCHAR}
+      and CLASSES_NO = #{classesNo,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPlanNo" parameterType="java.lang.String">
+    delete from POST_SCHEDULE_PLAN_TABLE
+    where PLAN_NO = #{planNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.usercenter.po.PostSchedulePlanPO" >
+    insert into POST_SCHEDULE_PLAN_TABLE (PLAN_NO, OP_NO, PLAN_DATE, 
+      CLASSES_NO, SCHEDULE_MONTH)
+    values (#{planNo,jdbcType=VARCHAR}, #{opNo,jdbcType=VARCHAR}, #{planDate,jdbcType=VARCHAR}, 
+      #{classesNo,jdbcType=VARCHAR}, #{scheduleMonth,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.usercenter.po.PostSchedulePlanPO" >
+    insert into POST_SCHEDULE_PLAN_TABLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="planNo != null" >
+        PLAN_NO,
+      </if>
+      <if test="opNo != null" >
+        OP_NO,
+      </if>
+      <if test="planDate != null" >
+        PLAN_DATE,
+      </if>
+      <if test="classesNo != null" >
+        CLASSES_NO,
+      </if>
+      <if test="scheduleMonth != null" >
+        SCHEDULE_MONTH,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="planNo != null" >
+        #{planNo,jdbcType=VARCHAR},
+      </if>
+      <if test="opNo != null" >
+        #{opNo,jdbcType=VARCHAR},
+      </if>
+      <if test="planDate != null" >
+        #{planDate,jdbcType=VARCHAR},
+      </if>
+      <if test="classesNo != null" >
+        #{classesNo,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduleMonth != null" >
+        #{scheduleMonth,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPlanNo" parameterType="com.zjft.microservice.treasurybrain.usercenter.po.PostSchedulePlanPO" >
+    update POST_SCHEDULE_PLAN_TABLE
+    <set>
+      <if test="scheduleMonth != null and scheduleMonth!=''" >
+        SCHEDULE_MONTH = #{scheduleMonth,jdbcType=VARCHAR},
+      </if>
+		<if test="opNo != null and opNo!=''" >
+			OP_NO = #{opNo,jdbcType=VARCHAR},
+		</if>
+		<if test="planDate != null and planDate!=''" >
+			PLAN_DATE = #{planDate,jdbcType=VARCHAR},
+		</if>
+		<if test="classesNo != null and classesNo!=''" >
+			CLASSES_NO = #{classesNo,jdbcType=VARCHAR},
+		</if>
+    </set>
+    where PLAN_NO = #{planNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.usercenter.po.PostSchedulePlanPO" >
+    update POST_SCHEDULE_PLAN_TABLE
+    set SCHEDULE_MONTH = #{scheduleMonth,jdbcType=VARCHAR}
+    where PLAN_NO = #{planNo,jdbcType=VARCHAR}
+      and OP_NO = #{opNo,jdbcType=VARCHAR}
+      and PLAN_DATE = #{planDate,jdbcType=VARCHAR}
+      and CLASSES_NO = #{classesNo,jdbcType=VARCHAR}
+  </update>
+
+	<select id="qryPlanInfoByNo" resultMap="DetailMap" parameterType="com.zjft.microservice.treasurybrain.usercenter.domain.PostSchedulePlanDO" >
+		select
+		a.plan_date,a.classes_no,b.classess_name as classes_name
+		from POST_SCHEDULE_PLAN_TABLE a
+		left join POST_CLASSESS_TABLE b on a.classes_no=b.classes_no
+		where PLAN_NO = #{planNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryOpDetail" resultMap="OpMap">
+		select a.OP_NO,b.NAME as OP_NAME from POST_SCHEDULE_PLAN_TABLE a left join OP_TABLE b on a.OP_NO=b.NO
+        where CLASSES_NO= #{classesNo,jdbcType=VARCHAR} and PLAN_DATE= #{planDate,jdbcType=VARCHAR} and SCHEDULE_MONTH = #{scheduleMonth,jdbcType=VARCHAR}
+	</select>
+</mapper>

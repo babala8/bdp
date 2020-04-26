@@ -1,0 +1,11 @@
+project("zj-storage-impl") {
+    dependencies {
+        compile project(":zj-storage:zj-storage-api")
+        compile project(":zj-push-server:zj-push-server-api")
+        compile project(":zj-product-center:zj-product-center-api")
+        compile project(":zj-channel-center:zj-channel-center-api")
+        compile project(":zj-push-server:zj-push-server-api")
+        compile project(":zj-task:zj-task-api")
+        compile project(":zj-line-center:zj-line-center-api")
+    }
+}

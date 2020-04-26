@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.storage.repository.GoodManageMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.storage.domain.StorageEntityDO">
+		<id column="TASK_NO" property="taskNo" jdbcType="VARCHAR"/>
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR"/>
+		<result column="CENTER_NAME" property="clrCenterName" jdbcType="VARCHAR"/>
+		<result column="SHELF_NO" property="shelfNo" jdbcType="VARCHAR"/>
+		<result column="ADDNOTES_DATE" property="addnotesDate" jdbcType="VARCHAR"/>
+		<result column="LINE_NO" property="lineNo" jdbcType="VARCHAR"/>
+		<result column="LINE_NAME" property="lineName" jdbcType="VARCHAR"/>
+		<result column="AMOUNT" property="amount" jdbcType="NUMERIC"/>
+		<result column="IN_TIME" property="inTime" jdbcType="VARCHAR"/>
+		<result column="TASK_STATUS" property="taskStatus" jdbcType="VARCHAR"/>
+		<result column="NAME" property="statusDesc" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="CheckResultMap" type="com.zjft.microservice.treasurybrain.storage.domain.StorageCheckDO" >
+		<id column="NO" property="no" jdbcType="VARCHAR" />
+		<result column="STORAGE_CHECK_MONEY" property="storageCheckMoney" jdbcType="DECIMAL" />
+		<result column="DATABASE_RECORD_MONEY" property="databaseRecordMoney" jdbcType="DECIMAL" />
+		<result column="TIME" property="time" jdbcType="VARCHAR" />
+		<result column="FLAG" property="flag" jdbcType="INTEGER" />
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR" />
+		<result column="CENTER_NAME" property="centerName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="StorageMap" type="com.zjft.microservice.treasurybrain.storage.domain.StorageEntityDetailDO">
+		<id column="TASK_NO" property="taskNo" jdbcType="VARCHAR"/>
+		<result column="SHELF_NO" property="shelfNo" jdbcType="VARCHAR"/>
+		<result column="LINE_NO" property="lineNo" jdbcType="VARCHAR"/>
+		<result column="LINE_NAME" property="lineName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+<!--	<resultMap id="DevMap" type="com.zjft.microservice.treasurybrain.storage.domain.StorageDevDO">
+		<result column="CONTAINER_NO" property="cassetteNo" jdbcType="VARCHAR"/>
+		<result column="UPPER_NO" property="cassetteBagNo" jdbcType="VARCHAR"/>
+		<result column="CUSTOMER_NO" property="devNo" jdbcType="VARCHAR"/>
+		<result column="AMOUNT" property="amount" jdbcType="NUMERIC"/>
+		<result column="CURRENCY_CODE" property="currencyCode" jdbcType="VARCHAR"/>
+		<result column="DENOMINATION" property="denomination" jdbcType="VARCHAR"/>
+		<result column="CURRENCY_TYPE" property="currencyType" jdbcType="VARCHAR"/>
+	</resultMap>-->
+
+	<resultMap id="DevMap" type="com.zjft.microservice.treasurybrain.storage.domain.StorageDevDO">
+		<result column="CUSTOMER_NO" property="devNo" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="CassetteBagMap" type="com.zjft.microservice.treasurybrain.storage.domain.StorageCassetteBagDO">
+		<result column="CONTAINER_NO" property="cassetteBagNo" jdbcType="VARCHAR"/>
+		<result column="AMOUNT" property="amount" jdbcType="NUMERIC"/>
+		<result column="CURRENCY_CODE" property="currencyCode" jdbcType="VARCHAR"/>
+		<result column="DENOMINATION" property="denomination" jdbcType="VARCHAR"/>
+		<result column="CURRENCY_TYPE" property="currencyType" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="CassetteMap" type="com.zjft.microservice.treasurybrain.storage.domain.StorageCassetteDO">
+		<result column="CONTAINER_NO" property="cassetteNo" jdbcType="VARCHAR"/>
+		<result column="AMOUNT" property="amount" jdbcType="NUMERIC"/>
+		<result column="CURRENCY_CODE" property="currencyCode" jdbcType="VARCHAR"/>
+		<result column="DENOMINATION" property="denomination" jdbcType="VARCHAR"/>
+		<result column="CURRENCY_TYPE" property="currencyType" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<select id="qryCheckInfoByPage" resultMap="CheckResultMap" parameterType="java.util.Map" >
+		select t.*
+		from (
+		select rownum rn,
+		o.NO,o.STORAGE_CHECK_MONEY,o.DATABASE_RECORD_MONEY,o.TIME,o.FLAG,o.CLR_CENTER_NO,m.CENTER_NAME
+		from STORAGE_CHECK_TABLE o left join CLR_CENTER_TABLE m on o.CLR_CENTER_NO=m.CLR_CENTER_NO
+		<where>
+			<if test="startTime != null and startTime !='' ">
+				and o.TIME &gt;=#{startTime,jdbcType=VARCHAR}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and o.TIME &lt;=#{endTime,jdbcType=VARCHAR}
+			</if>
+			<if test="flag != null and flag !='' ">
+				and o.FLAG like '%' || #{flag,jdbcType=INTEGER} || '%'
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo !='' ">
+				and o.CLR_CENTER_NO= #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+		</where>
+		) t
+		where t.rn &gt; #{startRow,jdbcType=NUMERIC} and t.rn &lt;= #{endRow,jdbcType=NUMERIC} order by t.TIME desc
+	</select>
+
+	<select id="qryTotalRow" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from STORAGE_CHECK_TABLE t
+		<where>
+			<if test="startTime != null and startTime !='' ">
+				and t.TIME &gt;=#{startTime,jdbcType=VARCHAR}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and t.TIME &lt;=#{endTime,jdbcType=VARCHAR}
+			</if>
+			<if test="flag != null and flag !='' ">
+				and t.FLAG like '%' || #{flag,jdbcType=INTEGER} || '%'
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo !='' ">
+				and t.CLR_CENTER_NO= #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertCheckInfo" parameterType="com.zjft.microservice.treasurybrain.storage.po.StorageCheckPO" >
+    insert into STORAGE_CHECK_TABLE (NO, STORAGE_CHECK_MONEY, DATABASE_RECORD_MONEY,
+      TIME, FLAG, CLR_CENTER_NO)
+    values (#{no,jdbcType=VARCHAR}, #{storageCheckMoney,jdbcType=DECIMAL}, #{databaseRecordMoney,jdbcType=DECIMAL},
+      #{time,jdbcType=VARCHAR}, #{flag,jdbcType=INTEGER}, #{clrCenterNo,jdbcType=VARCHAR})
+  </insert>
+
+
+</mapper>

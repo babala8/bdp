@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.productcenter.repository.ServiceProductPropertyMapper">
+
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.productcenter.po.ServiceProductPropertyPO">
+		<result column="SERVICE_NO" jdbcType="DECIMAL" property="serviceNo" />
+		<result column="PRODUCT_NO" jdbcType="VARCHAR" property="productNo" />
+		<result column="DIRECTION" jdbcType="DECIMAL" property="direction" />
+		<result column="PROPERTY_VALUE_ID" jdbcType="VARCHAR" property="propertyValueID" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+    SERVICE_NO, PRODUCT_NO, DIRECTION, PROPERTY_VALUE_ID
+    </sql>
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.productcenter.po.ServiceProductPropertyPO">
+		insert into SERVICE_PRODUCT_PROPERTY (service_no, product_no, direction, property_value_id)
+		values (#{serviceNo,jdbcType=DECIMAL}, #{productNo,jdbcType=VARCHAR}, #{direction,jdbcType=DECIMAL}, #{propertyValueID,jdbcType=VARCHAR})
+    </insert>
+
+	<select id="qyrProductNo" parameterType="java.lang.String" resultType="java.lang.String">
+		select
+		distinct PRODUCT_NO
+		from SERVICE_PRODUCT_PROPERTY
+		where service_no = #{serviceNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryByServiceNo" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from SERVICE_PRODUCT_PROPERTY
+		where service_no = #{serviceNo,jdbcType=VARCHAR}
+		and product_no = #{productNo,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByserviceNo" parameterType="java.lang.Integer">
+		delete from SERVICE_PRODUCT_PROPERTY where SERVICE_NO = #{serviceNo,jdbcType=VARCHAR}
+    </delete>
+</mapper>

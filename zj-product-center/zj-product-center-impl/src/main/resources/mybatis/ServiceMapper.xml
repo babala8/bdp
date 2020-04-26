@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.productcenter.repository.ServiceMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.productcenter.domain.ServiceDO">
+		<id column="SERVICE_NO" jdbcType="DECIMAL" property="serviceNo"/>
+		<result column="SERVICE_NAME" jdbcType="VARCHAR" property="serviceName"/>
+		<result column="CUSTOMER_TYPE" jdbcType="DECIMAL" property="customerType"/>
+		<result column="NOTE" jdbcType="VARCHAR" property="note"/>
+		<result column="CUSTOMER_NAME" jdbcType="VARCHAR" property="customerName"/>
+		<result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+		<result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime"/>
+		<result column="STATUS" jdbcType="DECIMAL" property="status"/>
+		<result column="TYPE" jdbcType="DECIMAL" property="type"/>
+	</resultMap>
+
+	<select id="qryProductForUseByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select t.* from
+		(select ROWNUM rn ,
+		p.SERVICE_NO, p.SERVICE_NAME, p.CUSTOMER_TYPE, p.NOTE, p.CREATE_TIME, p.UPDATE_TIME, p.STATUS, pct.NAME as CUSTOMER_NAME
+		from SERVICE_TABLE p
+		left join PRODUCT_CUSTOMER_TYPE pct on p.CUSTOMER_TYPE = pct.CUSTOMER_TYPE
+		where  p.STATUS =1 and p.TYPE =1
+		order by p.SERVICE_NO)t
+		where t.rn &gt; #{startRow,jdbcType=NUMERIC} and t.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="qryProductForUseTotalRow" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from SERVICE_TABLE p where  p.STATUS =1 and p.TYPE =1
+
+	</select>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.productcenter.po.ServiceTablePO">
+    insert into SERVICE_TABLE (SERVICE_NO, SERVICE_NAME, CUSTOMER_TYPE,
+      CREATE_TIME, UPDATE_TIME,NOTE,STATUS,TYPE)
+    values (#{serviceNo,jdbcType=DECIMAL}, #{serviceName,jdbcType=VARCHAR}, #{customerType,jdbcType=DECIMAL},
+      #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL}, #{type,jdbcType=DECIMAL})
+    </insert>
+
+	<select id="qryTotalRow" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from SERVICE_TABLE p
+		<where>
+			<if test="serviceNo != null and serviceNo != ''">
+				and p.SERVICE_NO like '%' || #{serviceNo,jdbcType=VARCHAR} || '%'
+			</if>
+			<if test="serviceName != null and serviceName != ''">
+				and p.SERVICE_NAME like '%' || #{serviceName,jdbcType=VARCHAR} || '%'
+			</if>
+			<if test="customerType != null and customerType != ''">
+				and p.CUSTOMER_TYPE = #{customerType,jdbcType=DECIMAL}
+			</if>
+			<if test="status != null and status != ''">
+				and p.STATUS = #{status,jdbcType=DECIMAL}
+			</if>
+		</where>
+	</select>
+
+	<select id="qryProductInfoByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select tt.* from(select  t.*,rownum as rn from
+		(select
+		p.SERVICE_NO, p.SERVICE_NAME, p.CUSTOMER_TYPE, p.NOTE, p.CREATE_TIME, p.UPDATE_TIME, p.STATUS, p.TYPE, pct.NAME as CUSTOMER_NAME
+		from SERVICE_TABLE p
+		left join SERVICE_CUSTOMER_TYPE pct on p.CUSTOMER_TYPE = pct.CUSTOMER_TYPE
+		<where>
+			<if test="serviceNo != null and serviceNo != ''">
+				and p.SERVICE_NO like '%' || #{serviceNo,jdbcType=VARCHAR} || '%'
+			</if>
+			<if test="serviceName != null and serviceName != ''">
+				and p.SERVICE_NAME like '%' || #{serviceName,jdbcType=VARCHAR} || '%'
+			</if>
+			<if test="customerType != null and customerType != ''">
+				and p.CUSTOMER_TYPE = #{customerType,jdbcType=DECIMAL}
+			</if>
+			<if test="status != null and status != ''">
+				and p.STATUS = #{status,jdbcType=DECIMAL}
+			</if>
+		</where>
+		order by p.SERVICE_NO)t)tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="qryProductInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select p.SERVICE_NO, p.SERVICE_NAME, p.CUSTOMER_TYPE, p.NOTE, p.STATUS, pct.NAME as CUSTOMER_NAME
+		from SERVICE_TABLE p
+				 left join SERVICE_CUSTOMER_TYPE pct on p.CUSTOMER_TYPE = pct.CUSTOMER_TYPE
+		where SERVICE_NO = #{serviceNo,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateProductStatus" parameterType="com.zjft.microservice.treasurybrain.productcenter.po.ServiceTablePO">
+		update SERVICE_TABLE
+		set STATUS = #{status,jdbcType=NUMERIC},
+		  UPDATE_TIME = #{updateTime,jdbcType=VARCHAR}
+		where SERVICE_NO = #{serviceNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

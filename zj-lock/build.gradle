@@ -1,0 +1,6 @@
+project("zj-lock-impl") {
+    dependencies {
+        compile project(":zj-lock:zj-lock-api")
+
+    }
+}

@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.task.repository.TaskEntityDetailMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.task.po.TaskEntityDetailPO">
+		<id column="ID" property="id" jdbcType="VARCHAR"/>
+		<result column="TASK_NO" property="taskNo" jdbcType="VARCHAR"/>
+		<result column="KEY" property="key" jdbcType="VARCHAR"/>
+		<result column="VALUE" property="value" jdbcType="VARCHAR"/>
+		<result column="NAME" property="name" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="CurrencyTypeMap" type="com.zjft.microservice.treasurybrain.task.domain.CurrencyTypeList">
+		<result column="ID" jdbcType="VARCHAR" property="id"/>
+		<result column="CUSTOMER_NO" jdbcType="VARCHAR" property="customerNo"/>
+		<result column="AMOUNT" jdbcType="DECIMAL" property="amount"/>
+		<result column="CURRENCY_TYPE" jdbcType="DECIMAL" property="currencyType"/>
+		<result column="CURRENCY_CODE" jdbcType="VARCHAR" property="currencyCode"/>
+		<result column="DENOMINATION" jdbcType="DECIMAL" property="denomination"/>
+	</resultMap>
+
+	<resultMap id="CassetteBagMap" type="com.zjft.microservice.treasurybrain.task.dto.StorageUseCassetteBagDTO">
+		<result column="CONTAINER_NO" property="cassetteBagNo" jdbcType="VARCHAR"/>
+		<result column="AMOUNT" property="amount" jdbcType="NUMERIC"/>
+		<result column="CURRENCY_CODE" property="currencyCode" jdbcType="VARCHAR"/>
+		<result column="DENOMINATION" property="denomination" jdbcType="VARCHAR"/>
+		<result column="CURRENCY_TYPE" property="currencyType" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="CassetteMap" type="com.zjft.microservice.treasurybrain.task.dto.StorageUseCassetteBagDetailDTO">
+		<result column="KEY" property="key" jdbcType="VARCHAR"/>
+		<result column="VALUE" property="value" jdbcType="VARCHAR"/>
+		<result column="NAME" property="name" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, TASK_NO, KEY, VALUE, NAME
+  	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List"/>
+		from TASK_ENTITY_DETAIL
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByTaskNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List"/>
+		from TASK_ENTITY_DETAIL
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from TASK_ENTITY_DETAIL
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+
+	<delete id="deleteByTaskNo" parameterType="java.lang.String">
+		delete from TASK_ENTITY_DETAIL
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  	</delete>
+
+	<delete id="deleteByTaskNoAndContainerNo" parameterType="java.util.Map">
+		delete from TASK_ENTITY_DETAIL
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR} and CONTAINER_NO=#{containerNo,jdbcType=VARCHAR}
+ 	 </delete>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.task.po.TaskEntityDetailPO">
+		insert into TASK_ENTITY_DETAIL (ID, TASK_NO, CONTAINER_NO,
+		  CONTAINER_TYPE, AMOUNT, CURRENCY_TYPE,
+		  CURRENCY_CODE, DENOMINATION, OP_TYPE,
+		  OP_NO, OP_TIME, CLEAR_MACHINE_NO,
+		  APPLY_AMOUNT)
+		values (#{id,jdbcType=VARCHAR}, #{taskNo,jdbcType=VARCHAR}, #{containerNo,jdbcType=VARCHAR},
+		  #{containerType,jdbcType=DECIMAL}, #{amount,jdbcType=DECIMAL}, #{currencyType,jdbcType=DECIMAL},
+		  #{currencyCode,jdbcType=VARCHAR}, #{denomination,jdbcType=DECIMAL}, #{opType,jdbcType=DECIMAL},
+		  #{opNo,jdbcType=VARCHAR}, #{opTime,jdbcType=VARCHAR}, #{clearMachineNo,jdbcType=VARCHAR},
+		  #{applyAmount,jdbcType=DECIMAL})
+  	</insert>
+
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.task.po.TaskEntityDetailPO">
+		insert into TASK_ENTITY_DETAIL
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="taskNo != null">
+				TASK_NO,
+			</if>
+			<if test="containerNo != null">
+				CONTAINER_NO,
+			</if>
+			<if test="containerType != null">
+				CONTAINER_TYPE,
+			</if>
+			<if test="amount != null">
+				AMOUNT,
+			</if>
+			<if test="currencyType != null">
+				CURRENCY_TYPE,
+			</if>
+			<if test="currencyCode != null">
+				CURRENCY_CODE,
+			</if>
+			<if test="denomination != null">
+				DENOMINATION,
+			</if>
+			<if test="opType != null">
+				OP_TYPE,
+			</if>
+			<if test="opNo != null">
+				OP_NO,
+			</if>
+			<if test="opTime != null">
+				OP_TIME,
+			</if>
+			<if test="clearMachineNo != null">
+				CLEAR_MACHINE_NO,
+			</if>
+			<if test="applyAmount != null">
+				APPLY_AMOUNT,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="taskNo != null">
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="containerNo != null">
+				#{containerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="containerType != null">
+				#{containerType,jdbcType=DECIMAL},
+			</if>
+			<if test="amount != null">
+				#{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="currencyType != null">
+				#{currencyType,jdbcType=DECIMAL},
+			</if>
+			<if test="currencyCode != null">
+				#{currencyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="denomination != null">
+				#{denomination,jdbcType=DECIMAL},
+			</if>
+			<if test="opType != null">
+				#{opType,jdbcType=DECIMAL},
+			</if>
+			<if test="opNo != null">
+				#{opNo,jdbcType=VARCHAR},
+			</if>
+			<if test="opTime != null">
+				#{opTime,jdbcType=VARCHAR},
+			</if>
+			<if test="clearMachineNo != null">
+				#{clearMachineNo,jdbcType=VARCHAR},
+			</if>
+			<if test="applyAmount != null">
+				#{applyAmount,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertSelectiveByMap" parameterType="java.util.Map">
+		insert into TASK_ENTITY_DETAIL
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id !=''">
+				ID,
+			</if>
+			<if test="key != null and key !=''">
+				KEY,
+			</if>
+			<if test="taskNo != null and taskNo !=''">
+				TASK_NO,
+			</if>
+			<if test="value != null and value !=''">
+				VALUE,
+			</if>
+			<if test="name != null and name !=''">
+				NAME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id !=''">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="key != null and key !=''">
+				#{key,jdbcType=VARCHAR},
+			</if>
+			<if test="taskNo != null and taskNo !=''">
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null and value !=''">
+				#{value,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null and name !=''">
+				#{name,jdbcType=VARCHAR},
+			</if>
+
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective"
+			parameterType="com.zjft.microservice.treasurybrain.task.po.TaskEntityDetailPO">
+		update TASK_ENTITY_DETAIL
+		<set>
+			<if test="taskNo != null">
+				TASK_NO = #{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="containerNo != null">
+				CONTAINER_NO = #{containerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="containerType != null">
+				CONTAINER_TYPE = #{containerType,jdbcType=DECIMAL},
+			</if>
+			<if test="amount != null">
+				AMOUNT = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="currencyType != null">
+				CURRENCY_TYPE = #{currencyType,jdbcType=DECIMAL},
+			</if>
+			<if test="currencyCode != null">
+				CURRENCY_CODE = #{currencyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="denomination != null">
+				DENOMINATION = #{denomination,jdbcType=DECIMAL},
+			</if>
+			<if test="opType != null">
+				OP_TYPE = #{opType,jdbcType=DECIMAL},
+			</if>
+			<if test="opNo != null">
+				OP_NO = #{opNo,jdbcType=VARCHAR},
+			</if>
+			<if test="opTime != null">
+				OP_TIME = #{opTime,jdbcType=VARCHAR},
+			</if>
+			<if test="clearMachineNo != null">
+				CLEAR_MACHINE_NO = #{clearMachineNo,jdbcType=VARCHAR},
+			</if>
+			<if test="applyAmount != null">
+				APPLY_AMOUNT = #{applyAmount,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByID" parameterType="java.util.Map">
+		update TASK_ENTITY_DETAIL
+		<set>
+			<if test="taskNo != null">
+				TASK_NO = #{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="containerNo != null">
+				CONTAINER_NO = #{containerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="containerType != null">
+				CONTAINER_TYPE = #{containerType,jdbcType=DECIMAL},
+			</if>
+			<if test="amount != null">
+				AMOUNT = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="currencyType != null">
+				CURRENCY_TYPE = #{currencyType,jdbcType=DECIMAL},
+			</if>
+			<if test="currencyCode != null">
+				CURRENCY_CODE = #{currencyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="denomination != null">
+				DENOMINATION = #{denomination,jdbcType=DECIMAL},
+			</if>
+			<if test="opType != null">
+				OP_TYPE = #{opType,jdbcType=DECIMAL},
+			</if>
+			<if test="opNo != null">
+				OP_NO = #{opNo,jdbcType=VARCHAR},
+			</if>
+			<if test="opTime != null">
+				OP_TIME = #{opTime,jdbcType=VARCHAR},
+			</if>
+			<if test="clearMachineNo != null">
+				CLEAR_MACHINE_NO = #{clearMachineNo,jdbcType=VARCHAR},
+			</if>
+			<if test="applyAmount != null">
+				APPLY_AMOUNT = #{applyAmount,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.task.po.TaskEntityDetailPO">
+		update TASK_ENTITY_DETAIL
+		set TASK_NO = #{taskNo,jdbcType=VARCHAR},
+		  CONTAINER_NO = #{containerNo,jdbcType=VARCHAR},
+		  CONTAINER_TYPE = #{containerType,jdbcType=DECIMAL},
+		  AMOUNT = #{amount,jdbcType=DECIMAL},
+		  CURRENCY_TYPE = #{currencyType,jdbcType=DECIMAL},
+		  CURRENCY_CODE = #{currencyCode,jdbcType=VARCHAR},
+		  DENOMINATION = #{denomination,jdbcType=DECIMAL},
+		  OP_TYPE = #{opType,jdbcType=DECIMAL},
+		  OP_NO = #{opNo,jdbcType=VARCHAR},
+		  OP_TIME = #{opTime,jdbcType=VARCHAR},
+		  CLEAR_MACHINE_NO = #{clearMachineNo,jdbcType=VARCHAR},
+		  APPLY_AMOUNT = #{applyAmount,jdbcType=DECIMAL}
+		where ID = #{id,jdbcType=VARCHAR}
+  	</update>
+
+	<select id="selectSumAmount" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+		select  sum(AMOUNT) from TASK_ENTITY_TABLE where TASK_NO =  #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List"/>
+		from
+		(select a.*,ROWNUM r from TASK_ENTITY_DETAIL a where TASK_NO = #{taskNo,jdbcType=VARCHAR} and CONTAINER_NO =
+		#{containerNo,jdbcType=VARCHAR}
+		order by TASK_NO desc) c
+		where c.r=1
+	</select>
+
+	<select id="selectContainerTyoe" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select distinct CONTAINER_TYPE
+		from  TASK_ENTITY_DETAIL
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR} and CONTAINER_NO = #{containerNo,jdbcType=VARCHAR}
+  	</select>
+
+	<select id="selectContainerNo" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from
+		(select distinct ENTITY_NO from TASK_ENTITY_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		and PRODUCT_NO=#{productNo,jdbcType=VARCHAR})
+	</select>
+
+	<select id="selectCurrencyList" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select t.ID,t.TASK_NO,t.KEY,t.VALUE,t.NAME
+ from TASK_ENTITY_DETAIL t
+		where t.ID = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByTaskNoAndContainerNo" resultType="integer" parameterType="java.util.Map">
+		select count(1)
+		from TASK_ENTITY_DETAIL
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR} and CONTAINER_NO = #{containerNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getCassetteBagList"
+			resultMap="CassetteBagMap">
+		select detail.CONTAINER_NO,AMOUNT,CURRENCY_CODE,CURRENCY_TYPE,DENOMINATION from TASK_ENTITY_DETAIL detail
+		left join TASK_ENTITY_TABLE entity on entity.TASK_NO = detail.TASK_NO and entity.CONTAINER_NO = detail.CONTAINER_NO
+		where detail.TASK_NO = #{taskNo,jdbcType=VARCHAR} and entity.CUSTOMER_NO = #{devNo,jdbcType=VARCHAR} and UPPER_NO is null
+	</select>
+
+	<select id="getCassetteDetail"
+			resultMap="CassetteMap">
+		select key,value,name from TASK_ENTITY_DETAIL where id =#{id,jdbcType=VARCHAR}
+	</select>
+</mapper>

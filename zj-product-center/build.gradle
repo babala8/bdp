@@ -1,0 +1,7 @@
+project("zj-product-center-impl") {
+    dependencies {
+        compile project(":zj-product-center:zj-product-center-api")
+        compile project(":zj-task:zj-task-api")
+    }
+
+}

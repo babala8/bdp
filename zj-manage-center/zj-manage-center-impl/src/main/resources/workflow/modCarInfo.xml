@@ -1,0 +1,15 @@
+<zj-orchestration id="modCarInfo" name="修改车辆信息"
+				  requestObject="com.zjft.microservice.treasurybrain.managecenter.dto.CarDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="4d7j2bxg2600">
+	</zj-component>
+	<zj-component id="4d7j2bxg2600" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.managecenter.component.CarComponent.modCarInfo" next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

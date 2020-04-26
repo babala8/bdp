@@ -1,0 +1,8 @@
+dependencies {
+    compile project(":zj-security-center:zj-security-center-api")
+    
+    implementation 'com.zjft.microservice:zj-message-sdk:1.2.2-SNAPSHOT'
+    
+    compile project(":zj-push-server:zj-push-server-api")
+    
+}

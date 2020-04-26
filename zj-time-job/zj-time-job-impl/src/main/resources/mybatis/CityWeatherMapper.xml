@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjft.microservice.treasurybrain.timejob.repository.CityWeatherMapper">
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.timejob.po.CityWeatherPO">
+    <id column="CITY_ID" jdbcType="VARCHAR" property="cityId" />
+    <id column="WEATHER_DATE" jdbcType="VARCHAR" property="weatherDate" />
+    <result column="CITY_NAME" jdbcType="VARCHAR" property="cityName" />
+    <result column="DAY_WEATHER_ID" jdbcType="DECIMAL" property="dayWeatherId" />
+    <result column="DAY_WEATHER" jdbcType="VARCHAR" property="dayWeather" />
+    <result column="DAY_TEMP" jdbcType="DECIMAL" property="dayTemp" />
+    <result column="DAY_WIND" jdbcType="VARCHAR" property="dayWind" />
+    <result column="DAY_WIND_COMP" jdbcType="VARCHAR" property="dayWindComp" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    CITY_ID, WEATHER_DATE, CITY_NAME, DAY_WEATHER_ID, DAY_WEATHER, DAY_TEMP, DAY_WIND, 
+    DAY_WIND_COMP
+  </sql>
+
+  <insert id="insert" parameterType="java.util.Map">
+    insert into CITY_WEATHER (CITY_ID, WEATHER_DATE, CITY_NAME, 
+      DAY_WEATHER_ID, DAY_WEATHER, DAY_TEMP, 
+      DAY_WIND, DAY_WIND_COMP)
+    values (#{cityId,jdbcType=VARCHAR}, #{weatherDate,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR}, 
+      #{dayWeatherId,jdbcType=DECIMAL}, #{dayWeather,jdbcType=VARCHAR}, #{dayTemp,jdbcType=DECIMAL}, 
+      #{dayWind,jdbcType=VARCHAR}, #{dayWindComp,jdbcType=VARCHAR})
+  </insert>
+
+	<update id="updateByPrimaryKey" parameterType="java.util.Map">
+    update CITY_WEATHER
+    set CITY_NAME = #{cityName,jdbcType=VARCHAR},
+      DAY_WEATHER_ID = #{dayWeatherId,jdbcType=DECIMAL},
+      DAY_WEATHER = #{dayWeather,jdbcType=VARCHAR},
+      DAY_TEMP = #{dayTemp,jdbcType=DECIMAL},
+      DAY_WIND = #{dayWind,jdbcType=VARCHAR},
+      DAY_WIND_COMP = #{dayWindComp,jdbcType=VARCHAR}
+    where CITY_ID = #{cityId,jdbcType=VARCHAR}
+      and WEATHER_DATE = #{weatherDate,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

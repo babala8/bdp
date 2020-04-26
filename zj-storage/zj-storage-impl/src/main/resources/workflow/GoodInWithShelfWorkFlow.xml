@@ -1,0 +1,42 @@
+<zj-orchestration id="GoodInWithShelfWorkFlow" name="入库工作流(带车)"
+				  requestObject="com.zjft.microservice.treasurybrain.storage.dto.StorageEntityTransferDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="@Transactional(rollbackFor = Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+
+	</zj-component>
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.storage.component.GoodInComponent.goodInCheck" next="">
+
+		<exit path="ok" next="2"/>
+		<exit path="fail" next="F"/>
+	</zj-component>
+	<zj-component id="2" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.storage.component.GoodInComponent.goodInCheckWithShelf"
+				  next="">
+
+		<exit path="ok" next="3"/>
+		<exit path="fail" next="F"/>
+	</zj-component>
+	<zj-component id="3" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.storage.component.GoodInComponent.goodIn" next="">
+
+		<exit path="ok" next="4"/>
+		<exit path="fail" next="F"/>
+	</zj-component>
+	<zj-component id="4" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.storage.component.GoodInComponent.goodInWithShelf"
+				  next="">
+
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="F"/>
+	</zj-component>
+	<zj-component id="F" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.storage.component.GoodInComponent.goodInFail" next="">
+
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

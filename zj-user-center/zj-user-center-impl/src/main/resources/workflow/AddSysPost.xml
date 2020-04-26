@@ -1,0 +1,17 @@
+<zj-orchestration id="addPost" name="增加岗位信息"
+				  requestObject="com.zjft.microservice.treasurybrain.usercenter.dto.SysPostDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="java.lang.String"
+				  transaction="@Transactional(rollbackFor = Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+	</zj-component>
+
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.usercenter.component.SysPostComponent.addPost" next="">
+
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

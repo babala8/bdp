@@ -1,0 +1,13 @@
+subprojects {
+    dependencies {
+        compile project(":zj-business:zj-business-api")
+        implementation 'com.zjft.microservice:zj-message-sdk:1.2.2-SNAPSHOT'
+    }
+}
+
+project("zj-tolly-center-impl") {
+    dependencies {
+        compile project(":zj-tolly-center:zj-tolly-center-api")
+        implementation 'com.zjft.microservice:zj-message-sdk:1.2.2-SNAPSHOT'
+    }
+}

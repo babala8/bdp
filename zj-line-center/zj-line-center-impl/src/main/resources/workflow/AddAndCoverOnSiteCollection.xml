@@ -1,0 +1,22 @@
+<zj-orchestration id="addAndCoverCallCustomerLineRun" name="覆盖生成线路运行图"
+				  requestObject="com.zjft.microservice.treasurybrain.linecenter.dto.AddCallCustomerLineRunDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="java.util.HashMap"
+				  transaction="@Transactional(rollbackFor &#x3D; Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+	</zj-component>
+	<zj-component id="2" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.linecenter.component.OnSiteCollectionComponent.addAndCover"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.linecenter.component.OnSiteCollectionComponent.addAndCoverCheck"
+				  next="">
+		<exit path="ok" next="2"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

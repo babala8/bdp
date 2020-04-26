@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.accountscenter.repository.BiztxlogMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.accountscenter.domain.BiztxlogDO">
+		<result column="txType" property="txType" jdbcType="VARCHAR"/>
+		<result column="cashType" property="cashType" jdbcType="VARCHAR"/>
+		<result column="txStatus" property="txStatus" jdbcType="VARCHAR"/>
+		<result column="txDate" property="txDate" jdbcType="VARCHAR"/>
+		<result column="txInfo" property="txInfo" jdbcType="VARCHAR"/>
+		<result column="mediumNo1" property="mediumNo1" jdbcType="VARCHAR"/>
+		<result column="mediumNo2" property="mediumNo2" jdbcType="VARCHAR"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+    txType,cashType,txStatus,txDate,txInfo,mediumNo1,mediumNo2
+  </sql>
+	<select id="queryInfoByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select t.*
+		from (
+		select rownum rn,
+		<include refid="Base_Column_List"/>
+		from BIZTXLOG
+		) t
+		where t.rn &gt; #{startRow,jdbcType=NUMERIC} and t.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="qryTotalRow" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from BIZTXLOG t
+	</select>
+
+	<select id="qryDevDayAvgAmt" parameterType="java.util.Map" resultType="java.util.Map">
+		select sum(AMOUNT_PROCESS_CWD)/count(1) as dayAvgWdr, sum(AMOUNT_PROCESS_CDM)/count(1) as dayAvgDep
+			from BIZTXLOG_INIT where TERMID = #{devNo,jdbcType = NUMERIC}  and TRANDATE > #{tranDate,jdbcType =NUMERIC}
+	</select>
+
+	<select id="getMaxDateOfDev" parameterType="java.lang.String" resultType="java.util.Map">
+		select max(TRANDATE) as maxDate from BIZTXLOG_INIT where TERMID = #{devNo,jdbcType = NUMERIC}
+	</select>
+
+</mapper>

@@ -1,0 +1,28 @@
+<zj-orchestration id="GoodOutWorkFlow" name="出库工作流"
+				  requestObject="com.zjft.microservice.treasurybrain.storage.dto.StorageEntityTransferDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="@Transactional(rollbackFor = Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+
+	</zj-component>
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.storage.component.GoodOutComponent.goodOutCheck" next="">
+
+		<exit path="ok" next="2"/>
+		<exit path="fail" next="3"/>
+	</zj-component>
+	<zj-component id="2" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.storage.component.GoodOutComponent.goodOut" next="">
+
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="3"/>
+	</zj-component>
+	<zj-component id="3" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.storage.component.GoodOutComponent.goodOutFail" next="">
+
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

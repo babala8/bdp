@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.channelcenter.repository.DevCountMapper">
+
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.channelcenter.domain.DevCountDO">
+		<id column="DEV_NO" property="devNo" jdbcType="NUMERIC"/>
+		<result column="DEV_TYPE" property="devType" jdbcType="NUMERIC"/>
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR"/>
+		<result column="DEV_STATUS" property="devStatus" jdbcType="NUMERIC"/>
+		<result column="DEV_MODEL" property="devModel" jdbcType="VARCHAR"/>
+		<result column="DEV_STANDARDS" property="devStandards" jdbcType="NUMERIC"/>
+		<result column="USER_DATE" property="userDate" jdbcType="VARCHAR"/>
+		<result column="LOCATION" property="location" jdbcType="VARCHAR"/>
+		<result column="NOTE" property="note" jdbcType="VARCHAR"/>
+		<result column="IP" property="ip" jdbcType="VARCHAR"/>
+		<result column="BATCH" property="batch" jdbcType="NUMERIC"/>
+		<result column="CENTER_NAME" property="centerName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="DetailResultMap" type="com.zjft.microservice.treasurybrain.channelcenter.domain.CountTaskInfoDO">
+		<id column="TASK_NO" property="taskNo" jdbcType="VARCHAR"/>
+		<result column="DEV_NO" property="devNo" jdbcType="VARCHAR"/>
+		<result column="BATCH" property="batch" jdbcType="VARCHAR"/>
+		<result column="COUNT_STATUS" property="countStatus" jdbcType="VARCHAR"/>
+		<result column="COUNT_START_DATE" property="countStartDate" jdbcType="VARCHAR"/>
+		<result column="COUNT_END_DATE" property="countEndDate" jdbcType="VARCHAR"/>
+		<result column="COUNT_AMOUNT" property="countAmount" jdbcType="NUMERIC"/>
+	</resultMap>
+
+	<resultMap id="BaseResultMap2" type="com.zjft.microservice.treasurybrain.channelcenter.domain.TaskCountInfo">
+		<id column="TASK_NO" jdbcType="VARCHAR" property="taskNo" />
+		<result column="TASK_TYPE" jdbcType="INTEGER" property="taskType" />
+		<result column="TASK_STATUS" jdbcType="INTEGER" property="taskStatus" />
+		<result column="DEV_NO" jdbcType="VARCHAR" property="devNo" />
+		<result column="BATCH" jdbcType="INTEGER" property="batch" />
+		<result column="COUNT_STATUS" jdbcType="INTEGER" property="countStatus" />
+		<result column="COUNT_START_DATE" jdbcType="VARCHAR" property="countStartDate" />
+		<result column="COUNT_END_DATE" jdbcType="VARCHAR" property="countEndDate" />
+		<result column="COUNT_AMOUNT" jdbcType="DOUBLE" property="countAmount" />
+		<result column="CLR_CNETER_NO" jdbcType="VARCHAR" property="clrCenterNo" />
+		<result column="ADDNOTES_PLAN_NO" jdbcType="VARCHAR" property="addnotesPlanNo" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+    DEV_NO, DEV_TYPE, CLR_CENTER_NO, DEV_STATUS, DEV_MODEL, DEV_STANDARDS, USER_DATE, LOCATION,NOTE,IP
+  	</sql>
+
+	<sql id="Base_Column_List1">
+    d.DEV_NO, d.DEV_TYPE, d.CLR_CENTER_NO, d.DEV_STATUS, d.DEV_MODEL, d.DEV_STANDARDS, d.USER_DATE, d.LOCATION, d.NOTE, d.IP
+  </sql>
+
+	<sql id="Base_Column_List2">
+    TASK_NO, DEV_NO, BATCH, COUNT_STATUS, COUNT_START_DATE, COUNT_END_DATE
+  </sql>
+
+	<sql id="Detail_Column_List">
+		TASK_NO,DEV_NO,BATCH,COUNT_STATUS,COUNT_START_DATE,COUNT_END_DATE
+	</sql>
+
+	<select id="queryDevCountList" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List"/>,CENTER_NAME
+		from (
+		select c.*,o.CENTER_NAME ,rownum rn from DEV_COUNT_INFO c left join CLR_CENTER_TABLE o on o.CLR_CENTER_NO = c.CLR_CENTER_NO
+		<where>
+			<if test="devType !=null and devType !=-1">
+				and DEV_TYPE = #{devType,jdbcType=NUMERIC}
+			</if>
+			<if test="devNo!=null and devNo!=''">
+				and DEV_NO like concat(concat('%',#{devNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="devStatus!=null and devStatus!=-1">
+				and DEV_STATUS = #{devStatus,jdbcType=NUMERIC}
+			</if>
+			<if test="clrCenterNo!=null and orgNo!=''">
+				and c.CLR_CENTER_NO like concat(concat('%',#{clrCenterNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="devModel!=null and devModel!=''">
+				and DEV_MODEL like concat(concat('%',#{devModel,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+		)
+		where rn &gt; #{startRow} and rn &lt;= #{endRow}
+	</select>
+
+	<select id="qryTotalRowDevCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from DEV_COUNT_INFO
+		<where>
+			<if test="devType !=null and devType !=-1">
+				and DEV_TYPE = #{devType,jdbcType=NUMERIC}
+			</if>
+			<if test="devNo!=null and devNo!=''">
+				and DEV_NO like concat(concat('%',#{devNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="devStatus!=null and devStatus!=-1">
+				and DEV_STATUS = #{devStatus,jdbcType=NUMERIC}
+			</if>
+			<if test="clrCenterNo!=null and orgNo!=''">
+				and CLR_CENTER_NO like concat(concat('%',#{clrCenterNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="devModel!=null and devModel!=''">
+				and DEV_MODEL like concat(concat('%',#{devModel,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="queryByDevNo" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select count (1) from DEV_COUNT_INFO
+		<where>
+			<if test="devNo!=null and devNo!=''">
+				and DEV_NO = #{devNo,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.channelcenter.po.DevCountPO">
+		insert into DEV_COUNT_INFO (
+		<include refid="Base_Column_List"/>
+		)
+		values (
+		#{devNo,jdbcType=VARCHAR},#{devType,jdbcType=NUMERIC},#{clrCenterNo,jdbcType=VARCHAR},
+		#{devStatus,jdbcType=NUMERIC},#{devModel,jdbcType=VARCHAR},#{devStandards,jdbcType=VARCHAR},#{userDate,jdbcType=VARCHAR},
+		#{location,jdbcType=VARCHAR},#{note,jdbcType=VARCHAR},#{ip,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="com.zjft.microservice.treasurybrain.channelcenter.po.DevCountPO">
+		update DEV_COUNT_INFO
+		<set>
+			<if test="devNo != null">
+				DEV_NO = #{devNo,jdbcType=VARCHAR},
+			</if>
+			<if test="devType != null">
+				DEV_TYPE = #{devType,jdbcType=NUMERIC},
+			</if>
+			<if test="clrCenterNo != null">
+				CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+			</if>
+			<if test="devStatus != null">
+				DEV_STATUS = #{devStatus,jdbcType=NUMERIC},
+			</if>
+			<if test="devModel != null">
+				DEV_MODEL = #{devModel,jdbcType=VARCHAR},
+			</if>
+			<if test="devStandards != null">
+				DEV_STANDARDS = #{devStandards,jdbcType=VARCHAR},
+			</if>
+			<if test="userDate != null">
+				USER_DATE = #{userDate,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				LOCATION = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null">
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+			<if test="ip != null">
+				IP = #{ip,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where DEV_NO = #{devNo,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delDevCountByNo" parameterType="java.lang.String">
+		delete from DEV_COUNT_INFO
+		where DEV_NO = #{devNo,jdbcType=VARCHAR}
+   	</delete>
+
+	<select id="queryDevConMonitoring" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List"/>,CENTER_NAME
+		from (
+		select c.*,o.CENTER_NAME from DEV_COUNT_INFO c left join CLR_CENTER_TABLE o on o.CLR_CENTER_NO = c.CLR_CENTER_NO
+		<where>
+
+			<if test="devNo!=null and devNo!=''">
+				and DEV_NO like concat(concat('%',#{devNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="clrCenterNo!=null and orgNo!=''">
+				and c.CLR_CENTER_NO like concat(concat('%',#{clrCenterNo,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+		)
+	</select>
+
+	<select id="selectCountTaskInfo" resultMap="DetailResultMap">
+		select c.*,o.AMOUNT COUNT_AMOUNT from COUNT_TASK_INFO c left join TASK_IN_OUT o on o.TASK_NO = c.TASK_NO
+				WHERE c.DEV_NO = #{devNo,jdbcType=VARCHAR} and c.COUNT_STATUS =  #{countStatus,jdbcType=NUMERIC}
+
+	</select>
+
+	<select id="qryCountTaskNum" resultMap="BaseResultMap" >
+		select d.DEV_NO, d.DEV_STATUS, count(c.TASK_NO) as countNum
+                                  from DEV_COUNT_INFO d
+                                           , COUNT_TASK_INFO c
+                                  where c.COUNT_STATUS in (1, 4) and d.DEV_NO = c.DEV_NO group by d.DEV_NO ,d.DEV_STATUS
+	</select>
+
+	<select id="qryCountTaskInfoBytaskNo" resultMap="DetailResultMap" parameterType="java.lang.String">
+		SELECT
+			<include refid="Detail_Column_List"/>
+		from COUNT_TASK_INFO
+		<where>
+			<if test="taskNo != null">
+				TASK_NO = #{taskNo,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertCountTask" parameterType="com.zjft.microservice.treasurybrain.channelcenter.domain.CountTaskInfoDO">
+		insert into COUNT_TASK_INFO
+		values (
+			#{taskNo,jdbcType=VARCHAR},#{devNo,jdbcType=VARCHAR},#{batch,jdbcType=VARCHAR},
+			#{countStatus,jdbcType=VARCHAR},#{countStartDate,jdbcType=VARCHAR},#{countEndDate,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="qryCountDevList" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List1" />, o.name as CLR_CENTER_NAME
+		from DEV_COUNT_INFO d left join sys_org o on o.no = d.CLR_CENTER_NO
+		<where>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND d.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+			<if test="devType != null">
+				AND d.DEV_TYPE = #{devType,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectByDevNo" parameterType="java.lang.String" resultMap="BaseResultMap2">
+		select
+		<include refid="Base_Column_List2" />
+		from COUNT_TASK_INFO
+		where DEV_NO = #{devNo,jdbcType=VARCHAR}
+		AND COUNT_STATUS = 1
+		order by BATCH
+	</select>
+
+</mapper>

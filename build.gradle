@@ -1,0 +1,189 @@
+buildscript {
+    repositories {
+        maven {
+            url 'http://maven.aliyun.com/nexus/content/groups/public/'
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}"
+    }
+}
+
+allprojects {
+
+    ext {
+        /**
+         * gradle jvm 参数:
+         * -Dlevel=snapshot  or  -Dlevel=release
+         */
+        buildLevel = System.getProperty("level") ?: "snapshot"
+    }
+
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
+    group = 'com.zjft.microservice'
+    version = "$version"
+    sourceCompatibility = '1.8'
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+    
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+
+
+    if ("release".equals(buildLevel)) {
+        version += "-RELEASE"
+    } else {
+        version += "-SNAPSHOT"
+    }
+
+
+    repositories {
+        maven {
+            url 'http://maven.aliyun.com/nexus/content/groups/public/'
+        }
+        maven {
+            url 'http://www.datanucleus.org/downloads/maven2/'
+        }
+
+        maven { url 'http://nexus.pentaho.org/content/groups/omni' }
+        mavenCentral()
+    }
+
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
+            mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Greenwich.SR1'
+            mavenBom 'org.springframework.cloud:spring-cloud-alibaba-dependencies:0.9.0.RELEASE'
+        }
+    }
+
+    dependencies {
+
+        // test
+        testImplementation "junit:junit:${junitVersion}"
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+        // spring
+        implementation 'org.springframework.boot:spring-boot-starter'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-aop'
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+        runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+
+        // mybatis
+        implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:${springBootMybatisVersion}"
+        compile "com.github.xiaoymin:swagger-bootstrap-ui:${swaggerBootstrapUIVersion}"
+    }
+}
+
+subprojects {
+
+    if (it.name.endsWith("-api")) {
+        dependencies {
+            compile project(":zj-common")
+            compileOnly 'com.zjft.microservice:zj-orchestration-core:1.2.2-SNAPSHOT'
+        }
+    }
+
+    if (it.name.endsWith("-impl")) {
+        dependencies {
+            compile 'com.zjft.microservice:zj-orchestration-core:1.2.2-SNAPSHOT'
+            annotationProcessor 'com.zjft.microservice:zj-orchestration-core:1.2.2-SNAPSHOT'
+        }
+    }
+
+    // 子模块的通用依赖
+    dependencies {
+        compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+
+        // jdbc
+        compile "org.springframework.boot:spring-boot-starter-jdbc"
+
+        // 数据库驱动
+        compile group: 'oracle', name: 'ojdbc6', version: '11.2.0.3'
+        compile 'mysql:mysql-connector-java:5.1.46'
+
+        // redis
+        implementation 'com.alibaba:fastjson:1.2.51'
+        compile "org.springframework.boot:spring-boot-starter-data-redis"
+        compile "org.apache.commons:commons-pool2"
+
+        // mapstruct
+        compileOnly "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+        annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+        // lombok
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+    }
+}
+
+
+// 根项目
+dependencies {
+    implementation 'de.codecentric:spring-boot-admin-starter-client:2.1.6'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    compile group: 'com.zjft.microservice', name: 'zj-auth-admin-impl', version: '1.2.2-SNAPSHOT'
+    compile group: 'com.zjft.microservice', name: 'zj-api-log-core', version: '1.2.2-SNAPSHOT'
+
+    compile project(":zj-user-center:zj-user-center-impl")
+    compile project(":zj-channel-center:zj-channel-center-impl")
+    compile project(":zj-data-insight:zj-data-insight-impl")
+    compile project(":zj-tauro:zj-tauro-impl")
+    compile project(":zj-push-server:zj-push-server-impl")
+    compile project(":zj-lock:zj-lock-impl")
+    compile project(":zj-line-center:zj-line-center-impl")
+    compile project(":zj-time-job:zj-time-job-impl")
+    compile project(":zj-task:zj-task-impl")
+    compile project(":zj-clear-center:zj-clear-center-impl")
+    compile project(":zj-storage:zj-storage-impl")
+    compile project(":zj-business:zj-business-impl")
+    compile project(":zj-product-center:zj-product-center-impl")
+    compile project(":zj-security-center:zj-security-center-impl")
+    compile project(":zj-accounts-center:zj-accounts-center-impl")
+    compile project(":zj-manage-center:zj-manage-center-impl")
+    compile project(":zj-param-center:zj-param-center-impl")
+    compile project(":zj-tolly-center:zj-tolly-center-impl")
+
+
+    // https://mvnrepository.com/artifact/io.springfox/springfox-swagger2
+    compileOnly "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
+    // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
+    compileOnly "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+}
+
+
+// 单体启动打包到 build/publish/
+apply plugin: 'org.springframework.boot'
+bootJar {
+    doLast {
+        copy {
+            from("$rootDir/bins/")
+            into("$buildDir/publish")
+        }
+        copy {
+            from("$rootDir/resources/")
+            into("$buildDir/publish/resources")
+        }
+        copy {
+            from("$buildDir/libs/")
+            into("$buildDir/publish/")
+        }
+    }
+}
+

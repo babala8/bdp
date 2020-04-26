@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.usercenter.repository.OutsourcingMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.usercenter.po.OutsourcingPO">
+		<id column="NO" property="no" jdbcType="VARCHAR"/>
+		<result column="NAME" property="name" jdbcType="VARCHAR"/>
+		<result column="POST" property="post" jdbcType="NUMERIC"/>
+		<result column="AGE" property="age" jdbcType="NUMERIC"/>
+		<result column="FAMILY_ADDR" property="familyAddr" jdbcType="VARCHAR"/>
+		<result column="RESIDENCE_ADDR" property="residenceAddr" jdbcType="VARCHAR"/>
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+    NO, NAME, POST, AGE, FAMILY_ADDR, RESIDENCE_ADDR, MOBILE
+  	</sql>
+
+	<select id="qryTotalRowOutsourcing" resultType="java.lang.Integer">
+		select count(1) from OUTSOURCING_INFO
+		<where>
+			<if test="no!= null and no!=''">
+				and NO like concat(concat('%',#{no,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="name != null and name!=''">
+				and NAME like concat(concat('%',#{name,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="post != null and post!='' and post != -1">
+				and POST = #{post,jdbcType=NUMERIC}
+			</if>
+		</where>
+	</select>
+
+	<select id="queryOutsourcingByPage" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from (
+		select OUTSOURCING_INFO.*,rownum rn from OUTSOURCING_INFO
+		<where>
+			<if test="no!= null and no!=''">
+				and NO like concat(concat('%',#{no,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="name != null and name!=''">
+				and NAME like concat(concat('%',#{name,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="post != null and post!='' and post != -1">
+				and POST = #{post,jdbcType=NUMERIC}
+			</if>
+		</where>
+		)
+		where rn &gt; #{startRow} and rn &lt;= #{endRow}
+	</select>
+
+	<select id="queryByNo" resultType="java.lang.Integer">
+		select count(1) from OUTSOURCING_INFO where no = #{no,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.usercenter.po.OutsourcingPO">
+		insert into OUTSOURCING_INFO
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="no != null">
+				NO,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="post != null">
+				POST,
+			</if>
+			<if test="age != null">
+				AGE,
+			</if>
+			<if test="familyAddr != null">
+				FAMILY_ADDR,
+			</if>
+			<if test="residenceAddr != null">
+				RESIDENCE_ADDR,
+			</if>
+			<if test="mobile != null">
+				MOBILE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="no != null">
+				#{no,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="post != null">
+				#{post,jdbcType=NUMERIC},
+			</if>
+			<if test="age != null">
+				#{age,jdbcType=NUMERIC},
+			</if>
+			<if test="familyAddr != null">
+				#{familyAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="residenceAddr != null">
+				#{residenceAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective"
+			parameterType="com.zjft.microservice.treasurybrain.usercenter.po.OutsourcingPO">
+		update OUTSOURCING_INFO
+		<set>
+			<if test="name != null and name != ''">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="post != null ">
+				POST = #{post,jdbcType=NUMERIC},
+			</if>
+			<if test="age != null ">
+				AGE = #{age,jdbcType=NUMERIC},
+			</if>
+			<if test="familyAddr != null ">
+				FAMILY_ADDR = #{familyAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="residenceAddr != null ">
+				RESIDENCE_ADDR = #{residenceAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null ">
+				MOBILE = #{mobile,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where NO = #{no,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from OUTSOURCING_INFO where NO = #{no,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insertOrUpdate"
+			parameterType="com.zjft.microservice.treasurybrain.usercenter.po.OutsourcingPO">
+		<selectKey keyProperty="count" resultType="int" order="BEFORE">
+			select count(1) as count from OUTSOURCING_INFO t
+			where NO = #{no,jdbcType=VARCHAR}
+		</selectKey>
+		<if test="count==0">
+			insert into OUTSOURCING_INFO (
+			<include refid="Base_Column_List"/>
+			)
+			values (
+			#{no,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{post,jdbcType=NUMERIC},
+			#{age,jdbcType=NUMERIC}, #{familyAddr,jdbcType=VARCHAR},
+			#{residenceAddr,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR})
+		</if>
+		<if test="count>0">
+			update OUTSOURCING_INFO
+			<set>
+				<if test="name != null">
+					NAME = #{name,jdbcType=VARCHAR},
+				</if>
+				<if test="post != null">
+					POST = #{post,jdbcType=NUMERIC},
+				</if>
+				<if test="age != null">
+					AGE = #{age,jdbcType=NUMERIC},
+				</if>
+				<if test="familyAddr != null">
+					FAMILY_ADDR = #{familyAddr,jdbcType=VARCHAR},
+				</if>
+				<if test="residenceAddr != null">
+					RESIDENCE_ADDR = #{residenceAddr,jdbcType=VARCHAR},
+				</if>
+				<if test="mobile != null">
+					MOBILE = #{mobile,jdbcType=VARCHAR},
+				</if>
+			</set>
+			where NO = #{no,jdbcType=VARCHAR}
+		</if>
+	</insert>
+
+	<select id="qryByPost" resultType="string" parameterType="int">
+		select NO
+		from OUTSOURCING_INFO o
+		where o.POST=#{post,jdbcType = INTEGER}
+	</select>
+</mapper>

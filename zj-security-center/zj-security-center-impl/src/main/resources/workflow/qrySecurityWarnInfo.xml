@@ -1,0 +1,22 @@
+<zj-orchestration id="qrySecurityWarnInfo" name="查询安防预警信息"
+				  requestObject="java.util.HashMap"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.PageDTO"
+				  tempObject="java.util.HashMap"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+	</zj-component>
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.securitycenter.component.SecurityWarnFlowComponent.qrySecurityWarnInfoCheck"
+				  next="">
+		<exit path="ok" next="2"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+	<zj-component id="2" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.securitycenter.component.SecurityWarnFlowComponent.qrySecurityWarnInfo"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.param.repository.DevChsEstParamMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.param.domain.DevChsEstParam" >
+    <id column="EST_PARAM_NO" property="estParamNo" jdbcType="VARCHAR" />
+    <id column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR" />
+    <result column="EST_PARAM_NAME" property="estParamName" jdbcType="VARCHAR" />
+    <result column="EST_PARAM_DESP" property="estParamDesp" jdbcType="VARCHAR" />
+    <result column="WEIGHT" property="weight" jdbcType="DECIMAL" />
+    <result column="IS_VALID" property="isValid" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    EST_PARAM_NO, CLR_CENTER_NO, EST_PARAM_NAME, EST_PARAM_DESP, WEIGHT, IS_VALID
+  </sql>
+  
+  <select id="getEstParamByClrNo" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevChsEstParam" >
+    select 
+    <include refid="Base_Column_List" />
+    from dev_chs_est_param
+    where CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevChsEstParamKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from dev_chs_est_param
+    where EST_PARAM_NO = #{estParamNo,jdbcType=VARCHAR}
+      and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevChsEstParamKey" >
+    delete from dev_chs_est_param
+    where EST_PARAM_NO = #{estParamNo,jdbcType=VARCHAR}
+      and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevChsEstParam" >
+    insert into dev_chs_est_param (EST_PARAM_NO, CLR_CENTER_NO, EST_PARAM_NAME, 
+      EST_PARAM_DESP, WEIGHT, IS_VALID
+      )
+    values (#{estParamNo,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR}, #{estParamName,jdbcType=VARCHAR}, 
+      #{estParamDesp,jdbcType=VARCHAR}, #{weight,jdbcType=DECIMAL}, #{isValid,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevChsEstParam" >
+    insert into dev_chs_est_param
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="estParamNo != null" >
+        EST_PARAM_NO,
+      </if>
+      <if test="clrCenterNo != null" >
+        CLR_CENTER_NO,
+      </if>
+      <if test="estParamName != null" >
+        EST_PARAM_NAME,
+      </if>
+      <if test="estParamDesp != null" >
+        EST_PARAM_DESP,
+      </if>
+      <if test="weight != null" >
+        WEIGHT,
+      </if>
+      <if test="isValid != null" >
+        IS_VALID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="estParamNo != null" >
+        #{estParamNo,jdbcType=VARCHAR},
+      </if>
+      <if test="clrCenterNo != null" >
+        #{clrCenterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="estParamName != null" >
+        #{estParamName,jdbcType=VARCHAR},
+      </if>
+      <if test="estParamDesp != null" >
+        #{estParamDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevChsEstParam" >
+    update dev_chs_est_param
+    <set >
+      <if test="estParamName != null" >
+        EST_PARAM_NAME = #{estParamName,jdbcType=VARCHAR},
+      </if>
+      <if test="estParamDesp != null" >
+        EST_PARAM_DESP = #{estParamDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        WEIGHT = #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="isValid != null" >
+        IS_VALID = #{isValid,jdbcType=TINYINT},
+      </if>
+    </set>
+    where EST_PARAM_NO = #{estParamNo,jdbcType=VARCHAR}
+      and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevChsEstParam" >
+    update dev_chs_est_param
+    set EST_PARAM_NAME = #{estParamName,jdbcType=VARCHAR},
+      EST_PARAM_DESP = #{estParamDesp,jdbcType=VARCHAR},
+      WEIGHT = #{weight,jdbcType=DECIMAL},
+      IS_VALID = #{isValid,jdbcType=TINYINT}
+    where EST_PARAM_NO = #{estParamNo,jdbcType=VARCHAR}
+      and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByClrNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from dev_chs_est_param
+    where 1=1
+    <if test="_parameter != null and _parameter != ''">
+    and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+    </if>
+    ORDER By EST_PARAM_NO
+  </select>
+    <select id="selectIsValidCountsByClrNo" resultType="int" parameterType="java.lang.String" >
+    select count(1)
+    from dev_chs_est_param
+    where IS_VALID=1
+    <if test="_parameter != null and _parameter != ''">
+    and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+    </if>	
+    ORDER By EST_PARAM_NO
+  </select>
+  
+</mapper>

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.linecenter.repository.LineScheduleMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.LineScheduleDO" >
+    <result column="LINE_NO" property="lineNo" jdbcType="VARCHAR" />
+    <result column="SORT_NO" property="sortNo" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_NO" property="customerNo" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_TYPE" property="customerType" jdbcType="DECIMAL" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="LNG" property="lng" jdbcType="VARCHAR" />
+    <result column="LAT" property="lat" jdbcType="VARCHAR" />
+    <result column="ARRIVAL_TIME" property="arrivalTime" jdbcType="VARCHAR" />
+    <result column="LINE_WORK_ID" property="lineWorkId" jdbcType="VARCHAR" />
+    <result column="THE_YEAR_MONTH" property="theYearMonth" jdbcType="VARCHAR" />
+    <result column="THE_DAY" property="theDay" jdbcType="VARCHAR" />
+    <result column="CLR_TIME_INTERVAL" property="clrTimeInterval" jdbcType="CHAR" />
+  </resultMap>
+
+	<sql id="Base_Column_List" >
+    CUSTOMER_NO,CUSTOMER_NAME,CUSTOMER_TYPE,LINE_WORK_ID, CLR_TIME_INTERVAL, ARRIVAL_TIME,LINE_NO,SORT_NO,ADDRESS,LNG,
+    LAT,THE_YEAR_MONTH,THE_DAY
+  </sql>
+
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineScheduleDO" >
+    insert into LINE_SCHEDULE (LINE_NO, SORT_NO, CUSTOMER_NO, 
+      CUSTOMER_TYPE, ADDRESS, LNG,
+      LAT, ARRIVAL_TIME, LINE_WORK_ID, 
+      THE_YEAR_MONTH, THE_DAY, CLR_TIME_INTERVAL,CUSTOMER_NAME
+      )
+    values (#{lineNo,jdbcType=VARCHAR}, #{sortNo,jdbcType=DECIMAL}, #{customerNo,jdbcType=VARCHAR}, 
+      #{customerType,jdbcType=DECIMAL}, #{address,jdbcType=VARCHAR}, #{lng,jdbcType=VARCHAR}, 
+      #{lat,jdbcType=VARCHAR}, #{arrivalTime,jdbcType=VARCHAR}, #{lineWorkId,jdbcType=VARCHAR}, 
+      #{theYearMonth,jdbcType=VARCHAR}, #{theDay,jdbcType=VARCHAR}, #{clrTimeInterval,jdbcType=CHAR},
+      #{customerName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineScheduleDO" >
+    insert into LINE_SCHEDULE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="lineNo != null" >
+        LINE_NO,
+      </if>
+      <if test="sortNo != null" >
+        SORT_NO,
+      </if>
+      <if test="customerNo != null" >
+        CUSTOMER_NO,
+      </if>
+		<if test="customerName != null" >
+			CUSTOMER_NAME,
+		</if>
+      <if test="customerType != null" >
+        CUSTOMER_TYPE,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="lng != null" >
+        LNG,
+      </if>
+      <if test="lat != null" >
+        LAT,
+      </if>
+      <if test="arrivalTime != null" >
+        ARRIVAL_TIME,
+      </if>
+      <if test="lineWorkId != null" >
+        LINE_WORK_ID,
+      </if>
+      <if test="theYearMonth != null" >
+        THE_YEAR_MONTH,
+      </if>
+      <if test="theDay != null" >
+        THE_DAY,
+      </if>
+      <if test="clrTimeInterval != null" >
+        CLR_TIME_INTERVAL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="lineNo != null" >
+        #{lineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="sortNo != null" >
+        #{sortNo,jdbcType=DECIMAL},
+      </if>
+      <if test="customerNo != null" >
+        #{customerNo,jdbcType=VARCHAR},
+      </if>
+		<if test="customerName != null" >
+			#{customerName,jdbcType=VARCHAR},
+		</if>
+      <if test="customerType != null" >
+        #{customerType,jdbcType=DECIMAL},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null" >
+        #{lng,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        #{lat,jdbcType=VARCHAR},
+      </if>
+      <if test="arrivalTime != null" >
+        #{arrivalTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lineWorkId != null" >
+        #{lineWorkId,jdbcType=VARCHAR},
+      </if>
+      <if test="theYearMonth != null" >
+        #{theYearMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="theDay != null" >
+        #{theDay,jdbcType=VARCHAR},
+      </if>
+      <if test="clrTimeInterval != null" >
+        #{clrTimeInterval,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+	<delete id="deleteByLineWorkID" parameterType="string">
+		delete from LINE_SCHEDULE d
+		where d.LINE_WORK_ID = #{lineWorkId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertByMap"
+			parameterType="java.util.Map">
+		insert into LINE_SCHEDULE(CUSTOMER_NO,CUSTOMER_TYPE,LINE_WORK_ID,ARRIVAL_TIME,CLR_TIME_INTERVAL)
+		values (#{customerNo,jdbcType = VARCHAR},(#{customerType,jdbcType = NUMERIC},#{lineWorkId,jdbcType=VARCHAR},
+		#{arrivalTime,jdbcType = VARCHAR},#{clrTimeInterval,jdbcType=VARCHAR})
+	</insert>
+	<select id="selectLineWorkID" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT c.LINE_RUN_NO FROM LINE_SCHEDULE c
+        where c.THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR} and c.THE_DAY=#{theDay,jdbcType=VARCHAR} and c.LINE_NO=#{lineNo,jdbcType=VARCHAR}
+	</select>
+	<select id="qryCallCustomerLineRunDetail" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select LINE_WORK_ID,CUSTOMER_NO,CUSTOMER_TYPE,ARRIVAL_TIME,CLR_TIME_INTERVAL from LINE_SCHEDULE
+		where LINE_WORK_ID = #{lineWorkId,jdbcType=VARCHAR} and CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+	</select>
+	<update id="updateByMap" parameterType="java.util.Map">
+		update LINE_SCHEDULE
+		<set>
+			<if test="customerNo != null">
+				CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerType != null">
+				CUSTOMER_TYPE = #{customerType,jdbcType=NUMERIC},
+			</if>
+			<if test="lineRunNo != null">
+				LINE_WORK_ID = #{lineWorkId,jdbcType=VARCHAR},
+			</if>
+			<if test="arrivalTime != null">
+				ARRIVAL_TIME = #{arrivalTime,jdbcType=VARCHAR},
+			</if>
+			<if test="clrTimeInterval != null">
+				CLR_TIME_INTERVAL = #{clrTimeInterval,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where LINE_WORK_ID = #{lineWorkId,jdbcType=VARCHAR}
+	</update>
+	<insert id="insertSelectiveByMap" parameterType="java.util.Map" >
+		insert into LINE_SCHEDULE
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="lineNo != null" >
+				LINE_NO,
+			</if>
+			<if test="sortNo != null" >
+				SORT_NO,
+			</if>
+			<if test="customerNo != null" >
+				CUSTOMER_NO,
+			</if>
+			<if test="customerType != null" >
+				CUSTOMER_TYPE,
+			</if>
+			<if test="address != null" >
+				ADDRESS,
+			</if>
+			<if test="lng != null" >
+				LNG,
+			</if>
+			<if test="lat != null" >
+				LAT,
+			</if>
+			<if test="arrivalTime != null" >
+				ARRIVAL_TIME,
+			</if>
+			<if test="lineWorkId != null" >
+				LINE_WORK_ID,
+			</if>
+			<if test="theYearMonth != null" >
+				THE_YEAR_MONTH,
+			</if>
+			<if test="theDay != null" >
+				THE_DAY,
+			</if>
+			<if test="clrTimeInterval != null" >
+				CLR_TIME_INTERVAL,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="lineNo != null" >
+				#{lineNo,jdbcType=VARCHAR},
+			</if>
+			<if test="sortNo != null" >
+				#{sortNo,jdbcType=DECIMAL},
+			</if>
+			<if test="customerNo != null" >
+				#{customerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerType != null" >
+				#{customerType,jdbcType=DECIMAL},
+			</if>
+			<if test="address != null" >
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="lng != null" >
+				#{lng,jdbcType=VARCHAR},
+			</if>
+			<if test="lat != null" >
+				#{lat,jdbcType=VARCHAR},
+			</if>
+			<if test="arrivalTime != null" >
+				#{arrivalTime,jdbcType=VARCHAR},
+			</if>
+			<if test="lineWorkId != null" >
+				#{lineWorkId,jdbcType=VARCHAR},
+			</if>
+			<if test="theYearMonth != null" >
+				#{theYearMonth,jdbcType=VARCHAR},
+			</if>
+			<if test="theDay != null" >
+				#{theDay,jdbcType=VARCHAR},
+			</if>
+			<if test="clrTimeInterval != null" >
+				#{clrTimeInterval,jdbcType=CHAR},
+			</if>
+		</trim>
+	</insert>
+	<delete id="deleteLineDetail" parameterType="java.util.Map" >
+   DELETE FROM LINE_SCHEDULE WHERE LINE_WORK_ID in
+  (SELECT LINE_WORK_ID FROM LINE_WORK_TABLE
+  WHERE LINE_NO = #{lineNo,jdbcType=VARCHAR}
+  AND THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR})
+  </delete>
+	<select id="selectDetailByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineScheduleDO" >
+		select
+		<include refid="Base_Column_List" />
+		from LINE_SCHEDULE
+		where LINE_WORK_ID = #{lineWorkId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteNetworkLineDetail" parameterType="java.util.Map" >
+	   DELETE FROM LINE_SCHEDULE WHERE LINE_WORK_ID in
+	  (SELECT LINE_WORK_ID FROM LINE_WORK_TABLE
+	  WHERE LINE_NO = #{lineNo,jdbcType=VARCHAR}
+	  AND THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR})
+  </delete>
+	<select id="selectByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select l.LINE_WORK_ID,l.CUSTOMER_NO,l.CUSTOMER_NAME,l.SORT_NO, d.LINE_NO,d.THE_YEAR_MONTH,d.THE_DAY  from LINE_SCHEDULE l
+        left join LINE_WORK_TABLE d on l.LINE_WORK_ID=d.LINE_WORK_ID
+        where l.CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+        and d.THE_YEAR_MONTH= #{theYearMonth,jdbcType=VARCHAR}
+        and d.THE_DAY= #{theDay,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.productcenter.repository.ServiceStatusConvertsMapper">
+
+	<resultMap id="EdgeNodeResultMap" type="com.zjft.microservice.treasurybrain.productcenter.domain.ServiceStatusConvert">
+		<result column="CUR_STATUS" jdbcType="DECIMAL" property="curStatus"/>
+		<result column="OPERATE_TYPE" jdbcType="VARCHAR" property="operateType"/>
+		<result column="NEXT_STATUS" jdbcType="DECIMAL" property="nextStatus"/>
+		<result column="WEAK_NODE" jdbcType="DECIMAL" property="weakNode"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+   		 ID,SERVICE_NO,CUR_STATUS,OPERATE_TYPE,DESCRIPTION,MODULE_NO
+ 	</sql>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.productcenter.po.ServiceStatusConvertPO">
+		insert into SERVICE_STATUS_CONVERT (ID,SERVICE_NO,CUR_STATUS,OPERATE_TYPE,DESCRIPTION,MODULE_NO )
+		values (#{id,jdbcType=VARCHAR}, #{serviceNo,jdbcType=DECIMAL}, #{curStatus,jdbcType=DECIMAL}, #{operateType,jdbcType=DECIMAL}, #{description,jdbcType=VARCHAR}, #{moduleNo,jdbcType=DECIMAL})
+    </insert>
+	<delete id="deleteByProductNo" parameterType="java.lang.Integer">
+		delete from SERVICE_STATUS_CONVERT
+		where SERVICE_NO = #{serviceNo,jdbcType=DECIMAL}
+    </delete>
+
+	<select id="getJSONTemplate" parameterType="java.util.Map" resultType="java.lang.String">
+		select TEMPLATE
+		from SERVICE_STATUS_CONVERT
+		where SERVICE_NO = #{serviceNo,jdbcType=DECIMAL}
+		and OPERATE_TYPE = #{operateType,jdbcType=VARCHAR}
+		and ROWNUM = 1
+	</select>
+
+	<select id="selectCurStatus" resultType="java.lang.String" parameterType="java.util.Map" >
+   select CUR_STATUS from SERVICE_STATUS_CONVERT where OPERATE_TYPE= #{operateType,jdbcType=VARCHAR} and SERVICE_NO= #{taskType,jdbcType=INTEGER}
+  </select>
+
+	<select id="qryByServiceNo" parameterType="java.lang.Integer" resultMap="EdgeNodeResultMap">
+		select psc.CUR_STATUS,psc.OPERATE_TYPE,pse.NEXT_STATUS,ss.WEAK_NODE
+		from SERVICE_STATUS_CONVERT psc
+		left join SERVICE_STATUS_EXPAND pse on pse.OPERATE_TYPE = psc.OPERATE_TYPE
+		left join SERVICE_STATUS ss on ss.SERVICE_NO = psc.SERVICE_NO and ss.STATUS = pse.NEXT_STATUS
+		where SERVICE_NO = #{serviceNo,jdbcType=DECIMAL}
+	</select>
+
+</mapper>

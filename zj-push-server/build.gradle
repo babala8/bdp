@@ -1,0 +1,13 @@
+project("zj-push-server-impl") {
+
+    dependencies {
+        compile project(":zj-push-server:zj-push-server-api")
+
+        compile project(":zj-user-center:zj-user-center-api")
+
+        compile 'org.springframework.boot:spring-boot-starter-websocket'
+        compile 'org.springframework.boot:spring-boot-starter-mail'
+        compile group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.0.10.RELEASE'
+
+    }
+}

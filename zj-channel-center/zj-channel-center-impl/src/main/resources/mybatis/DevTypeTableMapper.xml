@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.channelcenter.repository.DevTypeTableMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.common.domain.DevTypeTable" >
+    <id column="NO" property="no" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="DEV_VENDOR" property="devVendor" jdbcType="VARCHAR" />
+    <result column="DEV_CATALOG" property="devCatalog" jdbcType="VARCHAR" />
+    <result column="SPEC" property="spec" jdbcType="VARCHAR" />
+    <result column="WEIGHT" property="weight" jdbcType="VARCHAR" />
+    <result column="WATT" property="watt" jdbcType="VARCHAR" />
+    <result column="CASH_TYPE" property="cashType" jdbcType="VARCHAR" />
+  </resultMap>
+	
+   <resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.common.domain.DevTypeTable"
+		extends="BaseResultMap">
+		<association property="devCatalogTable" column="DEV_CATALOG"
+			javaType="com.zjft.microservice.treasurybrain.common.domain.DevCatalogTable"
+			select="com.zjft.microservice.treasurybrain.channelcenter.repository.DevCatalogTableMapper.selectByPrimaryKey"></association>
+	   <association property="devVendorTable" column="DEV_VENDOR"
+			javaType="com.zjft.microservice.treasurybrain.common.domain.DevVendorTable"
+			select="com.zjft.microservice.treasurybrain.channelcenter.repository.DevVendorTableMapper.selectByPrimaryKey"></association>
+	</resultMap>
+	
+  <sql id="Base_Column_List" >
+    NO, NAME, DEV_VENDOR, DEV_CATALOG, SPEC, WEIGHT, WATT, CASH_TYPE
+  </sql>
+	
+	
+	<select id="queryDevTypeList" parameterType="java.lang.String" resultMap="DetailMap">
+		select
+		<include refid="Base_Column_List" />
+		from DEV_TYPE_TABLE
+		<where>
+			<if test="name!='' and name!=null">
+				AND NAME like concat(concat('%',#{name,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+	</select>
+	
+	
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from DEV_TYPE_TABLE
+    where NO = #{no,jdbcType=VARCHAR}
+  </select>
+	
+	
+    <select id="selectDetailByPrimaryKey" resultMap="DetailMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from DEV_TYPE_TABLE
+    where NO = #{no,jdbcType=VARCHAR}
+  </select>
+	
+	
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from DEV_TYPE_TABLE
+    where NO = #{no,jdbcType=VARCHAR}
+  </delete>
+
+
+	<select id="getMax1DevTypeNo" resultType="java.lang.String">
+		select max(NO)+1 from DEV_TYPE_TABLE
+	</select>
+
+	
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.common.domain.DevTypeTable" >
+    insert into DEV_TYPE_TABLE (NO, NAME, DEV_VENDOR, 
+      DEV_CATALOG, SPEC, WEIGHT, 
+      WATT, CASH_TYPE)
+    values (#{no,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{devVendor,jdbcType=VARCHAR}, 
+      #{devCatalog,jdbcType=VARCHAR}, #{spec,jdbcType=VARCHAR}, #{weight,jdbcType=VARCHAR}, 
+      #{watt,jdbcType=VARCHAR}, #{cashType,jdbcType=VARCHAR})
+  </insert>
+	
+	
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.common.domain.DevTypeTable" >
+    insert into DEV_TYPE_TABLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="no != null" >
+        NO,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="devVendor != null" >
+        DEV_VENDOR,
+      </if>
+      <if test="devCatalog != null" >
+        DEV_CATALOG,
+      </if>
+      <if test="spec != null" >
+        SPEC,
+      </if>
+      <if test="weight != null" >
+        WEIGHT,
+      </if>
+      <if test="watt != null" >
+        WATT,
+      </if>
+      <if test="cashType != null" >
+        CASH_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="no != null" >
+        #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="devVendor != null" >
+        #{devVendor,jdbcType=VARCHAR},
+      </if>
+      <if test="devCatalog != null" >
+        #{devCatalog,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null" >
+        #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        #{weight,jdbcType=VARCHAR},
+      </if>
+      <if test="watt != null" >
+        #{watt,jdbcType=VARCHAR},
+      </if>
+      <if test="cashType != null" >
+        #{cashType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+	
+	
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.common.domain.DevTypeTable" >
+    update DEV_TYPE_TABLE
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="devVendor != null" >
+        DEV_VENDOR = #{devVendor,jdbcType=VARCHAR},
+      </if>
+      <if test="devCatalog != null" >
+        DEV_CATALOG = #{devCatalog,jdbcType=VARCHAR},
+      </if>
+      <if test="spec != null" >
+        SPEC = #{spec,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        WEIGHT = #{weight,jdbcType=VARCHAR},
+      </if>
+      <if test="watt != null" >
+        WATT = #{watt,jdbcType=VARCHAR},
+      </if>
+      <if test="cashType != null" >
+        CASH_TYPE = #{cashType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where NO = #{no,jdbcType=VARCHAR}
+  </update>
+	
+	
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.common.domain.DevTypeTable" >
+    update DEV_TYPE_TABLE
+    set NAME = #{name,jdbcType=VARCHAR},
+      DEV_VENDOR = #{devVendor,jdbcType=VARCHAR},
+      DEV_CATALOG = #{devCatalog,jdbcType=VARCHAR},
+      SPEC = #{spec,jdbcType=VARCHAR},
+      WEIGHT = #{weight,jdbcType=VARCHAR},
+      WATT = #{watt,jdbcType=VARCHAR},
+      CASH_TYPE = #{cashType,jdbcType=VARCHAR}
+    where NO = #{no,jdbcType=VARCHAR}
+  </update>
+</mapper>

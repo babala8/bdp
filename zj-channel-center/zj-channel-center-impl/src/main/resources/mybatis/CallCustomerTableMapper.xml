@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.channelcenter.repository.CallCustomerTableMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.channelcenter.domain.CallCustomerInfo" >
+    <id column="CUSTOMER_NO" property="customerNo" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_SHORT_NAME" property="customerShortName" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="LOCATION" property="location" jdbcType="VARCHAR" />
+    <result column="X" property="x" jdbcType="VARCHAR" />
+    <result column="Y" property="y" jdbcType="VARCHAR" />
+    <result column="ISONESELF" property="isOneself" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_NUMBER" property="customerNumber" jdbcType="VARCHAR" />
+    <result column="CNCUSTOMER_LONG_NAME" property="cnCustomerLongName" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_AUTH_PHONE" property="customerAuthPhone" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_MANAGE" property="customerManage" jdbcType="VARCHAR" />
+    <result column="TOUCH_PHONE_ONE" property="touchPhoneOne" jdbcType="VARCHAR" />
+    <result column="TOUCH_PHONE_TWO" property="touchPhoneTwo" jdbcType="VARCHAR" />
+    <result column="CALL_CUSTOMER_LINE" property="callCustomerLine" jdbcType="VARCHAR" />
+	<result column="CALL_CUSTOMER_LINE_NAME" property="callCustomerLineName" jdbcType="VARCHAR" />
+	<result column="CALL_CLR_PERIOD" property="callClrPeriod" jdbcType="VARCHAR" />
+	<result column="CALL_CUSTOMER_TYPE" property="callCustomerType" jdbcType="VARCHAR" />
+	<result column="CALL_CUSTOMER_TYPE_NAME" property="callCustomerTypeName" jdbcType="VARCHAR" />
+  </resultMap>
+	
+  <sql id="Base_Column_List" >
+    d.CUSTOMER_NO, d.CUSTOMER_SHORT_NAME, d.ADDRESS, d.LOCATION, d.X, d.Y, d.ISONESELF, d.CUSTOMER_NUMBER,
+    d.CNCUSTOMER_LONG_NAME, d.CUSTOMER_AUTH_PHONE, d.CUSTOMER_MANAGE, d.TOUCH_PHONE_ONE, d.TOUCH_PHONE_TWO,
+	  d.CALL_CUSTOMER_LINE, d.CALL_CLR_PERIOD, d.CALL_CUSTOMER_TYPE
+  </sql>
+	
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from CALL_CUSTOMER_TABLE d
+    where d.CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+  </select>
+
+	<select id="qryTotalRow" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from CALL_CUSTOMER_TABLE d,LINE_TABLE l,CALL_CUSTOMER_TYPE t
+		<where>
+			and d.CALL_CUSTOMER_LINE = l.LINE_NO
+			and d.CALL_CUSTOMER_TYPE = t.no
+			<if test="customerShortName != null and customerShortName != ''">
+				and d.CUSTOMER_SHORT_NAME like concat(concat('%',#{customerShortName,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="address != null and address != ''">
+				and d.ADDRESS = #{address,jdbcType=VARCHAR}
+			</if>
+			<if test="isOneself != null and isOneself != ''">
+				and d.ISONESELF = #{isOneself,jdbcType=VARCHAR}
+			</if>
+			<if test="customerNumber != null and customerNumber != ''">
+				and d.CUSTOMER_NUMBER = #{customerNumber,jdbcType=VARCHAR}
+			</if>
+			<if test="cnCustomerLongName != null and cnCustomerLongName != ''">
+				and d.CNCUSTOMER_LONG_NAME like concat(concat('%',#{cnCustomerLongName,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="callCustomerLine != null and callCustomerLine != ''">
+				and d.CALL_CUSTOMER_LINE = #{callCustomerLine,jdbcType=VARCHAR}
+			</if>
+			<if test="callCustomerType != null and callCustomerType != ''">
+				and d.CALL_CUSTOMER_TYPE = #{callCustomerType,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+  <select id="selectCallCustomerListByParams" resultMap="BaseResultMap">
+	select tt.* from (select t.*, rownum as rn
+	from
+	  (
+	  select <include refid="Base_Column_List" />,l.LINE_NAME as CALL_CUSTOMER_LINE_NAME ,t.name as CALL_CUSTOMER_TYPE_NAME from CALL_CUSTOMER_TABLE d,LINE_TABLE l,CALL_CUSTOMER_TYPE t
+		<where>
+			  and d.CALL_CUSTOMER_LINE = l.LINE_NO
+			  and d.CALL_CUSTOMER_TYPE = t.no
+		  <if test="customerShortName != null and customerShortName != ''">
+			  and d.CUSTOMER_SHORT_NAME like concat(concat('%',#{customerShortName,jdbcType=VARCHAR}),'%')
+		  </if>
+		  <if test="address != null and address != ''">
+			  and d.ADDRESS = #{address,jdbcType=VARCHAR}
+		  </if>
+		  <if test="isOneself != null and isOneself != ''">
+			  and d.ISONESELF = #{isOneself,jdbcType=VARCHAR}
+		  </if>
+		  <if test="customerNumber != null and customerNumber != ''">
+			  and d.CUSTOMER_NUMBER = #{customerNumber,jdbcType=VARCHAR}
+		  </if>
+		  <if test="cnCustomerLongName != null and cnCustomerLongName != ''">
+			  and d.CNCUSTOMER_LONG_NAME like concat(concat('%',#{cnCustomerLongName,jdbcType=VARCHAR}),'%')
+		  </if>
+          <if test="callCustomerLine != null and callCustomerLine != ''">
+			  and d.CALL_CUSTOMER_LINE = #{callCustomerLine,jdbcType=VARCHAR}
+		  </if>
+	      <if test="callCustomerType != null and callCustomerType != ''">
+		     and d.CALL_CUSTOMER_TYPE = #{callCustomerType,jdbcType=VARCHAR}
+		  </if>
+		</where>
+	order by d.CUSTOMER_SHORT_NAME)t)tt
+	where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+  </select>
+	
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from CALL_CUSTOMER_TABLE
+    where CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+  </delete>
+	
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.channelcenter.domain.CallCustomerInfo" >
+    insert into CALL_CUSTOMER_TABLE (CUSTOMER_NO, CUSTOMER_SHORT_NAME, ADDRESS, LOCATION, X, Y, ISONESELF, CUSTOMER_NUMBER,
+    CNCUSTOMER_LONG_NAME, CUSTOMER_AUTH_PHONE, CUSTOMER_MANAGE, TOUCH_PHONE_ONE, TOUCH_PHONE_TWO, CALL_CUSTOMER_LINE, CALL_CLR_PERIOD, CALL_CUSTOMER_TYPE)
+    values (#{customerNo,jdbcType=VARCHAR}, #{customerShortName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+      #{location,jdbcType=VARCHAR}, #{x,jdbcType=VARCHAR}, #{y,jdbcType=VARCHAR},
+      #{isOneself,jdbcType=VARCHAR}, #{customerNumber,jdbcType=VARCHAR}, #{cnCustomerLongName,jdbcType=VARCHAR}, #{customerAuthPhone,jdbcType=VARCHAR},
+	  #{customerManage,jdbcType=VARCHAR}, #{touchPhoneOne,jdbcType=VARCHAR}, #{touchPhoneTwo,jdbcType=VARCHAR}, #{callCustomerLine,jdbcType=VARCHAR},
+	  #{callClrPeriod,jdbcType=VARCHAR},  #{callCustomerType,jdbcType=VARCHAR})
+  </insert>
+	
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.channelcenter.domain.CallCustomerInfo" >
+    insert into CALL_CUSTOMER_TABLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="no != null" >
+        CUSTOMER_NO,
+      </if>
+      <if test="customerShortName != null" >
+        CUSTOMER_SHORT_NAME,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="location != null" >
+        LOCATION,
+      </if>
+      <if test="x != null" >
+        X,
+      </if>
+      <if test="y != null" >
+        Y,
+      </if>
+      <if test="isOneself != null" >
+        ISONESELF,
+      </if>
+      <if test="customerNumber != null" >
+        CUSTOMER_NUMBER,
+      </if>
+      <if test="cnCustomerLongName != null" >
+        CNCUSTOMER_LONG_NAME,
+      </if>
+      <if test="customerAuthPhone != null" >
+        CUSTOMER_AUTH_PHONE,
+      </if>
+      <if test="customerManage != null" >
+        CUSTOMER_MANAGE,
+      </if>
+      <if test="touchPhoneOne != null" >
+        TOUCH_PHONE_ONE,
+      </if>
+      <if test="touchPhoneTwo != null" >
+        TOUCH_PHONE_TWO,
+      </if>
+      <if test="callCustomerLine != null" >
+        CALL_CUSTOMER_LINE,
+      </if>
+      <if test="callClrPeriod != null" >
+        CALL_CLR_PERIOD,
+      </if>
+	  <if test="callCustomerType != null" >
+		CALL_CUSTOMER_TYPE,
+	  </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="customerNo != null" >
+        #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerShortName != null" >
+        #{customerShortName,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="x != null" >
+        #{x,jdbcType=VARCHAR},
+      </if>
+      <if test="y != null" >
+        #{y,jdbcType=VARCHAR},
+      </if>
+      <if test="isOneself != null" >
+        #{isOneself,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNumber != null" >
+        #{customerNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="cnCustomerLongName != null" >
+        #{cnCustomerLongName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerAuthPhone != null" >
+        #{customerAuthPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="customerManage != null" >
+        #{customerManage,jdbcType=VARCHAR},
+      </if>
+      <if test="touchPhoneOne != null" >
+        #{touchPhoneOne,jdbcType=VARCHAR},
+      </if>
+      <if test="touchPhoneTwo != null" >
+        #{touchPhoneTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="callCustomerLine != null" >
+        #{callCustomerLine,jdbcType=VARCHAR},
+      </if>
+      <if test="callClrPeriod != null" >
+        #{callClrPeriod,jdbcType=VARCHAR},
+      </if>
+	  <if test="callCustomerType != null" >
+		#{callCustomerType,jdbcType=VARCHAR},
+	  </if>
+    </trim>
+  </insert>
+	
+	
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.channelcenter.domain.CallCustomerInfo" >
+    update CALL_CUSTOMER_TABLE
+    <set >
+      <if test="customerShortName != null" >
+        CUSTOMER_SHORT_NAME = #{customerShortName,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        LOCATION = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="x != null" >
+        X = #{x,jdbcType=VARCHAR},
+      </if>
+      <if test="y != null" >
+        Y = #{y,jdbcType=VARCHAR},
+      </if>
+      <if test="isOneself != null" >
+        ISONESELF = #{isOneself,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNumber != null" >
+        CUSTOMER_NUMBER = #{customerNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="cnCustomerLongName != null" >
+        CNCUSTOMER_LONG_NAME = #{cnCustomerLongName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerAuthPhone != null" >
+        CUSTOMER_AUTH_PHONE = #{customerAuthPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="customerManage != null" >
+        CUSTOMER_MANAGE = #{customerManage,jdbcType=VARCHAR},
+      </if>
+      <if test="touchPhoneOne != null" >
+        TOUCH_PHONE_ONE = #{touchPhoneOne,jdbcType=VARCHAR},
+      </if>
+      <if test="touchPhoneTwo != null" >
+        TOUCH_PHONE_TWO = #{touchPhoneTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="callCustomerLine != null" >
+        CALL_CUSTOMER_LINE = #{callCustomerLine,jdbcType=VARCHAR},
+      </if>
+      <if test="callClrPeriod != null" >
+        CALL_CLR_PERIOD = #{callClrPeriod,jdbcType=VARCHAR},
+      </if>
+	  <if test="callCustomerType != null" >
+		CALL_CUSTOMER_TYPE = #{callCustomerType,jdbcType=VARCHAR},
+	  </if>
+
+    </set>
+    where CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+  </update>
+
+	
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.channelcenter.domain.CallCustomerInfo" >
+    update CALL_CUSTOMER_TABLE
+    set CUSTOMER_SHORT_NAME = #{customerShortName,jdbcType=VARCHAR},
+        ADDRESS = #{address,jdbcType=VARCHAR},
+        LOCATION = #{location,jdbcType=VARCHAR},
+        X = #{x,jdbcType=VARCHAR},
+        Y = #{y,jdbcType=VARCHAR},
+        ISONESELF = #{isOneself,jdbcType=VARCHAR},
+        CUSTOMER_NUMBER = #{customerNumber,jdbcType=VARCHAR},
+        CNCUSTOMER_LONG_NAME = #{cnCustomerLongName,jdbcType=VARCHAR},
+        CUSTOMER_AUTH_PHONE = #{customerAuthPhone,jdbcType=VARCHAR},
+        CUSTOMER_MANAGE = #{customerManage,jdbcType=VARCHAR},
+        TOUCH_PHONE_ONE = #{touchPhoneOne,jdbcType=VARCHAR},
+        TOUCH_PHONE_TWO = #{touchPhoneTwo,jdbcType=VARCHAR},
+	    CALL_CUSTOMER_LINE = #{callCustomerLine,jdbcType=VARCHAR},
+	    CALL_CLR_PERIOD = #{callClrPeriod,jdbcType=VARCHAR},
+	    CALL_CUSTOMER_TYPE = #{callCustomerType,jdbcType=VARCHAR}
+    where CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+  </update>
+
+	<select id="selectOutOrgLineNo" parameterType="java.lang.String" resultType="java.lang.String">
+    select CALL_CUSTOMER_LINE
+    from CALL_CUSTOMER_TABLE
+    where CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+  </select>
+
+	<select id="selectlineNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select CALL_CUSTOMER_LINE as "lineNo",CUSTOMER_NO as "customerNo" from CALL_CUSTOMER_TABLE where CUSTOMER_NUMBER = #{id,jdbcType=VARCHAR}
+	</select>
+
+
+</mapper>

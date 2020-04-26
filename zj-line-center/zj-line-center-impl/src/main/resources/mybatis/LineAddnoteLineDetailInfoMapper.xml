@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjft.microservice.treasurybrain.linecenter.repository.LineAddnoteLineDetailInfoMapper">
+
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.LineAddnoteLineDetailInfoDO">
+    <id column="THE_DAY" jdbcType="DECIMAL" property="theDay" />
+    <result column="LINE_NO" jdbcType="VARCHAR" property="lineNo" />
+    <result column="TASK_COUNT" jdbcType="DECIMAL" property="taskCount" />
+    <result column="TASK_ONE_TYPE" jdbcType="CHAR" property="taskOneType" />
+    <result column="TASK_TWO_TYPE" jdbcType="CHAR" property="taskTwoType" />
+    <result column="START_TIME_AM" jdbcType="VARCHAR" property="startTimeAm" />
+    <result column="END_TIME_AM" jdbcType="VARCHAR" property="endTimeAm" />
+    <result column="START_TIME_PM" jdbcType="VARCHAR" property="startTimePm" />
+    <result column="END_TIME_PM" jdbcType="VARCHAR" property="endTimePm" />
+    <result column="RETURN_UNIT_AM" jdbcType="VARCHAR" property="returnUnitAm" />
+    <result column="RETURN_UNIT_PM" jdbcType="VARCHAR" property="returnUnitPm" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List">
+    THE_DAY, LINE_NO, TASK_COUNT, TASK_ONE_TYPE, TASK_TWO_TYPE, START_TIME_AM, END_TIME_AM, 
+    START_TIME_PM, END_TIME_PM, RETURN_UNIT_AM, RETURN_UNIT_PM
+  </sql>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Short" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ADDNOTES_LINE_DETAIL
+    where THE_DAY = #{theDay,jdbcType=DECIMAL}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
+    delete from ADDNOTES_LINE_DETAIL
+    where THE_DAY = #{theDay,jdbcType=DECIMAL}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineAddnoteLineDetailInfoDO">
+    insert into ADDNOTES_LINE_DETAIL (THE_DAY, ROUTE_NO, TASK_COUNT,
+      TASK_ONE_TYPE, TASK_TWO_TYPE, START_TIME_AM, 
+      END_TIME_AM, START_TIME_PM, END_TIME_PM, 
+      RETURN_UNIT_AM, RETURN_UNIT_PM)
+    values (#{theDay,jdbcType=DECIMAL}, #{lineNo,jdbcType=VARCHAR}, #{taskCount,jdbcType=DECIMAL}, 
+      #{taskOneType,jdbcType=CHAR}, #{taskTwoType,jdbcType=CHAR}, #{startTimeAm,jdbcType=VARCHAR}, 
+      #{endTimeAm,jdbcType=VARCHAR}, #{startTimePm,jdbcType=VARCHAR}, #{endTimePm,jdbcType=VARCHAR}, 
+      #{returnUnitAm,jdbcType=VARCHAR}, #{returnUnitPm,jdbcType=VARCHAR})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineAddnoteLineDetailInfoDO">
+    insert into ADDNOTES_LINE_DETAIL
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="theDay != null">
+        THE_DAY,
+      </if>
+      <if test="lineNo != null">
+        LINE_NO,
+      </if>
+      <if test="taskCount != null">
+        TASK_COUNT,
+      </if>
+      <if test="taskOneType != null">
+        TASK_ONE_TYPE,
+      </if>
+      <if test="taskTwoType != null">
+        TASK_TWO_TYPE,
+      </if>
+      <if test="startTimeAm != null">
+        START_TIME_AM,
+      </if>
+      <if test="endTimeAm != null">
+        END_TIME_AM,
+      </if>
+      <if test="startTimePm != null">
+        START_TIME_PM,
+      </if>
+      <if test="endTimePm != null">
+        END_TIME_PM,
+      </if>
+      <if test="returnUnitAm != null">
+        RETURN_UNIT_AM,
+      </if>
+      <if test="returnUnitPm != null">
+        RETURN_UNIT_PM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="theDay != null">
+        #{theDay,jdbcType=DECIMAL},
+      </if>
+      <if test="lineNo != null">
+        #{lineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="taskCount != null">
+        #{taskCount,jdbcType=DECIMAL},
+      </if>
+      <if test="taskOneType != null">
+        #{taskOneType,jdbcType=CHAR},
+      </if>
+      <if test="taskTwoType != null">
+        #{taskTwoType,jdbcType=CHAR},
+      </if>
+      <if test="startTimeAm != null">
+        #{startTimeAm,jdbcType=VARCHAR},
+      </if>
+      <if test="endTimeAm != null">
+        #{endTimeAm,jdbcType=VARCHAR},
+      </if>
+      <if test="startTimePm != null">
+        #{startTimePm,jdbcType=VARCHAR},
+      </if>
+      <if test="endTimePm != null">
+        #{endTimePm,jdbcType=VARCHAR},
+      </if>
+      <if test="returnUnitAm != null">
+        #{returnUnitAm,jdbcType=VARCHAR},
+      </if>
+      <if test="returnUnitPm != null">
+        #{returnUnitPm,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineAddnoteLineDetailInfoDO">
+    update ADDNOTES_LINE_DETAIL
+    <set>
+      <if test="lineNo != null">
+        LINE_NO = #{lineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="taskCount != null">
+        TASK_COUNT = #{taskCount,jdbcType=DECIMAL},
+      </if>
+      <if test="taskOneType != null">
+        TASK_ONE_TYPE = #{taskOneType,jdbcType=CHAR},
+      </if>
+      <if test="taskTwoType != null">
+        TASK_TWO_TYPE = #{taskTwoType,jdbcType=CHAR},
+      </if>
+      <if test="startTimeAm != null">
+        START_TIME_AM = #{startTimeAm,jdbcType=VARCHAR},
+      </if>
+      <if test="endTimeAm != null">
+        END_TIME_AM = #{endTimeAm,jdbcType=VARCHAR},
+      </if>
+      <if test="startTimePm != null">
+        START_TIME_PM = #{startTimePm,jdbcType=VARCHAR},
+      </if>
+      <if test="endTimePm != null">
+        END_TIME_PM = #{endTimePm,jdbcType=VARCHAR},
+      </if>
+      <if test="returnUnitAm != null">
+        RETURN_UNIT_AM = #{returnUnitAm,jdbcType=VARCHAR},
+      </if>
+      <if test="returnUnitPm != null">
+        RETURN_UNIT_PM = #{returnUnitPm,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where THE_DAY = #{theDay,jdbcType=DECIMAL}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineAddnoteLineDetailInfoDO">
+    update ADDNOTES_LINE_DETAIL
+    set ROUTE_NO = #{lineNo,jdbcType=VARCHAR},
+      TASK_COUNT = #{taskCount,jdbcType=DECIMAL},
+      TASK_ONE_TYPE = #{taskOneType,jdbcType=CHAR},
+      TASK_TWO_TYPE = #{taskTwoType,jdbcType=CHAR},
+      START_TIME_AM = #{startTimeAm,jdbcType=VARCHAR},
+      END_TIME_AM = #{endTimeAm,jdbcType=VARCHAR},
+      START_TIME_PM = #{startTimePm,jdbcType=VARCHAR},
+      END_TIME_PM = #{endTimePm,jdbcType=VARCHAR},
+      RETURN_UNIT_AM = #{returnUnitAm,jdbcType=VARCHAR},
+      RETURN_UNIT_PM = #{returnUnitPm,jdbcType=VARCHAR}
+    where THE_DAY = #{theDay,jdbcType=DECIMAL}
+  </update>
+
+
+	<select id="selectTaskCount" resultType="java.util.List" parameterType="java.util.Map">
+		SELECT TASK_COUNT FROM ADDNOTES_LINE_DETAIL
+		WHERE Line_NO =#{lineNo,jdbcType=VARCHAR} AND THE_DAY = #{theDay,jdbcType=VARCHAR}
+	</select>
+</mapper>

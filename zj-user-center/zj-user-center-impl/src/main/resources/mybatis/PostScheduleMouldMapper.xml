@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.usercenter.repository.PostScheduleMouldMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.usercenter.po.PostScheduleMouldPO">
+		<id column="MOULD_NO" property="mouldNo" jdbcType="VARCHAR"/>
+		<result column="MOULD_TYPE" property="mouldType" jdbcType="DECIMAL"/>
+		<result column="MOULD_NAME" property="mouldName" jdbcType="VARCHAR"/>
+		<result column="ORG_NO" property="orgNo" jdbcType="VARCHAR"/>
+		<result column="POST_NO" property="postNo" jdbcType="VARCHAR"/>
+		<result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR"/>
+	</resultMap>
+	<resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.usercenter.domain.PostScheduleMouldDO"
+			   extends="BaseResultMap">
+		<result column="ORG_NAME" property="orgName" jdbcType="VARCHAR"/>
+		<result column="POST_NAME" property="postName" jdbcType="VARCHAR"/>
+	</resultMap>
+	<resultMap id="PersionMap" type="com.zjft.microservice.treasurybrain.usercenter.domain.PostScheduleDetailDO" extends="BaseResultMap">
+		<!--<result column="OP_NO" property="opNo" jdbcType="VARCHAR"/>
+		<result column="CLASSES_NO" property="classesNo" jdbcType="VARCHAR"/>-->
+		<result column="COUNT_NO" property="countNo" jdbcType="INTEGER"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+    MOULD_NO, MOULD_TYPE, MOULD_NAME, ORG_NO, POST_NO,CREATE_TIME
+  </sql>
+	<sql id="Detail_Columm_List">
+	 MOULD_NO, MOULD_TYPE, MOULD_NAME, ORG_NO, POST_NO, ORG_NAME, OP_NAME, CLASSES_NAME, POST_NAME
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List"/>
+		from POST_SCHEDULE_MOULD_TABLE
+		where MOULD_NO = #{mouldNo,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from POST_SCHEDULE_MOULD_TABLE
+    where MOULD_NO = #{mouldNo,jdbcType=VARCHAR}
+  </delete>
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.usercenter.po.PostScheduleMouldPO">
+    insert into POST_SCHEDULE_MOULD_TABLE (MOULD_NO, MOULD_TYPE, MOULD_NAME, 
+      ORG_NO, POST_NO, CREATE_TIME)
+    values (#{mouldNo,jdbcType=VARCHAR}, #{mouldType,jdbcType=DECIMAL}, #{mouldName,jdbcType=VARCHAR}, 
+      #{orgNo,jdbcType=VARCHAR}, #{postNo,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR})
+  </insert>
+	<insert id="insertSelective"
+			parameterType="com.zjft.microservice.treasurybrain.usercenter.po.PostScheduleMouldPO">
+		insert into POST_SCHEDULE_MOULD_TABLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="mouldNo != null">
+				MOULD_NO,
+			</if>
+			<if test="mouldType != null">
+				MOULD_TYPE,
+			</if>
+			<if test="mouldName != null">
+				MOULD_NAME,
+			</if>
+			<if test="orgNo != null">
+				ORG_NO,
+			</if>
+			<if test="postNo != null">
+				POST_NO,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="mouldNo != null">
+				#{mouldNo,jdbcType=VARCHAR},
+			</if>
+			<if test="mouldType != null">
+				#{mouldType,jdbcType=DECIMAL},
+			</if>
+			<if test="mouldName != null">
+				#{mouldName,jdbcType=VARCHAR},
+			</if>
+			<if test="orgNo != null">
+				#{orgNo,jdbcType=VARCHAR},
+			</if>
+			<if test="postNo != null">
+				#{postNo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+			parameterType="com.zjft.microservice.treasurybrain.usercenter.po.PostScheduleMouldPO">
+		update POST_SCHEDULE_MOULD_TABLE
+		<set>
+			<if test="mouldType != null">
+				MOULD_TYPE = #{mouldType,jdbcType=DECIMAL},
+			</if>
+			<if test="mouldName != null">
+				MOULD_NAME = #{mouldName,jdbcType=VARCHAR},
+			</if>
+			<if test="orgNo != null">
+				ORG_NO = #{orgNo,jdbcType=VARCHAR},
+			</if>
+			<if test="postNo != null">
+				POST_NO = #{postNo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where MOULD_NO = #{mouldNo,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+			parameterType="com.zjft.microservice.treasurybrain.usercenter.po.PostScheduleMouldPO">
+    update POST_SCHEDULE_MOULD_TABLE
+    set MOULD_TYPE = #{mouldType,jdbcType=DECIMAL},
+      MOULD_NAME = #{mouldName,jdbcType=VARCHAR},
+      ORG_NO = #{orgNo,jdbcType=VARCHAR},
+      POST_NO = #{postNo,jdbcType=VARCHAR}
+    where MOULD_NO = #{mouldNo,jdbcType=VARCHAR}
+  </update>
+
+	<select id="qryTotalRow" resultType="int" parameterType="java.util.Map">
+		select count(1) from POST_SCHEDULE_MOULD_TABLE p
+		where 1=1
+		<if test="''!=postNo and postNo!=null">
+			and p.POST_NO like concat('%',concat(#{postNo,jdbcType = VARCHAR},'%'))
+		</if>
+		<if test="''!=orgNo and orgNo!=null">
+			and p.ORG_NO = #{orgNo,jdbcType = VARCHAR}
+		</if>
+		<if test="0!=mouldType and mouldType!=null">
+			and p.MOULD_TYPE = #{mouldType,jdbcType = VARCHAR}
+		</if>
+	</select>
+
+	<select id="qryByPage" resultMap="DetailMap" parameterType="java.util.Map">
+		select t.* from
+		(select ROWNUM rn ,
+		p.MOULD_NO, p.MOULD_TYPE, p.MOULD_NAME, p.ORG_NO, p.POST_NO,p.create_time, m.NAME as ORG_NAME, n.POST_NAME
+		from POST_SCHEDULE_MOULD_TABLE p
+		left join SYS_ORG m on p.ORG_NO=m.NO
+		left join SYS_POST n on p.POST_NO=n.POST_NO
+		<where>
+			<if test="''!=postNo and postNo!=null">
+				and p.POST_NO like concat('%',concat(#{postNo,jdbcType = VARCHAR},'%'))
+			</if>
+			<if test="0!=mouldType and mouldType!=null">
+				and p.MOULD_TYPE = #{mouldType,jdbcType = VARCHAR}
+			</if>
+			<if test="''!=orgNo and orgNo!=null">and exists(select s.NO
+				FROM SYS_ORG s
+				WHERE s.NO=#{orgNo,jdbcType=VARCHAR} and m.LEFT &gt;=s.LEFT and m.RIGHT &lt;=s.RIGHT)
+			</if>
+		</where>
+		order by p.create_time desc)t
+		where t.rn &gt; #{startRow,jdbcType=NUMERIC} and t.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="qryInfoByMouldNo" resultMap="PersionMap">
+	select distinct b.COUNT_NO,a.* from POST_SCHEDULE_MOULD_TABLE a left join POST_SCHEDULE_MOULD_PERSION b on a.MOULD_NO=b.MOULD_NO
+	where a.MOULD_NO=#{mouldNo,jdbcType=VARCHAR} order by b.COUNT_NO
+   </select>
+
+	<select id="qryAll" resultMap="DetailMap">
+		select p.MOULD_NO,p.MOULD_TYPE, p.MOULD_NAME, p.ORG_NO, p.POST_NO, m.NAME as ORG_NAME, n.POST_NAME
+		from POST_SCHEDULE_MOULD_TABLE p
+		left join SYS_ORG m on p.ORG_NO=m.NO
+		left join SYS_POST n on p.POST_NO=n.POST_NO
+		<where>
+			<if test="''!=postNo and postNo!=null">
+				and p.POST_NO =#{postNo,jdbcType = VARCHAR}
+			</if>
+			<if test="''!=orgNo and orgNo!=null">and exists(select s.NO
+				FROM SYS_ORG s
+				WHERE s.NO=#{orgNo,jdbcType=VARCHAR} and m.LEFT &gt;=s.LEFT and m.RIGHT &lt;=s.RIGHT)
+			</if>
+		</where>
+		order by p.MOULD_NO
+   </select>
+
+</mapper>

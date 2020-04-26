@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.task.repository.TaskLineMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.task.po.TaskLinePO" >
+    <result column="LINE_WORK_ID" property="lineWorkId" jdbcType="VARCHAR" />
+    <result column="TASK_NO" property="taskNo" jdbcType="VARCHAR" />
+    <result column="SORT_NO" property="sortNo" jdbcType="DECIMAL" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="LNG" property="lng" jdbcType="VARCHAR" />
+    <result column="LAT" property="lat" jdbcType="VARCHAR" />
+    <result column="EARLY_TIME" property="earlyTime" jdbcType="VARCHAR" />
+    <result column="LATEST_TIME" property="latestTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.task.po.TaskLinePO" >
+    insert into TASK_LINE (LINE_WORK_ID, TASK_NO, SORT_NO, 
+      ADDRESS, LNG, LAT, 
+      EARLY_TIME, LATEST_TIME)
+    values (#{lineWorkId,jdbcType=VARCHAR}, #{taskNo,jdbcType=VARCHAR}, #{sortNo,jdbcType=DECIMAL}, 
+      #{address,jdbcType=VARCHAR}, #{lng,jdbcType=VARCHAR}, #{lat,jdbcType=VARCHAR}, 
+      #{earlyTime,jdbcType=VARCHAR}, #{latestTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.task.po.TaskLinePO" >
+    insert into TASK_LINE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="lineWorkId != null" >
+        LINE_WORK_ID,
+      </if>
+      <if test="taskNo != null" >
+        TASK_NO,
+      </if>
+      <if test="sortNo != null" >
+        SORT_NO,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="lng != null" >
+        LNG,
+      </if>
+      <if test="lat != null" >
+        LAT,
+      </if>
+      <if test="earlyTime != null" >
+        EARLY_TIME,
+      </if>
+      <if test="latestTime != null" >
+        LATEST_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="lineWorkId != null" >
+        #{lineWorkId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskNo != null" >
+        #{taskNo,jdbcType=VARCHAR},
+      </if>
+      <if test="sortNo != null" >
+        #{sortNo,jdbcType=DECIMAL},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null" >
+        #{lng,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        #{lat,jdbcType=VARCHAR},
+      </if>
+      <if test="earlyTime != null" >
+        #{earlyTime,jdbcType=VARCHAR},
+      </if>
+      <if test="latestTime != null" >
+        #{latestTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+	<insert id="insertSelectiveByMap" parameterType="java.util.Map" >
+		insert into TASK_LINE
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="lineWorkId != null" >
+				LINE_WORK_ID,
+			</if>
+			<if test="taskNo != null" >
+				TASK_NO,
+			</if>
+			<if test="sortNo != null" >
+				SORT_NO,
+			</if>
+			<if test="address != null" >
+				ADDRESS,
+			</if>
+			<if test="lng != null" >
+				LNG,
+			</if>
+			<if test="lat != null" >
+				LAT,
+			</if>
+			<if test="earlyTime != null" >
+				EARLY_TIME,
+			</if>
+			<if test="latestTime != null" >
+				LATEST_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="lineWorkId != null" >
+				#{lineWorkId,jdbcType=VARCHAR},
+			</if>
+			<if test="taskNo != null" >
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="sortNo != null" >
+				#{sortNo,jdbcType=DECIMAL},
+			</if>
+			<if test="address != null" >
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="lng != null" >
+				#{lng,jdbcType=VARCHAR},
+			</if>
+			<if test="lat != null" >
+				#{lat,jdbcType=VARCHAR},
+			</if>
+			<if test="earlyTime != null" >
+				#{earlyTime,jdbcType=VARCHAR},
+			</if>
+			<if test="latestTime != null" >
+				#{latestTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateSelectiveByMap" parameterType="java.util.Map" >
+		update TASK_LINE
+		<set>
+			<if test="lineWorkId != null" >
+				LINE_WORK_ID = #{lineWorkId,jdbcType=VARCHAR},
+			</if>
+			<if test="sortNo != null" >
+				SORT_NO = #{sortNo,jdbcType=DECIMAL},
+			</if>
+			<if test="address != null" >
+				ADDRESS = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="lng != null" >
+				LNG = #{lng,jdbcType=VARCHAR},
+			</if>
+			<if test="lat != null" >
+				LAT =#{lat,jdbcType=VARCHAR},
+			</if>
+			<if test="earlyTime != null" >
+				EARLY_TIME = #{earlyTime,jdbcType=VARCHAR},
+			</if>
+			<if test="latestTime != null" >
+				LATEST_TIME =#{latestTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteByTaskNo" parameterType="java.lang.String">
+		delete from TASK_LINE where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="getLineByTaskNo" parameterType="java.lang.String" resultType="java.util.Map">
+		select lt.LINE_NO ,lt.LINE_NAME from TASK_LINE t
+			left join LINE_WORK_TABLE lwt on lwt.LINE_WORK_ID = t.LINE_WORK_ID
+			left join LINE_TABLE lt on lt.LINE_NO = lwt.LINE_NO
+			where t.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+</mapper>

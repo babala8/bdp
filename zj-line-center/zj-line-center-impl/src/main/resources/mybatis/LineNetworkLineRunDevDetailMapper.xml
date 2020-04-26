@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.linecenter.repository.LineNetworkLineRunDevDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunOrgDetail" >
+    <id column="LINE_RUN_NO" property="networkLineRunNo" jdbcType="VARCHAR" />
+    <id column="ORG_NO" property="networkNo" jdbcType="VARCHAR" />
+    <result column="SORT" property="sort" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    LINE_RUN_NO, ORG_NO, SORT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunOrgDetailKey" >
+    select
+    <include refid="Base_Column_List" />
+    from LINE_RUN_NET_DETAIL
+    where ORG_NO = #{networkNo,jdbcType=VARCHAR}
+      and LINE_RUN_NO = #{networkLineRunNo,jdbcType=VARCHAR}
+  </select>
+
+	<select id="selectDetailByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunOrgDetailKey" >
+	select
+	d.LINE_RUN_NO, d.ORG_NO, d.SORT,o.NAME as networkName
+	from LINE_RUN_NET_DETAIL d,SYS_ORG o
+	where d.ORG_NO = o.NO and d.LINE_RUN_NO = #{networkLineRunNo,jdbcType=VARCHAR}
+</select>
+
+  <delete id="deleteByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunOrgDetailKey" >
+    delete from LINE_RUN_DEV_DETAIL
+    where ORG_NO = #{networkNo,jdbcType=VARCHAR}
+      and LINE_RUN_NO = #{networkLineRunNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunOrgDetail" >
+    insert into LINE_RUN_NET_DETAIL (LINE_RUN_NO, ORG_NO,
+      SORT
+      )
+    values (#{networkLineRunNo,jdbcType=VARCHAR}, #{networkNo,jdbcType=VARCHAR},
+      #{sort,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunOrgDetail" >
+    insert into LINE_RUN_NET_DETAIL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="networkLineRunNo != null" >
+        LINE_RUN_NO,
+      </if>
+      <if test="networkNo != null" >
+        ORG_NO,
+      </if>
+      <if test="sort != null" >
+        SORT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="networkLineRunNo != null" >
+        #{networkLineRunNo,jdbcType=VARCHAR},
+      </if>
+	  <if test="networkNo != null" >
+        #{networkNo,jdbcType=VARCHAR},
+      </if>
+	  <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunOrgDetail" >
+    update LINE_RUN_DEV_DETAIL
+    <set >
+      <if test="sort != null" >
+        SORT = #{sort,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ORG_NO = #{networkNo,jdbcType=VARCHAR}
+      and LINE_RUN_NO = #{networkLineRunNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunOrgDetail" >
+    update LINE_RUN_NET_DETAIL
+    set SORT = #{sort,jdbcType=INTEGER}
+    where ORG_NO = #{networkNo,jdbcType=VARCHAR}
+      and LINE_RUN_NO = #{networkLineRunNo,jdbcType=VARCHAR}
+  </update>
+
+	<delete id="deleteNetworkLineDetail" parameterType="java.util.Map" >
+	   DELETE FROM LINE_RUN_NET_DETAIL WHERE LINE_RUN_NO in
+	  (SELECT LINE_RUN_NO FROM LINE_RUN_NET
+	  WHERE LINE_NO = #{networkLineNo,jdbcType=VARCHAR}
+	  AND THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR})
+  </delete>
+
+	<delete id="deleteByNetworkLineRunNo" parameterType="java.lang.String">
+	   DELETE FROM LINE_RUN_NET_DETAIL
+	   WHERE LINE_RUN_NO =#{networkLineRunNo,jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

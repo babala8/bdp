@@ -1,0 +1,1468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjft.microservice.treasurybrain.task.repository.TaskInfoMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.task.domain.TaskInfo">
+		<id column="TASK_NO" jdbcType="VARCHAR" property="taskNo"/>
+		<result column="TASK_TYPE" jdbcType="DECIMAL" property="taskType"/>
+		<result column="PLAN_FINISH_DATE" jdbcType="VARCHAR" property="planFinishDate"/>
+		<result column="STATUS" jdbcType="DECIMAL" property="status"/>
+		<result column="CLR_CENTER_NO" jdbcType="VARCHAR" property="clrCenterNo"/>
+		<result column="LINE_NO" jdbcType="VARCHAR" property="lineNo"/>
+		<result column="LINE_NAME" jdbcType="VARCHAR" property="lineName"/>
+		<result column="OP_NO1" jdbcType="VARCHAR" property="opNo1"/>
+		<result column="OP_NO2" jdbcType="VARCHAR" property="opNo2"/>
+		<result column="CREATE_OP_NO" jdbcType="VARCHAR" property="createOpNo"/>
+		<result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+		<result column="NOTE" jdbcType="VARCHAR" property="note"/>
+		<result column="MODE_OP" jdbcType="VARCHAR" property="modeOp"/>
+		<result column="MODE_TIME" jdbcType="VARCHAR" property="modeTime"/>
+		<result column="MODE_NOTE" jdbcType="VARCHAR" property="modeNote"/>
+		<result column="AUDIT_OP" jdbcType="VARCHAR" property="auditOp"/>
+		<result column="AUDIT_TIME" jdbcType="VARCHAR" property="auditTime"/>
+		<result column="AUDIT_NOTE" jdbcType="VARCHAR" property="auditNote"/>
+		<result column="PLAN_DISTANCE" jdbcType="DECIMAL" property="planDistance"/>
+		<result column="PLAN_TIME_COST" jdbcType="DECIMAL" property="planTimeCost"/>
+		<result column="URGENT_FLAG" jdbcType="DECIMAL" property="urgentFlag"/>
+		<result column="ADDNOTES_PLAN_NO" jdbcType="DECIMAL" property="addnotesPlanNo"/>
+		<result column="NO" jdbcType="VARCHAR" property="devNo"/>
+		<result column="ADDRESS" jdbcType="VARCHAR" property="address"/>
+		<result column="ORG_NO" jdbcType="VARCHAR" property="orgNo"/>
+		<result column="ORG_NAME" jdbcType="VARCHAR" property="orgName"/>
+		<result column="SHELF_NO" jdbcType="VARCHAR" property="shelfNo"/>
+		<result column="CENTER_NAME" jdbcType="VARCHAR" property="clrCenterName"/>
+		<result column="CREATE_OP_NAME" jdbcType="VARCHAR" property="createOpName"/>
+		<result column="CUSTOMER_NO" jdbcType="VARCHAR" property="customerNo"/>
+		<result column="CUSTOMER_NAME" jdbcType="VARCHAR" property="customerName"/>
+		<result column="CUSTOMER_TYPE" jdbcType="VARCHAR" property="customerType"/>
+	</resultMap>
+
+	<resultMap id="AddnotsLinetMap" type="com.zjft.microservice.treasurybrain.common.domain.AddnoteLine">
+		<result column="LINE_NO" jdbcType="VARCHAR" property="lineNo"/>
+		<result column="LINE_NAME" jdbcType="VARCHAR" property="lineName"/>
+	</resultMap>
+
+	<resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.task.domain.TaskTableForName"
+			   extends="BaseResultMap">
+
+		<result column="ADDNOTES_OP_NAME1" property="addnotesOpName1" jdbcType="VARCHAR"/>
+		<result column="ADDNOTES_OP_NAME2" property="addnotesOpName2" jdbcType="VARCHAR"/>
+		<result column="CLR_CENTER_NAME" property="clrCenterName" jdbcType="VARCHAR"/>
+		<!--
+		<association property="addnotesPlan" column="ADDNOTES_PLAN_NO"
+					 javaType="com.zjft.microservice.treasurybrain.task.domain.TaskInfo"
+					 select="com.zjft.microservice.treasurybrain.task.repository.TaskInfoMapper.selectByPrimaryKey"></association>
+		<association property="addnoteLine" column="LINE_NO"
+					 javaType="com.zjft.microservice.treasurybrain.linecenter.domain.AddnoteLineDO"
+					 select="com.zjft.microservice.treasurybrain.linecenter.repository.LineAddnoteLineMapper.selectByPrimaryKey"></association>
+		-->
+	</resultMap>
+
+	<resultMap id="TaskCountInfoMap" type="com.zjft.microservice.treasurybrain.task.domain.TaskCountInfo">
+		<id column="TASK_NO" jdbcType="VARCHAR" property="taskNo"/>
+		<result column="TASK_TYPE" jdbcType="INTEGER" property="taskType"/>
+		<result column="TASK_STATUS" jdbcType="INTEGER" property="taskStatus"/>
+		<result column="DEV_NO" jdbcType="VARCHAR" property="devNo"/>
+		<result column="BATCH" jdbcType="INTEGER" property="batch"/>
+		<result column="COUNT_STATUS" jdbcType="INTEGER" property="countStatus"/>
+		<result column="COUNT_START_DATE" jdbcType="VARCHAR" property="countStartDate"/>
+		<result column="COUNT_END_DATE" jdbcType="VARCHAR" property="countEndDate"/>
+		<result column="COUNT_AMOUNT" jdbcType="DOUBLE" property="countAmount"/>
+		<result column="CLR_CNETER_NO" jdbcType="VARCHAR" property="clrCenterNo"/>
+		<result column="ADDNOTES_PLAN_NO" jdbcType="VARCHAR" property="addnotesPlanNo"/>
+	</resultMap>
+
+	<resultMap id="StorageEntityTransMap"
+			   type="com.zjft.microservice.treasurybrain.task.dto.StorageUseEntityTransferDTO">
+		<id column="TASK_NO" jdbcType="VARCHAR" property="taskNo"/>
+		<result column="LINE_NO" jdbcType="VARCHAR" property="lineNo"/>
+		<result column="LINE_NAME" jdbcType="VARCHAR" property="lineName"/>
+		<result column="SHELF_NO" jdbcType="VARCHAR" property="shelfNo"/>
+	</resultMap>
+
+	<resultMap id="StorageResultMap" type="com.zjft.microservice.treasurybrain.task.dto.StorageUseEntityDTO">
+		<id column="TASK_NO" property="taskNo" jdbcType="VARCHAR"/>
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR"/>
+		<result column="CENTER_NAME" property="clrCenterName" jdbcType="VARCHAR"/>
+		<result column="SHELF_NO" property="shelfNo" jdbcType="VARCHAR"/>
+		<result column="ADDNOTES_DATE" property="addnotesDate" jdbcType="VARCHAR"/>
+		<result column="LINE_NO" property="lineNo" jdbcType="VARCHAR"/>
+		<result column="LINE_NAME" property="lineName" jdbcType="VARCHAR"/>
+		<result column="AMOUNT" property="amount" jdbcType="NUMERIC"/>
+		<result column="IN_TIME" property="inTime" jdbcType="VARCHAR"/>
+		<result column="TASK_STATUS" property="taskStatus" jdbcType="VARCHAR"/>
+		<result column="NAME" property="statusDesc" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="StorageMap" type="com.zjft.microservice.treasurybrain.task.dto.StorageUseEntityDetailDTO">
+		<id column="TASK_NO" property="taskNo" jdbcType="VARCHAR"/>
+		<result column="SHELF_NO" property="shelfNo" jdbcType="VARCHAR"/>
+		<result column="LINE_NO" property="lineNo" jdbcType="VARCHAR"/>
+		<result column="LINE_NAME" property="lineName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="TaskProcessResultMap" type="com.zjft.microservice.treasurybrain.task.dto.TaskTauroDTO">
+		<id column="TASK_NO" jdbcType="VARCHAR" property="taskNo"/>
+		<result column="TASK_TYPE" jdbcType="INTEGER" property="taskType"/>
+		<result column="PLAN_FINISH_DATE" jdbcType="VARCHAR" property="planFinishDate"/>
+		<result column="STATUS" jdbcType="INTEGER" property="status"/>
+		<result column="CLR_CENTER_NO" jdbcType="VARCHAR" property="clrCenterNo"/>
+		<result column="LINE_NO" jdbcType="VARCHAR" property="lineNo"/>
+		<result column="OP_NO1" jdbcType="VARCHAR" property="opNo1"/>
+		<result column="OP_NO2" jdbcType="VARCHAR" property="opNo2"/>
+		<result column="CREATE_OP_NO" jdbcType="VARCHAR" property="createOpNo"/>
+		<result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+		<result column="NOTE" jdbcType="VARCHAR" property="note"/>
+		<result column="PLAN_DISTANCE" jdbcType="DECIMAL" property="planDistance"/>
+		<result column="PLAN_TIME_COST" jdbcType="INTEGER" property="planTimeCost"/>
+		<result column="URGENT_FLAG" jdbcType="INTEGER" property="urgentFlag"/>
+		<result column="SHELF_NO" jdbcType="VARCHAR" property="shelfNo"/>
+		<result column="ADDNOTES_PLAN_NO" jdbcType="VARCHAR" property="addnotesPlanNo"/>
+		<result column="OP_NAME1" jdbcType="VARCHAR" property="opName1"/>
+		<result column="OP_NAME2" jdbcType="VARCHAR" property="opName2"/>
+		<result column="ADDNOTESDATE" jdbcType="VARCHAR" property="addnotesDate"/>
+		<result column="LINE_NAME" jdbcType="VARCHAR" property="lineName"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+    TASK_NO, TASK_TYPE, PLAN_FINISH_DATE, STATUS, CLR_CENTER_NO, CAR_NUMBER, LINE_NO, 
+    OP_NO1, OP_NO2, CREATE_OP_NO, CREATE_TIME, NOTE, MODE_OP, MODE_TIME, MODE_NOTE, AUDIT_OP, 
+    AUDIT_TIME, AUDIT_NOTE, PLAN_DISTANCE, PLAN_TIME_COST, URGENT_FLAG, SHELF_NO, ADDNOTES_PLAN_NO
+  </sql>
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    t.TASK_NO, t.TASK_TYPE, t.PLAN_FINISH_DATE, t.STATUS, t.CLR_CENTER_NO, t.CUSTOMER_NO,t.CUSTOMER_TYPE,t.SHELF_NO,t.CUSTOMER_NAME,
+    t.OP_NO1,t.OP_NO2, t.CREATE_OP_NO, t.CREATE_TIME, t.NOTE, t.URGENT_FLAG, t.ADDRESS, t.ADDNOTES_PLAN_NO, l.LINE_NO, l.LINE_NAME
+    from TASK_TABLE t
+    left join TASK_LINE tl on t.TASK_NO = tl.TASK_NO
+    left join LINE_WORK_TABLE lwt on lwt.LINE_WORK_ID = tl.LINE_WORK_ID
+    left join LINE_TABLE l on l.LINE_NO = lwt.LINE_NO
+    where t.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  </select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TASK_TABLE
+    where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  </delete>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskInfo">
+    insert into TASK_TABLE (TASK_NO, TASK_TYPE, PLAN_FINISH_DATE, 
+      STATUS, CLR_CENTER_NO, CAR_NUMBER, 
+      LINE_NO, OP_NO1, OP_NO2, 
+      CREATE_OP_NO, CREATE_TIME, NOTE,
+      URGENT_FLAG
+      )
+    values (#{taskNo,jdbcType=VARCHAR}, #{taskType,jdbcType=DECIMAL}, #{planFinishDate,jdbcType=VARCHAR}, 
+      #{status,jdbcType=DECIMAL}, #{clrCenterNo,jdbcType=VARCHAR}, #{carNumber,jdbcType=VARCHAR}, 
+      #{lineNo,jdbcType=VARCHAR}, #{opNo1,jdbcType=VARCHAR}, #{opNo2,jdbcType=VARCHAR}, 
+      #{createOpNo,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, 
+      #{modeOp,jdbcType=VARCHAR}, #{modeTime,jdbcType=VARCHAR}, #{modeNote,jdbcType=VARCHAR}, 
+      #{auditOp,jdbcType=VARCHAR}, #{auditTime,jdbcType=VARCHAR}, #{auditNote,jdbcType=VARCHAR}, 
+      #{planDistance,jdbcType=DECIMAL}, #{planTimeCost,jdbcType=DECIMAL}, #{urgentFlag,jdbcType=DECIMAL}
+      )
+  </insert>
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskInfo">
+		insert into TASK_TABLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="taskNo != null">
+				TASK_NO,
+			</if>
+			<if test="taskType != null ">
+				TASK_TYPE,
+			</if>
+			<if test="planFinishDate != null">
+				PLAN_FINISH_DATE,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="clrCenterNo != null">
+				CLR_CENTER_NO,
+			</if>
+			<if test="carNumber != null">
+				CAR_NUMBER,
+			</if>
+			<if test="lineNo != null">
+				LINE_NO,
+			</if>
+			<if test="opNo1 != null">
+				OP_NO1,
+			</if>
+			<if test="opNo2 != null">
+				OP_NO2,
+			</if>
+			<if test="createOpNo != null">
+				CREATE_OP_NO,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="note != null">
+				NOTE,
+			</if>
+			<if test="addnotesPlanNo != null">
+				ADDNOTES_PLAN_NO,
+			</if>
+			<if test="urgentFlag != null">
+				URGENT_FLAG,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="taskNo != null">
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="taskType != null">
+				#{taskType,jdbcType=DECIMAL},
+			</if>
+			<if test="planFinishDate != null">
+				#{planFinishDate,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=DECIMAL},
+			</if>
+			<if test="clrCenterNo != null">
+				#{clrCenterNo,jdbcType=VARCHAR},
+			</if>
+			<if test="carNumber != null">
+				#{carNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="lineNo != null">
+				#{lineNo,jdbcType=VARCHAR},
+			</if>
+			<if test="opNo1 != null">
+				#{opNo1,jdbcType=VARCHAR},
+			</if>
+			<if test="opNo2 != null">
+				#{opNo2,jdbcType=VARCHAR},
+			</if>
+			<if test="createOpNo != null">
+				#{createOpNo,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null">
+				#{note,jdbcType=VARCHAR},
+			</if>
+			<if test="addnotesPlanNo != null">
+				#{addnotesPlanNo,jdbcType=DECIMAL},
+			</if>
+			<if test="urgentFlag != null">
+				#{urgentFlag,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertTaskLineByMap" parameterType="java.util.Map">
+		insert into TASK_TABLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="lineWorkId != null and lineWorkId !=''">
+				LINE_WORK_ID,
+			</if>
+			<if test="taskNo != null and taskNo !=''">
+				TASK_NO,
+			</if>
+			<if test="sortNo != null and sortNo !=''">
+				SORT_NO,
+			</if>
+			<if test="address != null and address !=''">
+				ADDRESS,
+			</if>
+			<if test="lng != null and lng !=''">
+				LNG,
+			</if>
+			<if test="lat != null and lat !=''">
+				LAT,
+			</if>
+			<if test="earlyTime != null and earlyTime !=''">
+				EARLY_TIME,
+			</if>
+			<if test="latestTime != null and latestTime !=''">
+				LATEST_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="lineWorkId != null and lineWorkId !=''">
+				#{lineWorkId,jdbcType=VARCHAR},
+			</if>
+			<if test="taskNo != null and taskNo !=''">
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="sortNo != null and sortNo !=''">
+				#{sortNo,jdbcType=DECIMAL},
+			</if>
+			<if test="ADDRESS != null and ADDRESS !=''">
+				#{ADDRESS,jdbcType=VARCHAR},
+			</if>
+			<if test="lng != null and lng !=''">
+				#{lng,jdbcType=VARCHAR},
+			</if>
+			<if test="lat != null and lat !=''">
+				#{lat,jdbcType=VARCHAR},
+			</if>
+			<if test="earlyTime != null and earlyTime !=''">
+				#{tasearlyTimekNo,jdbcType=VARCHAR},
+			</if>
+			<if test="latestTime != null and latestTime !=''">
+				#{latestTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+
+	</insert>
+
+	<insert id="insertSelectiveByMap" parameterType="java.util.Map">
+		insert into TASK_TABLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="taskNo != null and taskNo !=''">
+				TASK_NO,
+			</if>
+			<if test="taskType != null and taskType !=''">
+				TASK_TYPE,
+			</if>
+			<if test="customerNo != null and customerNo !=''">
+				CUSTOMER_NO,
+			</if>
+			<if test="customerType != null and customerType !=''">
+				CUSTOMER_TYPE,
+			</if>
+			<if test="planFinishDate != null and planFinishDate !=''">
+				PLAN_FINISH_DATE,
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo !=''">
+				CLR_CENTER_NO,
+			</if>
+			<if test="createOpNo != null and createOpNo !=''">
+				CREATE_OP_NO,
+			</if>
+			<if test="createTime != null and createTime !=''">
+				CREATE_TIME,
+			</if>
+			<if test="note != null and note !=''">
+				NOTE,
+			</if>
+			<if test="urgentFlag != null and urgentFlag !=''">
+				URGENT_FLAG,
+			</if>
+			<if test="status != null and status !=''">
+				STATUS,
+			</if>
+			<if test="shelfNo != null and shelfNo !=''">
+				SHELF_NO,
+			</if>
+			<if test="customerName != null and customerName !=''">
+				CUSTOMER_NAME,
+			</if>
+			<if test="address != null and address !=''">
+				ADDRESS,
+			</if>
+			<if test="addnotesPlanNo != null and addnotesPlanNo !=''">
+				ADDNOTES_PLAN_NO,
+			</if>
+			<if test="opNo1 != null and opNo1 !=''">
+				OP_NO1,
+			</if>
+			<if test="opNo2 != null and opNo2 !=''">
+				OP_NO2,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="taskNo != null and taskNo !=''">
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="taskType != null and taskType !=''">
+				#{taskType,jdbcType=DECIMAL},
+			</if>
+			<if test="customerNo != null and customerNo !=''">
+				#{customerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerType != null and customerType !=''">
+				#{customerType,jdbcType=DECIMAL},
+			</if>
+			<if test="planFinishDate != null and planFinishDate !=''">
+				#{planFinishDate,jdbcType=VARCHAR},
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo !=''">
+				#{clrCenterNo,jdbcType=VARCHAR},
+			</if>
+			<if test="createOpNo != null and createOpNo !=''">
+				#{createOpNo,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null and createTime !=''">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null and note !=''">
+				#{note,jdbcType=VARCHAR},
+			</if>
+			<if test="urgentFlag != null and urgentFlag !=''">
+				#{urgentFlag,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null and status !=''">
+				#{status,jdbcType=DECIMAL},
+			</if>
+			<if test="shelfNo != null and shelfNo !=''">
+				#{shelfNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerName != null and customerName !=''">
+				#{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null and address !=''">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="addnotesPlanNo != null and addnotesPlanNo !=''">
+				#{addnotesPlanNo,jdbcType=DECIMAL},
+			</if>
+			<if test="opNo1 != null and opNo1 !=''">
+				#{opNo1,jdbcType=VARCHAR},
+			</if>
+			<if test="opNo2 != null and opNo2 !=''">
+				#{opNo2,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskInfo">
+		update TASK_TABLE
+		<set>
+			<if test="planFinishDate != null">
+				PLAN_FINISH_DATE = #{planFinishDate,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=DECIMAL},
+			</if>
+			<if test="clrCenterNo != null">
+				CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+			</if>
+			<if test="urgentFlag != null">
+				URGENT_FLAG = #{urgentFlag,jdbcType=DECIMAL},
+			</if>
+			<if test="opNo1 != null">
+				OP_NO1 = #{opNo1,jdbcType=VARCHAR},
+			</if>
+			<if test="opNo2 != null">
+				OP_NO2 = #{opNo2,jdbcType=VARCHAR},
+			</if>
+			<if test="createOpNo != null">
+				CREATE_OP_NO = #{createOpNo,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null">
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+			<if test="customerNo != null">
+				CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerType != null">
+				CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR},
+			</if>
+			<if test="shelfNo != null">
+				SHELF_NO = #{shelfNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerName != null">
+				CUSTOMER_NAME = #{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="addnotesPlanNo != null">
+				ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR},
+			</if>
+			<if test="taskType != null">
+				TASK_TYPE = #{taskType,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskInfo">
+    update TASK_TABLE
+    set TASK_TYPE = #{taskType,jdbcType=DECIMAL},
+      PLAN_FINISH_DATE = #{planFinishDate,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=DECIMAL},
+      CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+      CAR_NUMBER = #{carNumber,jdbcType=VARCHAR},
+      LINE_NO = #{lineNo,jdbcType=VARCHAR},
+      OP_NO1 = #{opNo1,jdbcType=VARCHAR},
+      OP_NO2 = #{opNo2,jdbcType=VARCHAR},
+      CREATE_OP_NO = #{createOpNo,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      NOTE = #{note,jdbcType=VARCHAR},
+      URGENT_FLAG = #{urgentFlag,jdbcType=DECIMAL}
+    where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  </update>
+
+	<select id="selectByAddDate" parameterType="java.util.Map" resultType="java.lang.String">
+    select max(TASK_NO)
+    from TASK_TABLE
+    where CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+    and  TASK_TYPE = #{taskType,jdbcType=DECIMAL}
+    and CREATE_TIME like concat(#{createDate,jdbcType=VARCHAR},'%')
+  </select>
+
+	<update id="updateByTaskNo" parameterType="java.util.Map">
+    update TASK_TABLE
+    set STATUS = #{status,jdbcType=INTEGER}
+    where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  </update>
+
+	<update id="updateByPrimaryKeyMap" parameterType="java.util.Map">
+		update TASK_TABLE
+		<set>
+			<if test="taskType != null">
+				TASK_TYPE = #{taskType,jdbcType=DECIMAL},
+			</if>
+			<if test="customerNo != null">
+				CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerType != null">
+				CUSTOMER_TYPE = #{customerType,jdbcType=DECIMAL},
+			</if>
+			<if test="planFinishDate != null">
+				PLAN_FINISH_DATE = #{planFinishDate,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=DECIMAL},
+			</if>
+			<if test="clrCenterNo != null">
+				CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+			</if>
+			<if test="opNo1 != null">
+				OP_NO1 = #{opNo1,jdbcType=VARCHAR},
+			</if>
+			<if test="opNo2 != null">
+				OP_NO2 = #{opNo2,jdbcType=VARCHAR},
+			</if>
+			<if test="createOpNo != null">
+				CREATE_OP_NO = #{createOpNo,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null">
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+			<if test="urgentFlag != null">
+				URGENT_FLAG = #{urgentFlag,jdbcType=DECIMAL},
+			</if>
+			<if test="shelfNo != null">
+				SHELF_NO = #{shelfNo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectDetailByPrimaryKey" parameterType="java.lang.String" resultMap="DetailMap">
+		select
+		<include refid="Base_Column_List"/>
+		,u1.name ADDNOTES_OP_NAME1
+		,u2.name ADDNOTES_OP_NAME2
+		,u3.name CREATE_OP_NAME
+		,cct.center_name CLR_CENTER_NAME
+		from TASK_TABLE dt
+		left join SYS_USER u1 on dt.OP_NO1 = u1.USERNAME
+		left join SYS_USER u2 on dt.OP_NO2 = u2.USERNAME
+		left join SYS_USER u3 on dt.CREATE_OP_NO = u3.USERNAME
+		left join CLR_CENTER_TABLE cct on dt.CLR_CENTER_NO = cct.CLR_CENTER_NO
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectDetailByTask" parameterType="java.lang.String" resultMap="DetailMap">
+		select
+		TASK_NO, TASK_TYPE, PLAN_FINISH_DATE, dt.STATUS, dt.CLR_CENTER_NO, CAR_NUMBER, LINE_NO, OP_NO1, OP_NO2, CREATE_OP_NO,
+       CREATE_TIME, dt.NOTE,
+       URGENT_FLAG
+		,u1.name ADDNOTES_OP_NAME1
+		,u2.name ADDNOTES_OP_NAME2
+		,u3.name MOD_OP_NAME
+		,cct.center_name CLR_CENTER_NAME
+		from TASK_TABLE dt
+		left join SYS_USER u1 on dt.OP_NO1 = u1.USERNAME
+		left join SYS_USER u2 on dt.OP_NO2 = u2.USERNAME
+		left join SYS_USER u3 on dt.MODE_OP = u3.USERNAME
+		left join CLR_CENTER_TABLE cct on dt.CLR_CENTER_NO = cct.CLR_CENTER_NO
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectTotalRow" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(1) from (
+		SELECT distinct d.TASK_NO as "taskNo"
+		FROM TASK_TABLE d
+		LEFT OUTER JOIN SERVICE_TABLE st on st.SERVICE_NO = d.TASK_TYPE
+		LEFT OUTER JOIN TASK_LINE tl on d.TASK_NO = tl.TASK_NO
+		LEFT OUTER JOIN LINE_WORK_TABLE lwt on tl.LINE_WORK_ID = lwt.LINE_WORK_ID
+		LEFT OUTER JOIN LINE_TABLE aa on lwt.LINE_NO = aa.LINE_NO
+		LEFT OUTER JOIN SYS_USER o1 ON d.op_no1=o1.USERNAME
+		LEFT OUTER JOIN SYS_USER o2 ON d.op_no2=o2.USERNAME
+		LEFT OUTER JOIN SYS_USER o3 ON d.CREATE_OP_NO=o3.USERNAME
+		LEFT OUTER JOIN CLR_CENTER_TABLE c1 ON d.CLR_CENTER_NO=c1.CLR_CENTER_NO
+		LEFT OUTER JOIN ADDNOTES_PLAN a ON d.addnotes_plan_no=a.ADDNOTES_PLAN_NO
+		left outer join SYS_ORG s on d.CUSTOMER_NO = s.NO
+		left outer join service_status_convert ssc on d.STATUS=ssc.CUR_STATUS and d.TASK_TYPE = ssc.SERVICE_NO
+		<if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag != 1 and orgGradeNo != 5">
+			LEFT JOIN SYS_ORG tOrg on tOrg.no = #{orgNo,jdbcType=VARCHAR}
+			LEFT JOIN SYS_ORG t on t.CLR_CENTER_NO = c1.CLR_CENTER_NO
+		</if>
+		WHERE 1=1
+		and d.TASK_TYPE = st.SERVICE_NO
+		and st.TYPE = #{productType,jdbcType=NUMERIC}
+
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND d.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+		<if test="addnotesPlanNo != null and addnotesPlanNo != ''">
+			AND d.ADDNOTES_PLAN_NO like CONCAT(CONCAT('%',#{addnotesPlanNo,jdbcType=VARCHAR}),'%')
+		</if>
+
+		<!--金库人员-->
+		<if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag == 1">
+			AND c1.BANK_ORG_NO = #{orgNo,jdbcType=VARCHAR}
+		</if>
+		<!--金库上级人员-->
+		<if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag != 1 and orgGradeNo != 5">
+			AND t.left > tOrg.LEFT and t.right &lt; tOrg.RIGHT
+		</if>
+		<!--网点人员-->
+		<if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag != 1 and orgGradeNo == 5">
+			AND d.CLR_CENTER_NO = s.CLR_CENTER_NO and s.no = #{orgNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="taskNo != null and taskNo != ''">
+			AND d.TASK_NO like CONCAT(CONCAT('%',#{taskNo,jdbcType=NUMERIC}),'%')
+		</if>
+		<if test="lineNo != null and lineNo != ''">
+			AND aa.LINE_NO like CONCAT(CONCAT('%',#{lineNo,jdbcType=NUMERIC}),'%')
+		</if>
+		<if test="status != null and status != ''">
+			AND d.STATUS = #{status,jdbcType=NUMERIC}
+		</if>
+		<if test="startDate != null and startDate != ''">
+			AND d.PLAN_FINISH_DATE &gt;= #{startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND d.PLAN_FINISH_DATE &lt;= #{endDate,jdbcType=VARCHAR}
+		</if>
+		<if test="taskType != null and taskType >0 ">
+			AND d.TASK_TYPE = #{taskType,jdbcType=VARCHAR}
+		</if>
+		<if test="operateType != null and operateType != ''">
+			AND ssc.OPERATE_TYPE = #{operateType,jdbcType=VARCHAR}
+		</if>
+
+		<choose>
+			<when test="checkAll != 1">
+				<if test="opNo != null and opNo != ''">
+					AND d.OP_NO1 = #{opNo,jdbcType=VARCHAR}
+					OR d.OP_NO2 = #{opNo,jdbcType=VARCHAR}
+				</if>
+			</when>
+		</choose>
+		) tmp
+	</select>
+
+	<select id="selectTask" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from (select tmp.*, rownum as rn from (
+		SELECT distinct d.TASK_NO as "taskNo", d.TASK_TYPE as "taskType", d.CUSTOMER_NO as "customerNo", d.CUSTOMER_TYPE
+		as "customerType", d.CUSTOMER_NAME as "customerName",
+		d.PLAN_FINISH_DATE as "planFinishDate", d.CLR_CENTER_NO as "clrCenterNo", d.CREATE_OP_NO as "createOpNo",
+		d.CREATE_TIME as "createTime", d.NOTE as "note", d.URGENT_FLAG as "urgentFlag", d.STATUS as "status",d.SHELF_NO
+		as "shelfNo",
+		d.ADDRESS as "address", d.ADDNOTES_PLAN_NO as "addnotesPlanNo",d.OP_NO1 as "opNo1", d.OP_NO2 as "opNo2",
+		aa.LINE_NO as "lineNo",aa.LINE_NAME as "lineName",
+		o1.NAME as "addnotesOpName1", o2.NAME as "addnotesOpName2", o3.NAME as "createOpName",
+		c1.CENTER_NAME as "clrCenterName",
+		a.PLAN_ADDNOTES_AMT as "addnotesAmt",a.PLAN_DEV_COUNT as "devCount",
+		st.SERVICE_NAME as "taskTypeName",ss.NAME as "statusName"
+		FROM TASK_TABLE d
+		LEFT OUTER JOIN SERVICE_TABLE st on st.SERVICE_NO = d.TASK_TYPE
+		LEFT OUTER JOIN TASK_LINE tl on d.TASK_NO = tl.TASK_NO
+		LEFT OUTER JOIN LINE_WORK_TABLE lwt on tl.LINE_WORK_ID = lwt.LINE_WORK_ID
+		LEFT OUTER JOIN LINE_TABLE aa on lwt.LINE_NO = aa.LINE_NO
+		LEFT OUTER JOIN SYS_USER o1 ON d.op_no1=o1.USERNAME
+		LEFT OUTER JOIN SYS_USER o2 ON d.op_no2=o2.USERNAME
+		LEFT OUTER JOIN SYS_USER o3 ON d.CREATE_OP_NO=o3.USERNAME
+		LEFT OUTER JOIN CLR_CENTER_TABLE c1 ON d.CLR_CENTER_NO=c1.CLR_CENTER_NO
+		LEFT OUTER JOIN ADDNOTES_PLAN a ON d.addnotes_plan_no=a.ADDNOTES_PLAN_NO
+		left outer join SYS_ORG s on d.CUSTOMER_NO = s.NO
+		left outer join service_status_convert ssc on d.STATUS=ssc.CUR_STATUS and d.TASK_TYPE = ssc.SERVICE_NO
+		left outer join SERVICE_STATUS ss on ss.SERVICE_NO = d.TASK_TYPE and ss.STATUS = d.STATUS
+		<if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag != 1 and orgGradeNo != 5">
+			LEFT JOIN SYS_ORG tOrg on tOrg.no = #{orgNo,jdbcType=VARCHAR}
+			LEFT JOIN SYS_ORG t on t.CLR_CENTER_NO = c1.CLR_CENTER_NO
+		</if>
+		WHERE 1=1
+		and d.TASK_TYPE = st.SERVICE_NO
+		and st.TYPE = #{productType,jdbcType=NUMERIC}
+
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND d.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+
+		<!--金库人员-->
+		<if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag == 1">
+			AND c1.BANK_ORG_NO = #{orgNo,jdbcType=VARCHAR}
+		</if>
+		<!--金库上级人员-->
+		<if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag != 1 and orgGradeNo != 5">
+			AND t.left > tOrg.LEFT and t.right &lt; tOrg.RIGHT
+		</if>
+		<!--网点人员-->
+		<if test="(clrCenterNo == null or clrCenterNo == '') and clrCenterFlag != 1 and orgGradeNo == 5">
+			AND d.CLR_CENTER_NO = s.CLR_CENTER_NO and s.no = #{orgNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="addnotesPlanNo != null and addnotesPlanNo != ''">
+			AND d.ADDNOTES_PLAN_NO like CONCAT(CONCAT('%',#{addnotesPlanNo,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="taskNo != null and taskNo != ''">
+			AND d.TASK_NO like CONCAT(CONCAT('%',#{taskNo,jdbcType=NUMERIC}),'%')
+		</if>
+		<if test="lineNo != null and lineNo != ''">
+			AND aa.LINE_NO like CONCAT(CONCAT('%',#{lineNo,jdbcType=NUMERIC}),'%')
+		</if>
+		<if test="status != null and status != ''">
+			AND d.STATUS = #{status,jdbcType=NUMERIC}
+		</if>
+		<if test="startDate != null and startDate != ''">
+			AND d.PLAN_FINISH_DATE &gt;= #{startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND d.PLAN_FINISH_DATE &lt;= #{endDate,jdbcType=VARCHAR}
+		</if>
+		<if test="taskType != null and taskType >0 ">
+			AND d.TASK_TYPE = #{taskType,jdbcType=VARCHAR}
+		</if>
+		<if test="operateType != null and operateType != ''">
+			AND ssc.OPERATE_TYPE = #{operateType,jdbcType=VARCHAR}
+		</if>
+
+		<choose>
+			<when test="checkAll != 1">
+				<if test="opNo != null and opNo != ''">
+					AND d.OP_NO1 = #{opNo,jdbcType=VARCHAR}
+					OR d.OP_NO2 = #{opNo,jdbcType=VARCHAR}
+				</if>
+			</when>
+		</choose>
+		order by d.PLAN_FINISH_DATE desc,d.task_no desc
+		) tmp )
+		where rn &gt; #{startRow,jdbcType=NUMERIC} and rn &lt;= #{endRow,jdbcType=NUMERIC}
+
+	</select>
+
+	<select id="selectOwnTask" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		d.TASK_NO, d.TASK_TYPE, d.PLAN_FINISH_DATE, d.STATUS,d.CLR_CENTER_NO, d.CAR_NUMBER, d.LINE_NO, d.OP_NO1,
+		d.OP_NO2,
+		d.CREATE_OP_NO, d.CREATE_TIME, d.NOTE,
+		d.MODE_OP, d.MODE_TIME, d.MODE_NOTE, d.AUDIT_OP, d.AUDIT_TIME,
+		d.URGENT_FLAG,d.SHELF_NO,a.LINE_NAME
+		from TASK_TABLE d
+		LEFT JOIN LINE_TABLE a
+		on a.LINE_NO=d.LINE_NO
+		LEFT JOIN service_status_convert p
+		on d.STATUS=p.CUR_STATUS and d.TASK_TYPE = p.SERVICE_NO
+		where 1 =1
+
+		<if test="operateType != null and operateType != ''">
+			AND p.OPERATE_TYPE = #{operateType,jdbcType=VARCHAR}
+		</if>
+		<if test="startDate != null and startDate != ''">
+			AND d.PLAN_FINISH_DATE &gt;= #{startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND d.PLAN_FINISH_DATE &lt;= #{endDate,jdbcType=VARCHAR}
+		</if>
+		<if test="taskType != null and taskType != ''">
+			AND d.TASK_TYPE = #{taskType,jdbcType=VARCHAR}
+		</if>
+
+		<choose>
+			<when test="checkAll != 1">
+				<if test="opNo != null and opNo != ''">
+					AND d.OP_NO1 = #{opNo,jdbcType=VARCHAR}
+					OR d.OP_NO2 = #{opNo,jdbcType=VARCHAR}
+				</if>
+			</when>
+		</choose>
+	</select>
+
+	<select id="selectOwnTaskDetail" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		d.TASK_NO,d.ADDNOTES_PLAN_NO,d.CUSTOMER_NO,d.CUSTOMER_NAME,d.CUSTOMER_TYPE, d.TASK_TYPE, d.PLAN_FINISH_DATE, d.STATUS,d.CLR_CENTER_NO,d.OP_NO1, d.OP_NO2,
+		d.CREATE_OP_NO, d.CREATE_TIME, d.NOTE,d.SHELF_NO,d.ADDRESS,
+		 d.URGENT_FLAG,c.CENTER_NAME,
+		o1.NAME as opName1,o2.NAME as opName2
+     	from TASK_TABLE d
+     	LEFT JOIN CLR_CENTER_TABLE c on c.CLR_CENTER_NO = d.CLR_CENTER_NO
+		  LEFT JOIN SYS_USER o1
+				 ON d.op_no1=o1.USERNAME
+		  LEFT JOIN SYS_USER o2
+				 ON d.op_no2=o2.USERNAME
+		where d.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="qryTaskByLineNo" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		d.TASK_NO,d.CUSTOMER_NO,d.CUSTOMER_TYPE,d.ADDNOTES_PLAN_NO, d.TASK_TYPE, d.PLAN_FINISH_DATE, d.STATUS,d.CLR_CENTER_NO,
+		d.OP_NO1, d.OP_NO2,d.CUSTOMER_NAME,d.SHELF_NO,
+		d.CREATE_OP_NO, d.CREATE_TIME, d.NOTE,
+		d.URGENT_FLAG,l.LINE_NO,l.LINE_NAME
+		from TASK_TABLE d
+		LEFT JOIN TASK_LINE tl
+		ON d.TASK_NO = tl.TASK_NO
+		LEFT JOIN LINE_WORK_TABLE lwt
+		ON lwt.LINE_WORK_ID = tl.LINE_WORK_ID
+		LEFT JOIN LINE_TABLE l
+		ON l.LINE_NO = lwt.LINE_NO
+		LEFT JOIN service_status_convert s
+		on d.STATUS=s.CUR_STATUS and d.TASK_TYPE = s.SERVICE_NO
+		WHERE 1=1
+		<if test="taskTypeList != null ">
+			and d.TASK_TYPE in
+			<foreach item="item" index="index" collection="taskTypeList" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="operateType != null and operateType != ''">
+			AND s.OPERATE_TYPE = #{operateType,jdbcType=VARCHAR}
+		</if>
+		<if test="planFinishDate != null and planFinishDate != ''">
+			AND d.PLAN_FINISH_DATE = #{planFinishDate,jdbcType=VARCHAR}
+		</if>
+		<if test="lineNo != null and lineNo != ''">
+			AND lwt.LINE_NO = #{lineNo,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="qryTaskByCustomerNo" parameterType="java.util.Map" resultType="java.lang.String">
+		select a.TASK_NO as "taskNo" from TASK_TABLE a
+where a.PLAN_FINISH_DATE=#{sysDate,jdbcType=VARCHAR} and a.CUSTOMER_NO=#{customerNo,jdbcType=VARCHAR} and a.STATUS=#{status,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryTaskDetailByContainerNo" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select d.TASK_NO,d.ADDNOTES_PLAN_NO, d.TASK_TYPE, d.PLAN_FINISH_DATE, d.STATUS,d.CLR_CENTER_NO,
+		d.OP_NO1, d.OP_NO2, d.CREATE_OP_NO, d.CREATE_TIME, d.NOTE,
+		d.URGENT_FLAG, d.SHELF_NO, c.CENTER_NAME,d.CUSTOMER_NO,d.CUSTOMER_NAME,d.CUSTOMER_TYPE
+		from TASK_TABLE d
+		left join TASK_ENTITY_TABLE t on t.TASK_NO = d.TASK_NO
+		LEFT JOIN CLR_CENTER_TABLE c on c.CLR_CENTER_NO=d.CLR_CENTER_NO
+		where 1 = 1
+		<if test="entityNo != null and entityNo != ''">
+			AND t.ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="productNo != null and productNo != ''">
+			AND t.PRODUCT_NO = #{productNo,jdbcType=VARCHAR}
+		</if>
+		<if test="operateType != null and operateType != ''">
+			AND (d.STATUS,d.TASK_TYPE) in
+			(select CUR_STATUS,SERVICE_NO from SERVICE_STATUS_CONVERT where OPERATE_TYPE=
+			#{operateType,jdbcType=INTEGER})
+		</if>
+		<if test="status != null and status != ''">
+			AND d.STATUS = #{status,jdbcType=INTEGER}
+		</if>
+
+	</select>
+
+	<select id="qryLineNoList" parameterType="java.util.Map" resultType="java.util.Map">
+		select distinct l.LINE_NO as "lineNo",
+		<choose>
+			<when test="productNo != null and productNo != ''">
+				t.SHELF_NO as "shelfNo",
+			</when>
+		</choose>
+		l.LINE_NAME as "lineName"
+		FROM TASK_TABLE t
+		LEFT JOIN TASK_LINE tl
+		ON t.TASK_NO = tl.TASK_NO
+		LEFT JOIN LINE_WORK_TABLE lwt
+		ON lwt.LINE_WORK_ID = tl.LINE_WORK_ID
+		LEFT JOIN LINE_TABLE l
+		ON l.LINE_NO = lwt.LINE_NO
+		LEFT JOIN TASK_ENTITY_TABLE tt
+		ON t.TASK_NO = tt.TASK_NO
+		LEFT JOIN service_status_convert p
+		ON t.STATUS=p.CUR_STATUS and t.TASK_TYPE = p.SERVICE_NO
+		WHERE 1=1
+		and l.LINE_NO is not null
+		<if test="taskType != null and taskType != ''">
+			AND t.TASK_TYPE = #{taskType,jdbcType=VARCHAR}
+		</if>
+		<if test="planFinishDate != null and planFinishDate != ''">
+			AND t.PLAN_FINISH_DATE = #{planFinishDate,jdbcType=VARCHAR}
+		</if>
+		<if test="productNo != null and productNo != ''">
+			AND tt.PRODUCT_NO = #{productNo,jdbcType=VARCHAR} AND t.SHELF_NO is not null
+		</if>
+		<if test="operateType != null and operateType != ''">
+			AND p.OPERATE_TYPE = #{operateType,jdbcType=VARCHAR}
+		</if>
+		order by l.LINE_NO
+	</select>
+
+	<select id="qryShelfNoByLineNo" parameterType="java.util.Map" resultType="java.util.Map">
+		select distinct t.SHELF_NO as "shelfNo" from TASK_TABLE t
+		left join TASK_ENTITY_TABLE tt on t.TASK_NO = tt.TASK_NO
+		where 1=1 and t.SHELF_NO is not null
+		<choose>
+			<when test="taskType == 1">
+				<if test="status != null and status != ''">
+					AND t.STATUS = #{status,jdbcType=VARCHAR}
+				</if>
+				<if test="taskType != null and taskType != ''">
+					AND t.TASK_TYPE = #{taskType,jdbcType=VARCHAR}
+				</if>
+				AND t.TASK_NO in
+				<foreach collection="taskNoList" index="i" open="(" close=")" separator="," item="item">
+					#{item,jdbcType = VARCHAR}
+				</foreach>
+			</when>
+		</choose>
+		<choose>
+			<when test="taskType == 2">
+				<if test="status != null and status != ''">
+					AND t.STATUS = #{status,jdbcType=VARCHAR}
+				</if>
+				<if test="productNo != null and productNo != ''">
+					AND tt.PRODUCT_NO = #{productNo,jdbcType=VARCHAR}
+				</if>
+				<if test="taskType != null and taskType != ''">
+					AND t.TASK_TYPE = #{taskType,jdbcType=VARCHAR}
+				</if>
+				AND t.TASK_NO in
+				<foreach collection="taskNoList" index="i" open="(" close=")" separator="," item="item">
+					#{item,jdbcType = VARCHAR}
+				</foreach>
+			</when>
+		</choose>
+
+	</select>
+
+	<select id="qryShelfDetailByShelfNo" parameterType="java.util.Map" resultType="java.lang.String">
+		select distinct tt.CONTAINER_NO from TASK_TABLE t
+		left join TASK_ENTITY_TABLE tt on t.TASK_NO = tt.TASK_NO
+		where 1=1
+		<choose>
+			<when test="taskType == 1">
+				<if test="status != null and status != ''">
+					AND t.STATUS = #{status,jdbcType=VARCHAR}
+				</if>
+				<if test="taskType != null and taskType != ''">
+					AND t.TASK_TYPE = #{taskType,jdbcType=VARCHAR}
+				</if>
+				<if test="shelfNo != null and shelfNo != ''">
+					AND t.SHELF_NO = #{shelfNo,jdbcType=VARCHAR}
+				</if>
+			</when>
+		</choose>
+		<choose>
+			<when test="taskType == 2">
+				<if test="status != null and status != ''">
+					AND t.STATUS = #{status,jdbcType=VARCHAR}
+				</if>
+				<if test="productNo != null and productNo != ''">
+					AND tt.PRODUCT_NO = #{productNo,jdbcType=VARCHAR}
+				</if>
+				<if test="taskType != null and taskType != ''">
+					AND t.TASK_TYPE = #{taskType,jdbcType=VARCHAR}
+				</if>
+				<if test="shelfNo != null and shelfNo != ''">
+					AND t.SHELF_NO = #{shelfNo,jdbcType=VARCHAR}
+				</if>
+			</when>
+		</choose>
+
+	</select>
+
+	<select id="isTaskOutOfType" resultType="String">
+		select t.TASK_NO from TASK_TABLE t
+		where t.TASK_NO in
+		<foreach collection="taskNos" item="item" separator="," open="(" close=")" index="index">#{item}</foreach>
+		and t.task_type &lt;&gt; #{taskType,jdbcType = INTEGER}
+	</select>
+
+
+	<update id="taksTimeOut" parameterType="map">
+		update TASK_TABLE t
+		set t.status = #{outTimeStatus,jdbcType = INTEGER}
+		where t.plan_finish_date &lt; #{nowTime,jdbcType = VARCHAR}
+		and t.status = #{originStatus,jdbcType = INTEGER}
+		<if test="null!= taskType and 0 != taskType">
+			and t.TASK_TYPE = #{taskType,jdbcType = VARCHAR}
+		</if>
+	</update>
+
+	<select id="selectTaskType" resultType="java.lang.Integer">
+		select t.TASK_TYPE from TASK_TABLE t
+		where t.TASK_NO = #{taskNo,jdbcType = VARCHAR}
+	</select>
+
+	<select id="selectBankNote" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT t.TASK_NO,t.TASK_TYPE,t.SHELF_NO,t.CUSTOMER_NO,s.NAME,LT.LINE_NAME from TASK_TABLE t
+		left join SYS_ORG s on t.CUSTOMER_NO = s.NO
+		LEFT JOIN service_status_convert p on t.STATUS =p.CUR_STATUS and t.TASK_TYPE = p.SERVICE_NO
+		left join TASK_LINE t1 on t.TASK_NO = t1.TASK_NO
+		left join LINE_WORK_TABLE LWT on t1.LINE_WORK_ID = LWT.LINE_WORK_ID
+		LEFT JOIN LINE_TABLE LT on LWT.LINE_NO = LT.LINE_NO
+		WHERE 1=1
+		<if test="taskType != null and taskType != ''">
+			AND t.TASK_TYPE = #{taskType,jdbcType=INTEGER}
+		</if>
+		<if test="operateType != null and operateType != ''">
+			AND p.OPERATE_TYPE = #{operateType,jdbcType=VARCHAR}
+		</if>
+		<if test="startDate != null and startDate != ''">
+			AND t.PLAN_FINISH_DATE &gt;= #{startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND t.PLAN_FINISH_DATE &lt;= #{endDate,jdbcType=VARCHAR}
+		</if>
+
+	</select>
+
+	<select id="qryTotalLoadCheck" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from(
+		select rlt.*,rownum rn from (
+		select tt.TASK_NO,tt.PLAN_FINISH_DATE,alt.LINE_NAME,cct.CENTER_NAME,tt.STATUS
+		FROM TASK_TABLE tt
+		left join TASK_LINE tl on tl.TASK_NO = tt.TASK_NO
+		left join LINE_WORK_TABLE lwt on lwt.LINE_WORK_ID = tl.LINE_WORK_ID
+		left join LINE_TABLE alt on alt.LINE_NO = lwt.LINE_NO
+		LEFT JOIN CLR_CENTER_TABLE cct ON tt.CLR_CENTER_NO=cct.CLR_CENTER_NO
+		<where>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND tt.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+			<if test="taskNoCount != null and taskNoCount!='' ">
+				<if test=" taskNo != null and taskNo != ''">
+					AND tt.TASK_NO in ( ${taskNo})
+				</if>
+			</if>
+			<if test="taskNoCount != null and taskNoCount =='' ">
+				<if test=" taskNo != null and taskNo != ''">
+					AND tt.TASK_NO like CONCAT('%',CONCAT(#{taskNo,jdbcType=VARCHAR},'%'))
+				</if>
+			</if>
+			<if test="lineNo != null and lineNo != ''">
+				AND tt.LINE_NO = #{lineNo,jdbcType=VARCHAR}
+			</if>
+			<if test="planStartDate != null and planStartDate != ''">
+				AND tt.PLAN_FINISH_DATE &gt;= #{planStartDate,jdbcType=VARCHAR}
+			</if>
+			<if test="planEndDate != null and planEndDate != ''">
+				AND tt.PLAN_FINISH_DATE &lt;= #{planEndDate,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null and status != ''">
+				AND tt.STATUS = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="taskType != null and taskType != ''">
+				AND tt.TASK_TYPE = #{taskType,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by tt.TASK_NO desc) rlt)
+		where rn &gt; #{startRow,jdbcType=NUMERIC} and rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+
+	<select id="qryTotalRowLoadCheck" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from TASK_TABLE tt
+		left join TASK_LINE tl on tl.TASK_NO = tt.TASK_NO
+		left join LINE_WORK_TABLE lwt on lwt.LINE_WORK_ID = tl.LINE_WORK_ID
+		left join LINE_TABLE alt on alt.LINE_NO = lwt.LINE_NO
+		left join CLR_CENTER_TABLE cct on tt.CLR_CENTER_NO=cct.CLR_CENTER_NO
+		<where>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND tt.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+			<if test="taskNoCount != null and taskNoCount!='' ">
+				<if test=" taskNo != null and taskNo != ''">
+					AND tt.TASK_NO in ( ${taskNo})
+				</if>
+			</if>
+			<if test="taskNoCount != null and taskNoCount =='' ">
+				<if test=" taskNo != null and taskNo != ''">
+					AND tt.TASK_NO like CONCAT('%',CONCAT(#{taskNo,jdbcType=VARCHAR},'%'))
+				</if>
+			</if>
+			<if test="lineNo != null and lineNo != ''">
+				AND tt.LINE_NO = #{lineNo,jdbcType=VARCHAR}
+			</if>
+			<if test="planStartDate != null and planStartDate != ''">
+				AND tt.PLAN_FINISH_DATE &gt;= #{planStartDate,jdbcType=VARCHAR}
+			</if>
+			<if test="planEndDate != null and planEndDate != ''">
+				AND tt.PLAN_FINISH_DATE &lt;= #{planEndDate,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null and status != ''">
+				AND tt.STATUS = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="taskType != null and taskType != ''">
+				AND TASK_TYPE = #{taskType,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+
+	<select id="qryTotalRowLoadInfo" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from TASK_TABLE tt
+		LEFT JOIN TASK_LINE tl
+		ON tt.TASK_NO = tl.TASK_NO
+		LEFT JOIN LINE_WORK_TABLE lwt
+		ON lwt.LINE_WORK_ID = tl.LINE_WORK_ID
+		LEFT JOIN LINE_TABLE l
+		ON l.LINE_NO = lwt.LINE_NO
+		left join CLR_CENTER_TABLE cct on tt.CLR_CENTER_NO=cct.CLR_CENTER_NO
+		<where>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND tt.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+			<if test="taskNoCount != null and taskNoCount!='' ">
+				<if test=" taskNo != null and taskNo != ''">
+					AND tt.TASK_NO in ( ${taskNo})
+				</if>
+			</if>
+			<if test="taskNoCount != null and taskNoCount =='' ">
+				<if test=" taskNo != null and taskNo != ''">
+					AND tt.TASK_NO like CONCAT('%',CONCAT(#{taskNo,jdbcType=VARCHAR},'%'))
+				</if>
+			</if>
+			<if test="lineNo != null and lineNo != ''">
+				AND lwt.LINE_NO = #{lineNo,jdbcType=VARCHAR}
+			</if>
+			<if test="planStartDate != null and planStartDate != ''">
+				AND tt.PLAN_FINISH_DATE &gt;= #{planStartDate,jdbcType=VARCHAR}
+			</if>
+			<if test="planEndDate != null and planEndDate != ''">
+				AND tt.PLAN_FINISH_DATE &lt;= #{planEndDate,jdbcType=VARCHAR}
+			</if>
+			<if test="taskType != null and taskType !=''">
+				AND TASK_TYPE = #{taskType,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+
+	<select id="qryTotalLoadInfo" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from(
+		select rlt.*,rownum rn from (
+		select distinct tt.TASK_NO,tt.TASK_TYPE,tt.PLAN_FINISH_DATE,SU.NAME as "CREATE_OP_NAME",SO.NAME as
+		"ORG_NAME",l.LINE_NAME,cct.CENTER_NAME,tt.STATUS
+		FROM TASK_TABLE tt
+		LEFT JOIN TASK_LINE tl
+		ON tt.TASK_NO = tl.TASK_NO
+		LEFT JOIN LINE_WORK_TABLE lwt
+		ON lwt.LINE_WORK_ID = tl.LINE_WORK_ID
+		LEFT JOIN LINE_TABLE l
+		ON l.LINE_NO = lwt.LINE_NO
+		LEFT JOIN CLR_CENTER_TABLE cct
+		ON tt.CLR_CENTER_NO=cct.CLR_CENTER_NO
+		LEFT JOIN SYS_USER SU on tt.CREATE_OP_NO = SU.USERNAME
+		LEFT JOIN SYS_ORG SO on SO.NO = tt.CUSTOMER_NO
+		<where>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND tt.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+			<if test="taskNoCount != null and taskNoCount!='' ">
+				<if test=" taskNo != null and taskNo != ''">
+					AND tt.TASK_NO in ( ${taskNo})
+				</if>
+			</if>
+			<if test="taskNoCount != null and taskNoCount =='' ">
+				<if test=" taskNo != null and taskNo != ''">
+					AND tt.TASK_NO like CONCAT('%',CONCAT(#{taskNo,jdbcType=VARCHAR},'%'))
+				</if>
+			</if>
+			<if test="lineNo != null and lineNo != ''">
+				AND lwt.LINE_NO = #{lineNo,jdbcType=VARCHAR}
+			</if>
+			<if test="planStartDate != null and planStartDate != ''">
+				AND tt.PLAN_FINISH_DATE &gt;= #{planStartDate,jdbcType=VARCHAR}
+			</if>
+			<if test="planEndDate != null and planEndDate != ''">
+				AND tt.PLAN_FINISH_DATE &lt;= #{planEndDate,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null and status != ''">
+				AND tt.STATUS = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="taskType != null and taskType != ''">
+				AND tt.TASK_TYPE = #{taskType,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by tt.TASK_NO desc) rlt)
+		where rn &gt; #{startRow,jdbcType=NUMERIC} and rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="qryCountTaskListByPage" parameterType="java.util.Map" resultMap="TaskCountInfoMap">
+		select * from(
+		select rlt.*,rownum rn from (
+		select tat.TASK_NO as TASK_NO, tt.DEV_NO, tt.BATCH, tt.COUNT_STATUS, tt.COUNT_START_DATE, tt.COUNT_END_DATE,
+		tat.TASK_TYPE,tat.STATUS as TASK_STATUS,tat.CLR_CENTER_NO as CLR_CENTER_NO,tat.ADDNOTES_PLAN_NO
+		FROM TASK_TABLE tat
+		LEFT JOIN COUNT_TASK_INFO tt
+		ON tt.TASK_NO=tat.TASK_NO
+		<where>
+			<if test="taskType != null and taskType != ''">
+				AND tat.TASK_TYPE = #{taskType,jdbcType=INTEGER}
+			</if>
+			<if test="taskNo != null and taskNo != ''">
+				AND tat.TASK_NO like concat(concat('%',#{taskNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="countStatus != null and countStatus != ''">
+				AND tt.COUNT_STATUS = #{countStatus,jdbcType=INTEGER}
+			</if>
+			<if test="taskStatus1 != null and taskStatus1 != ''">
+				AND (tat.STATUS = #{taskStatus1,jdbcType=INTEGER} OR tat.STATUS = #{taskStatus,jdbcType=INTEGER})
+			</if>
+			<if test="taskStatus != null and taskStatus != '' and (taskStatus1 == null or taskStatus1 == '')">
+				AND tat.STATUS = #{taskStatus,jdbcType=INTEGER}
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND tat.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by tt.COUNT_STATUS,tat.TASK_NO desc) rlt)
+		where rn &gt; #{startRow,jdbcType=NUMERIC} and rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="qryTotalRow" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from TASK_TABLE tat
+		LEFT JOIN COUNT_TASK_INFO tt
+		ON tt.TASK_NO=tat.TASK_NO
+		<where>
+			<if test="taskNo != null and taskNo != ''">
+				AND tat.TASK_NO like concat(concat('%',#{taskNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="countStatus != null and countStatus != ''">
+				AND tt.COUNT_STATUS = #{countStatus,jdbcType=INTEGER}
+			</if>
+			<if test="taskType != null and taskType != ''">
+				AND tat.TASK_TYPE = #{taskType,jdbcType=INTEGER}
+			</if>
+			<if test="taskStatus1 != null and taskStatus1 != ''">
+				AND (tat.STATUS = #{taskStatus1,jdbcType=INTEGER} OR tat.STATUS = #{taskStatus,jdbcType=INTEGER})
+			</if>
+			<if test="taskStatus != null and taskStatus != '' and (taskStatus1 == null or taskStatus1 == '')">
+				AND tat.STATUS = #{taskStatus,jdbcType=INTEGER}
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND tat.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="getClrCenterNo" parameterType="java.lang.String" resultType="java.lang.String">
+		select CLR_CENTER_NO from TASK_TABLE where TASK_NO=#{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getShelfNo" parameterType="java.lang.String" resultType="java.lang.String">
+		select SHELF_NO from TASK_TABLE where TASK_NO=#{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectTaskNoByLineNo" parameterType="java.util.Map" resultType="java.lang.String">
+		select
+		d.TASK_NO
+		from TASK_TABLE d
+		left join TASK_LINE tl on tl.TASK_NO=d.TASK_NO
+		left join LINE_WORK_TABLE lwt on lwt.LINE_WORK_ID = tl.LINE_WORK_ID
+		where 1=1
+		<if test="lineNo != null and lineNo != ''">
+			AND lwt.LINE_NO = #{lineNo,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null ">
+			AND STATUS in
+			<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="planFinishDate != null and planFinishDate != ''">
+			AND d.PLAN_FINISH_DATE = #{planFinishDate,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="qryTaskNoByLineNo" parameterType="java.util.Map" resultType="String">
+		select
+		d.TASK_NO
+		from TASK_TABLE d
+		left join TASK_LINE tl on tl.TASK_NO=d.TASK_NO
+		left join LINE_WORK_TABLE lwt on lwt.LINE_WORK_ID = tl.LINE_WORK_ID
+		where 1=1
+		<if test="lineNo != null and lineNo != ''">
+			AND lwt.LINE_NO = #{lineNo,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != ''">
+			AND d.STATUS = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="planFinishDate != null and planFinishDate != ''">
+			AND d.PLAN_FINISH_DATE = #{planFinishDate,jdbcType=VARCHAR}
+		</if>
+		<if test="taskType != null and taskType != ''">
+			AND TASK_TYPE = #{taskType,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="getStatusByNo" resultType="int" parameterType="java.lang.String">
+		select t.STATUS from TASK_TABLE t where t.TASK_NO=#{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<!--	根据任务单编号批量更新状态-->
+	<update id="cashInStorage">
+		update TASK_TABLE tt
+		set tt.STATUS = #{status,jdbcType=INTEGER}
+		where tt.TASK_NO in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<select id="getTodayLine" resultType="java.lang.String" parameterType="java.lang.String">
+		select distinct a.LINE_NAME from TASK_TABLE d
+		LEFT JOIN LINE_TABLE a
+		on a.LINE_NO=d.LINE_NO
+		where d.STATUS = #{status,jdbcType=NUMERIC} and d.PLAN_FINISH_DATE = #{planFinishDate,jdbcType=VARCHAR}
+		  and d.OP_NO1 = #{opNo,jdbcType=VARCHAR}
+		  or d.OP_NO2  = #{opNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getLine" parameterType="java.lang.String"
+			resultMap="StorageEntityTransMap">
+		select distinct a.LINE_NO,a.LINE_NAME from LINE_TABLE a
+		left join LINE_WORK_TABLE b on a.LINE_NO = b.LINE_NO
+		left join TASK_LINE c on c.LINE_WORK_ID = b.LINE_WORK_ID
+		left join TASK_TABLE d on d.TASK_NO = c.TASK_NO
+		where d.SHELF_NO = #{shelfNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getTaskListByShelfNo" parameterType="java.lang.String"
+			resultType="java.lang.String">
+		select TASK_NO from TASK_TABLE
+		where SHELF_NO = #{shelfNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getTaskListByShelfNoAndTaskType" parameterType="java.util.Map"
+			resultType="java.lang.String">
+		select TASK_NO from TASK_TABLE
+		where SHELF_NO = #{shelfNo,jdbcType=VARCHAR}
+		AND TASK_TYPE = #{taskType,jdbcType=INTEGER}
+	</select>
+
+	<select id="qryTotalRowStorage" resultType="java.lang.Integer">
+		select count(1) from (select task.CLR_CENTER_NO,task.TASK_NO,SHELF_NO,PLAN_FINISH_DATE as
+		ADDNOTES_DATE,n.LINE_NO,detail.AMOUNT,record.IN_TIME,task.STATUS as TASK_STATUS from TASK_TABLE
+		task
+		left join(select TASK_NO,sum(AMOUNT) as AMOUNT from TASK_ENTITY_TABLE group by TASK_NO) detail on task.TASK_NO
+		= detail.TASK_NO
+		left join(select TASK_NO,max(PERFORM_TIME) as IN_TIME FROM TASK_PER_RECORDER group by TASK_NO) record on
+		task.TASK_NO = record.TASK_NO
+		left join task_line m on m.task_no = task.task_no
+		left join LINE_WORK_TABLE n on m.line_work_id = n.line_work_id
+		left join LINE_TABLE b on b.line_no = n.line_no
+		WHERE task.SHELF_NO is not null and task.TASK_TYPE=1)o
+		<where>
+			<if test="clrCenterNo!= null and clrCenterNo!=''">
+				and CLR_CENTER_NO like concat(concat('%',#{clrCenterNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="taskNo != null and taskNo != ''">
+				and TASK_NO like concat(concat('%',#{taskNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="shelfNo != null and shelfNo != ''">
+				and SHELF_NO = #{shelfNo,jdbcType=NUMERIC}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="qryStorageEntityByPage" resultMap="StorageResultMap">
+		select t.*,clr.CENTER_NAME,line.LINE_NAME,status.NAME
+		from(
+		select a.*
+		from (
+		select o.*,rownum rn from (select task.CLR_CENTER_NO,task.TASK_NO,SHELF_NO,PLAN_FINISH_DATE as
+		ADDNOTES_DATE,n.LINE_NO,detail.AMOUNT,record.IN_TIME,task.TASK_TYPE,task.STATUS as TASK_STATUS from
+		TASK_TABLE
+		task
+		left join(select TASK_NO,sum(AMOUNT) as AMOUNT from TASK_ENTITY_TABLE group by TASK_NO) detail on task.TASK_NO
+		= detail.TASK_NO
+		left join(select TASK_NO,max(PERFORM_TIME) as IN_TIME FROM TASK_PER_RECORDER group by TASK_NO) record on
+		task.TASK_NO = record.TASK_NO
+		left join task_line m on m.task_no = task.task_no
+		left join LINE_WORK_TABLE n on m.line_work_id = n.line_work_id
+		left join LINE_TABLE b on b.line_no = n.line_no
+		WHERE task.SHELF_NO is not null and task.TASK_TYPE=1) o
+		<where>
+			<if test="clrCenterNo!= null and clrCenterNo!=''">
+				and CLR_CENTER_NO like concat(concat('%',#{clrCenterNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="taskNo != null and taskNo != ''">
+				and TASK_NO like concat(concat('%',#{taskNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="shelfNo != null and shelfNo != ''">
+				and SHELF_NO = #{shelfNo,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by TASK_NO asc) a
+		where rn &gt; #{startRow} and rn &lt;= #{endRow})t
+		left join CLR_CENTER_TABLE clr on t.CLR_CENTER_NO = clr.CLR_CENTER_NO
+		left join LINE_TABLE line on t.LINE_NO = line.LINE_NO
+		LEFT JOIN SERVICE_STATUS status ON t.TASK_TYPE = status.SERVICE_NO and t.TASK_STATUS = status.STATUS
+	</select>
+
+	<select id="getStorageInfo" resultMap="StorageMap">
+		select task.TASK_NO,SHELF_NO,b.LINE_NO,b.LINE_NAME from TASK_TABLE task
+		left join task_line m on m.task_no = task.task_no
+		left join LINE_WORK_TABLE n on m.line_work_id = n.line_work_id
+		left join LINE_TABLE b on b.line_no = n.line_no
+		where task.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryTotalRowTauro" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from TASK_TABLE t
+		<where>
+			<if test="taskNo != null and taskNo !='' ">
+				and t.TASK_NO like '%' || #{taskNo,jdbcType=VARCHAR} || '%'
+			</if>
+			<if test="lineNo != null and lineNo !='' ">
+				and t.LINE_NO like '%' || #{lineNo,jdbcType=VARCHAR} || '%'
+			</if>
+			<if test="taskType != null and taskType !='' ">
+				and t.TASK_TYPE = #{taskType,jdbcType=INTEGER}
+			</if>
+			<if test="opNo != null and opNo !='' ">
+				and ( t.OP_NO1 = (select USERNAME from SYS_USER where NAME = #{opNo,jdbcType=VARCHAR})
+				or t.OP_NO2 = (select USERNAME from SYS_USER where NAME = #{opNo,jdbcType=VARCHAR}) )
+			</if>
+		</where>
+	</select>
+
+	<select id="qryDispatchByPage" parameterType="java.util.Map" resultMap="TaskProcessResultMap">
+		select ttt.* ,u1.NAME as OP_NAME1,u2.NAME as OP_NAME2,a1.PLAN_ADDNOTES_DATE as ADDNOTESDATE,a2.LINE_NAME as
+		LINE_NAME from
+		(select tt.*,ROWNUM rn from
+		(select
+		<include refid="Base_Column_List"/>
+		from TASK_TABLE t
+		<where>
+			<if test="taskNo != null and taskNo !='' ">
+				and t.TASK_NO like '%' || #{taskNo,jdbcType=VARCHAR} || '%'
+			</if>
+			<if test="lineNo != null and lineNo !='' ">
+				and t.LINE_NO like '%' || #{lineNo,jdbcType=VARCHAR} || '%'
+			</if>
+			<if test="taskType != null and taskType !='' ">
+				and t.TASK_TYPE = #{taskType,jdbcType=INTEGER}
+			</if>
+			<if test="opNo != null and opNo !='' ">
+				and ( t.OP_NO1 = (select USERNAME from SYS_USER where NAME = #{opNo,jdbcType=VARCHAR})
+				or t.OP_NO2 = (select USERNAME from SYS_USER where NAME = #{opNo,jdbcType=VARCHAR}))
+			</if>
+		</where>
+		order by t.CREATE_TIME desc)tt)ttt
+		left join sys_user u1 on ttt.OP_NO1 = u1.USERNAME
+		left join sys_user u2 on ttt.OP_NO2 = u2.USERNAME
+		left join ADDNOTES_PLAN a1 on ttt.ADDNOTES_PLAN_NO = a1.ADDNOTES_PLAN_NO
+		left join LINE_TABLE a2 on ttt.LINE_NO = a2.LINE_NO
+		where ttt.rn &gt; #{startRow,jdbcType=NUMERIC} and ttt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="getDev" resultType="java.lang.String">
+		select CUSTOMER_NO from TASK_TABLE where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+</mapper>

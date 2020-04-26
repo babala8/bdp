@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.linecenter.repository.LineRunInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunInfo" >
+    <id column="LINE_RUN_NO" property="lineRunNo" jdbcType="VARCHAR" />
+    <result column="LINE_NO" property="lineNo" jdbcType="VARCHAR" />
+    <result column="THE_YEAR_MONTH" property="theYearMonth" jdbcType="VARCHAR" />
+    <result column="THE_DAY" property="theDay" jdbcType="VARCHAR" />
+    <result column="TASK_COUNT" property="taskCount" jdbcType="INTEGER" />
+    <result column="DEV_COUNT" property="devCount" jdbcType="INTEGER" />
+    <result column="START_TIME_AM" property="startTimeAm" jdbcType="VARCHAR" />
+    <result column="END_TIME_AM" property="endTimeAm" jdbcType="VARCHAR" />
+    <result column="START_TIME_PM" property="startTimePm" jdbcType="VARCHAR" />
+    <result column="END_TIME_PM" property="endTimePm" jdbcType="VARCHAR" />
+    <result column="RETURN_UNIT_AM" property="returnUnitAm" jdbcType="VARCHAR" />
+    <result column="RETURN_UNIT_PM" property="returnUnitPm" jdbcType="VARCHAR" />
+  </resultMap>
+
+	<resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunInfo"
+			   extends="BaseResultMap">
+		<association property="devList" column="LINE_RUN_NO"
+					 javaType="java.util.List"
+					 select="com.zjft.microservice.treasurybrain.linecenter.repository.LineRunDevDetailMapper.selectDetailByPrimaryKey"></association>
+
+	</resultMap>
+
+  <sql id="Base_Column_List" >
+    d.LINE_RUN_NO, d.LINE_NO, d.THE_YEAR_MONTH, d.THE_DAY, d.TASK_COUNT, d.DEV_COUNT, d.START_TIME_AM,
+    d.END_TIME_AM, d.START_TIME_PM, d.END_TIME_PM, d.RETURN_UNIT_AM, d.RETURN_UNIT_PM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LINE_RUN_INFO d
+    where LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LINE_RUN_INFO
+    where LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunInfo" >
+    insert into LINE_RUN_INFO (LINE_RUN_NO, LINE_NO, THE_YEAR_MONTH, 
+      THE_DAY, TASK_COUNT, DEV_COUNT, 
+      START_TIME_AM, END_TIME_AM, START_TIME_PM, 
+      END_TIME_PM, RETURN_UNIT_AM, RETURN_UNIT_PM
+      )
+    values (#{lineRunNo,jdbcType=VARCHAR}, #{lineNo,jdbcType=VARCHAR}, #{theYearMonth,jdbcType=VARCHAR}, 
+      #{theDay,jdbcType=VARCHAR}, #{taskCount,jdbcType=INTEGER}, #{devCount,jdbcType=INTEGER}, 
+      #{startTimeAm,jdbcType=VARCHAR}, #{endTimeAm,jdbcType=VARCHAR}, #{startTimePm,jdbcType=VARCHAR}, 
+      #{endTimePm,jdbcType=VARCHAR}, #{returnUnitAm,jdbcType=VARCHAR}, #{returnUnitPm,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunInfo" >
+    insert into LINE_RUN_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="lineRunNo != null" >
+        LINE_RUN_NO,
+      </if>
+      <if test="lineNo != null" >
+        LINE_NO,
+      </if>
+      <if test="theYearMonth != null" >
+        THE_YEAR_MONTH,
+      </if>
+      <if test="theDay != null" >
+        THE_DAY,
+      </if>
+      <if test="taskCount != null" >
+        TASK_COUNT,
+      </if>
+      <if test="devCount != null" >
+        DEV_COUNT,
+      </if>
+      <if test="startTimeAm != null" >
+        START_TIME_AM,
+      </if>
+      <if test="endTimeAm != null" >
+        END_TIME_AM,
+      </if>
+      <if test="startTimePm != null" >
+        START_TIME_PM,
+      </if>
+      <if test="endTimePm != null" >
+        END_TIME_PM,
+      </if>
+      <if test="returnUnitAm != null" >
+        RETURN_UNIT_AM,
+      </if>
+      <if test="returnUnitPm != null" >
+        RETURN_UNIT_PM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="lineRunNo != null" >
+        #{lineRunNo,jdbcType=VARCHAR},
+      </if>
+      <if test="lineNo != null" >
+        #{lineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="theYearMonth != null" >
+        #{theYearMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="theDay != null" >
+        #{theDay,jdbcType=VARCHAR},
+      </if>
+      <if test="taskCount != null" >
+        #{taskCount,jdbcType=INTEGER},
+      </if>
+      <if test="devCount != null" >
+        #{devCount,jdbcType=INTEGER},
+      </if>
+      <if test="startTimeAm != null" >
+        #{startTimeAm,jdbcType=VARCHAR},
+      </if>
+      <if test="endTimeAm != null" >
+        #{endTimeAm,jdbcType=VARCHAR},
+      </if>
+      <if test="startTimePm != null" >
+        #{startTimePm,jdbcType=VARCHAR},
+      </if>
+      <if test="endTimePm != null" >
+        #{endTimePm,jdbcType=VARCHAR},
+      </if>
+      <if test="returnUnitAm != null" >
+        #{returnUnitAm,jdbcType=VARCHAR},
+      </if>
+      <if test="returnUnitPm != null" >
+        #{returnUnitPm,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+	<insert id="insertSelectiveByMap" parameterType="java.util.Map" >
+		insert into LINE_RUN_INFO
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="lineRunNo != null" >
+				LINE_RUN_NO,
+			</if>
+			<if test="lineNo != null" >
+				LINE_NO,
+			</if>
+			<if test="theYearMonth != null" >
+				THE_YEAR_MONTH,
+			</if>
+			<if test="theDay != null" >
+				THE_DAY,
+			</if>
+			<if test="taskCount != null" >
+				TASK_COUNT,
+			</if>
+			<if test="devCount != null" >
+				DEV_COUNT,
+			</if>
+			<if test="startTimeAm != null" >
+				START_TIME_AM,
+			</if>
+			<if test="endTimeAm != null" >
+				END_TIME_AM,
+			</if>
+			<if test="startTimePm != null" >
+				START_TIME_PM,
+			</if>
+			<if test="endTimePm != null" >
+				END_TIME_PM,
+			</if>
+			<if test="returnUnitAm != null" >
+				RETURN_UNIT_AM,
+			</if>
+			<if test="returnUnitPm != null" >
+				RETURN_UNIT_PM,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="lineRunNo != null" >
+				#{lineRunNo,jdbcType=VARCHAR},
+			</if>
+			<if test="lineNo != null" >
+				#{lineNo,jdbcType=VARCHAR},
+			</if>
+			<if test="theYearMonth != null" >
+				#{theYearMonth,jdbcType=VARCHAR},
+			</if>
+			<if test="theDay != null" >
+				#{theDay,jdbcType=VARCHAR},
+			</if>
+			<if test="taskCount != null" >
+				#{taskCount,jdbcType=INTEGER},
+			</if>
+			<if test="devCount != null" >
+				#{devCount,jdbcType=INTEGER},
+			</if>
+			<if test="startTimeAm != null" >
+				#{startTimeAm,jdbcType=VARCHAR},
+			</if>
+			<if test="endTimeAm != null" >
+				#{endTimeAm,jdbcType=VARCHAR},
+			</if>
+			<if test="startTimePm != null" >
+				#{startTimePm,jdbcType=VARCHAR},
+			</if>
+			<if test="endTimePm != null" >
+				#{endTimePm,jdbcType=VARCHAR},
+			</if>
+			<if test="returnUnitAm != null" >
+				#{returnUnitAm,jdbcType=VARCHAR},
+			</if>
+			<if test="returnUnitPm != null" >
+				#{returnUnitPm,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunInfo" >
+    update LINE_RUN_INFO
+    <set >
+      <if test="lineNo != null" >
+        LINE_NO = #{lineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="theYearMonth != null" >
+        THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="theDay != null" >
+        THE_DAY = #{theDay,jdbcType=VARCHAR},
+      </if>
+      <if test="taskCount != null" >
+        TASK_COUNT = #{taskCount,jdbcType=INTEGER},
+      </if>
+      <if test="devCount != null" >
+        DEV_COUNT = #{devCount,jdbcType=INTEGER},
+      </if>
+      <if test="startTimeAm != null" >
+        START_TIME_AM = #{startTimeAm,jdbcType=VARCHAR},
+      </if>
+      <if test="endTimeAm != null" >
+        END_TIME_AM = #{endTimeAm,jdbcType=VARCHAR},
+      </if>
+      <if test="startTimePm != null" >
+        START_TIME_PM = #{startTimePm,jdbcType=VARCHAR},
+      </if>
+      <if test="endTimePm != null" >
+        END_TIME_PM = #{endTimePm,jdbcType=VARCHAR},
+      </if>
+      <if test="returnUnitAm != null" >
+        RETURN_UNIT_AM = #{returnUnitAm,jdbcType=VARCHAR},
+      </if>
+      <if test="returnUnitPm != null" >
+        RETURN_UNIT_PM = #{returnUnitPm,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunInfo" >
+    update LINE_RUN_INFO
+    set LINE_NO = #{lineNo,jdbcType=VARCHAR},
+      THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR},
+      THE_DAY = #{theDay,jdbcType=VARCHAR},
+      TASK_COUNT = #{taskCount,jdbcType=INTEGER},
+      DEV_COUNT = #{devCount,jdbcType=INTEGER},
+      START_TIME_AM = #{startTimeAm,jdbcType=VARCHAR},
+      END_TIME_AM = #{endTimeAm,jdbcType=VARCHAR},
+      START_TIME_PM = #{startTimePm,jdbcType=VARCHAR},
+      END_TIME_PM = #{endTimePm,jdbcType=VARCHAR},
+      RETURN_UNIT_AM = #{returnUnitAm,jdbcType=VARCHAR},
+      RETURN_UNIT_PM = #{returnUnitPm,jdbcType=VARCHAR}
+    where LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+  </update>
+
+	<select id="qryLineRunMap" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		select tt.* from (select t.*, rownum as rn from (
+
+		SELECT
+		<include refid="Base_Column_List" />,o.LINE_NAME as lineName
+		FROM LINE_RUN_INFO d LEFT OUTER JOIN LINE_TABLE o ON d.LINE_NO=o.LINE_NO
+
+		WHERE 1=1
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND o.CLR_CENTER_NO  = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="lineNo != null and lineNo != ''">
+			AND d.LINE_NO  = #{lineNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="startMonth != null and startMonth != ''">
+			AND d.THE_YEAR_MONTH &gt;= #{startMonth,jdbcType=VARCHAR}
+		</if>
+		<if test="endMonth != null and endMonth != ''">
+			AND d.THE_YEAR_MONTH &lt;= #{endMonth,jdbcType=VARCHAR}
+		</if>
+		order by d.THE_YEAR_MONTH desc)t)tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="qryLineRunMapForMonth" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		select tt.* from (select t.*, rownum as rn from (
+
+		SELECT
+		 d.THE_YEAR_MONTH, d.LINE_NO, count(d.TASK_COUNT) as TASK_COUNT,
+		       sum(d.DEV_COUNT) as DEV_COUNT,o.LINE_NAME as lineName
+		FROM LINE_RUN_INFO d LEFT OUTER JOIN LINE_TABLE o ON d.LINE_NO=o.LINE_NO
+
+		WHERE 1=1
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND o.CLR_CENTER_NO  = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="lineNo != null and lineNo != ''">
+			AND d.LINE_NO  = #{lineNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="startMonth != null and startMonth != ''">
+			AND d.THE_YEAR_MONTH &gt;= #{startMonth,jdbcType=VARCHAR}
+		</if>
+		<if test="endMonth != null and endMonth != ''">
+			AND d.THE_YEAR_MONTH &lt;= #{endMonth,jdbcType=VARCHAR}
+		</if>
+		group by  d.THE_YEAR_MONTH, d.LINE_NO ,o.LINE_NAME
+		order by d.THE_YEAR_MONTH desc)t)tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+
+	<select id="qryTotalRowForMonth" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)  from (
+			SELECT d.THE_YEAR_MONTH,
+			d.LINE_NO,
+			count(d.TASK_COUNT) as taskCount,
+			o.LINE_NAME as lineName
+			FROM LINE_RUN_INFO d LEFT OUTER JOIN LINE_TABLE o ON d.LINE_NO=o.LINE_NO
+			WHERE 1=1
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND o.CLR_CENTER_NO  = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+
+			<if test="lineNo != null and lineNo != ''">
+				AND d.LINE_NO  = #{lineNo,jdbcType=VARCHAR}
+			</if>
+
+			<if test="startMonth != null and startMonth != ''">
+				AND d.THE_YEAR_MONTH &gt;= #{startMonth,jdbcType=VARCHAR}
+			</if>
+			<if test="endMonth != null and endMonth != ''">
+				AND d.THE_YEAR_MONTH &lt;= #{endMonth,jdbcType=VARCHAR}
+			</if>
+			   group by  d.THE_YEAR_MONTH, d.LINE_NO ,o.LINE_NAME ) t
+	</select>
+
+
+	<select id="qryLineRunMapDetail" resultMap="DetailMap" parameterType="java.util.Map" >
+		SELECT
+		<include refid="Base_Column_List" />,o.LINE_NAME as lineName
+		FROM LINE_RUN_INFO d LEFT OUTER JOIN LINE_TABLE o ON d.LINE_NO=o.LINE_NO
+		WHERE 1=1
+		<if test="lineNo != null and lineNo != ''">
+			AND d.LINE_NO = #{lineNo,jdbcType=VARCHAR}
+		</if>
+		<if test="theYearMonth != null and theYearMonth != ''">
+			AND d.THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR}
+		</if>
+
+
+	</select>
+
+	<delete id="deleteLine" parameterType="java.util.Map" >
+   DELETE FROM LINE_RUN_INFO WHERE LINE_NO = #{lineNo,jdbcType=VARCHAR}
+   AND THE_YEAR_MONTH =#{theYearMonth,jdbcType=VARCHAR}
+  </delete>
+
+	<select id="selectTheYearMonthByLineNo" resultType="java.lang.String" parameterType="java.lang.String">
+	  select distinct THE_YEAR_MONTH from LINE_RUN_INFO where LINE_NO =#{lineNo,jdbcType=VARCHAR}
+      and THE_YEAR_MONTH &gt;= #{theYearMonth,jdbcType=VARCHAR}
+	</select>
+
+
+</mapper>

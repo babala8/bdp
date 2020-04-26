@@ -1,0 +1,25 @@
+project("zj-task-impl") {
+    dependencies {
+        compile project(":zj-task:zj-task-api")
+        compile project(":zj-product-center:zj-product-center-api")
+        compile project(":zj-user-center:zj-user-center-api")
+        compile project(":zj-clear-center:zj-clear-center-api")
+        compile project(":zj-channel-center:zj-channel-center-api")
+        compile project(":zj-business:zj-business-api")
+        compile project(":zj-line-center:zj-line-center-api")
+        compile project(":zj-storage:zj-storage-api")
+
+
+        // https://mvnrepository.com/artifact/org.apache.poi/poi
+        compile group: 'org.apache.poi', name: 'poi', version: '3.12'
+
+        // https://mvnrepository.com/artifact/commons-io/commons-io
+        compile group: 'commons-io', name: 'commons-io', version: '2.6'
+
+        // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+        compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+
+        // https://mvnrepository.com/artifact/org.javassist/javassist
+        compile group: 'org.javassist', name: 'javassist', version: '3.25.0-GA'
+    }
+}

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.param.repository.AddnotesRuleMapper" >
+
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.param.domain.AddnotesRule" >
+		<id column="RULE_ID" property="ruleId" jdbcType="VARCHAR" />
+		<result column="RULE_DESP" property="ruleDesp" jdbcType="VARCHAR" />
+		<result column="RULE_GEN_OP" property="ruleGenOp" jdbcType="VARCHAR" />
+		<result column="RULE_GEN_DATE" property="ruleGenDate" jdbcType="VARCHAR" />
+		<result column="RULE_GEN_TIME" property="ruleGenTime" jdbcType="VARCHAR" />
+		<result column="ADDNOTES_COEFF" property="addnotesCoeff" jdbcType="DECIMAL" />
+		<result column="QUOTA_RATIO" property="quotaRatio" jdbcType="DECIMAL" />
+		<result column="ADDNOTES_PERIOD" property="addnotesPeriod" jdbcType="DECIMAL" />
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap  id="DetailMap" type="com.zjft.microservice.treasurybrain.param.domain.AddnotesRule" extends="BaseResultMap">
+		<result column="RULE_GEN_OP_NAME" property="ruleGenOpName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		RULE_ID, RULE_DESP, RULE_GEN_OP, RULE_GEN_DATE, RULE_GEN_TIME, ADDNOTES_COEFF, QUOTA_RATIO,
+		ADDNOTES_PERIOD
+	</sql>
+  
+	<select id="qryNearby" parameterType="java.util.Map" resultType="java.lang.String">
+		select d.RULE_ID from ADDNOTES_RULE_TABLE d
+		<where>
+			<if test="addnotesRuleId != null and addnotesRuleId !=''">
+				AND d.RULE_ID like concat(concat('%',#{addnotesRuleId,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo !=''">
+				AND d.RULE_ID like concat(concat('%',#{clrCenterNo,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+	</select>
+  
+	<select id="qryRuleDesp" parameterType="java.lang.String" resultType="java.lang.String">
+		select
+			RULE_DESP
+		from
+			addnotes_rule_table
+		where
+			RULE_ID=#{addnotesRuleId,jdbcType=VARCHAR}
+	</select>
+  
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select
+			<include refid="Base_Column_List" />
+		from addnotes_rule_table
+		where RULE_ID = #{ruleId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectDetailByPrimaryKey" resultMap="DetailMap" parameterType="java.lang.String" >
+		select
+			<include refid="Base_Column_List" />,SYS_USER.NAME AS RULE_GEN_OP_NAME
+		from addnotes_rule_table
+		LEFT JOIN SYS_USER ON addnotes_rule_table.RULE_GEN_OP = SYS_USER.USERNAME
+		where RULE_ID = #{ruleId,jdbcType=VARCHAR}
+	</select>
+  
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+		delete from addnotes_rule_table
+		where RULE_ID = #{ruleId,jdbcType=VARCHAR}
+	</delete>
+
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.param.domain.AddnotesRule" >
+		insert into addnotes_rule_table (RULE_ID, RULE_DESP, RULE_GEN_OP,
+		RULE_GEN_DATE, RULE_GEN_TIME, ADDNOTES_COEFF,
+		QUOTA_RATIO, ADDNOTES_PERIOD, CLR_CENTER_NO)
+		values (#{ruleId,jdbcType=VARCHAR}, #{ruleDesp,jdbcType=VARCHAR}, #{ruleGenOp,jdbcType=VARCHAR},
+				#{ruleGenDate,jdbcType=VARCHAR}, #{ruleGenTime,jdbcType=VARCHAR}, #{addnotesCoeff,jdbcType=DECIMAL},
+				#{quotaRatio,jdbcType=DECIMAL}, #{addnotesPeriod,jdbcType=DECIMAL}, #{clrCenterNo,jdbcType=VARCHAR})
+	</insert>
+
+
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.param.domain.AddnotesRule" >
+		insert into addnotes_rule_table
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="ruleId != null" >
+				RULE_ID,
+			</if>
+			<if test="ruleDesp != null" >
+				RULE_DESP,
+			</if>
+			<if test="ruleGenOp != null" >
+				RULE_GEN_OP,
+			</if>
+			<if test="ruleGenDate != null" >
+				RULE_GEN_DATE,
+			</if>
+			<if test="ruleGenTime != null" >
+				RULE_GEN_TIME,
+			</if>
+			<if test="addnotesCoeff != null" >
+				ADDNOTES_COEFF,
+			</if>
+			<if test="quotaRatio != null" >
+				QUOTA_RATIO,
+			</if>
+			<if test="addnotesPeriod != null" >
+				ADDNOTES_PERIOD,
+			</if>
+			<if test="clrCenterNo != null" >
+				CLR_CENTER_NO,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="ruleId != null" >
+				#{ruleId,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleDesp != null" >
+				#{ruleDesp,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleGenOp != null" >
+				#{ruleGenOp,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleGenDate != null" >
+				#{ruleGenDate,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleGenTime != null" >
+				#{ruleGenTime,jdbcType=VARCHAR},
+			</if>
+			<if test="addnotesCoeff != null" >
+				#{addnotesCoeff,jdbcType=DECIMAL},
+			</if>
+			<if test="quotaRatio != null" >
+				#{quotaRatio,jdbcType=DECIMAL},
+			</if>
+			<if test="addnotesPeriod != null" >
+				#{addnotesPeriod,jdbcType=DECIMAL},
+			</if>
+			<if test="clrCenterNo != null" >
+				#{clrCenterNo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.param.domain.AddnotesRule" >
+		update addnotes_rule_table
+		<set >
+			<if test="ruleDesp != null" >
+				RULE_DESP = #{ruleDesp,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleGenOp != null" >
+				RULE_GEN_OP = #{ruleGenOp,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleGenDate != null" >
+				RULE_GEN_DATE = #{ruleGenDate,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleGenTime != null" >
+				RULE_GEN_TIME = #{ruleGenTime,jdbcType=VARCHAR},
+			</if>
+			<if test="addnotesCoeff != null" >
+				ADDNOTES_COEFF = #{addnotesCoeff,jdbcType=DECIMAL},
+			</if>
+			<if test="quotaRatio != null" >
+				QUOTA_RATIO = #{quotaRatio,jdbcType=DECIMAL},
+			</if>
+			<if test="addnotesPeriod != null" >
+				ADDNOTES_PERIOD = #{addnotesPeriod,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where RULE_ID = #{ruleId,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.param.domain.AddnotesRule" >
+		update addnotes_rule_table
+		set RULE_DESP = #{ruleDesp,jdbcType=VARCHAR},
+		RULE_GEN_OP = #{ruleGenOp,jdbcType=VARCHAR},
+		RULE_GEN_DATE = #{ruleGenDate,jdbcType=VARCHAR},
+		RULE_GEN_TIME = #{ruleGenTime,jdbcType=VARCHAR},
+		ADDNOTES_COEFF = #{addnotesCoeff,jdbcType=DECIMAL},
+		QUOTA_RATIO = #{quotaRatio,jdbcType=DECIMAL},
+		ADDNOTES_PERIOD = #{addnotesPeriod,jdbcType=DECIMAL}
+		where RULE_ID = #{ruleId,jdbcType=VARCHAR}
+	</update>
+
+	<select id="qryTotalRowRule" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM addnotes_rule_table d
+		WHERE 1=1
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND d.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+		<if test="ruleId != null and ruleId != ''">
+			AND d.RULE_ID like CONCAT(CONCAT('%',#{ruleId,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="ruleGenOp != null and ruleGenOp != ''">
+			AND d.RULE_GEN_OP like CONCAT('%',#{ruleGenOp,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="startDate != null and startDate != ''">
+			AND d.RULE_GEN_DATE &gt;= #{startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND d.RULE_GEN_DATE &lt;= #{endDate,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="qryAddnotesRule" resultMap="DetailMap" parameterType="java.util.Map" >
+		select tt.* from (select t.*, rownum as rn from (
+			SELECT
+				<include refid="Base_Column_List" />,
+				s.NAME as RULE_GEN_OP_NAME
+			FROM addnotes_rule_table d
+			LEFT JOIN SYS_USER s ON d.RULE_GEN_OP=s.USERNAME
+			WHERE 1=1
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND d.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+			<if test="ruleId != null and ruleId != ''">
+				AND d.RULE_ID like CONCAT(CONCAT('%',#{ruleId,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="ruleGenOpName != null and ruleGenOpName != ''">
+				AND s.name like CONCAT(CONCAT('%',#{ruleGenOpName,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="startDate != null and startDate != ''">
+				AND d.RULE_GEN_DATE &gt;= #{startDate,jdbcType=VARCHAR}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND d.RULE_GEN_DATE &lt;= #{endDate,jdbcType=VARCHAR}
+			</if>
+			order by d.RULE_GEN_DATE desc)t)tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="selectMaxRuleId" resultType="java.lang.String">
+	select max (RULE_ID) from ADDNOTES_RULE_TABLE where 1=1
+	<if test="ruleGenDate != null and ruleGenDate != ''">
+		AND RULE_ID like CONCAT(CONCAT('%',#{ruleGenDate,jdbcType=VARCHAR}),'%')
+	</if >
+	<if test="clrCenterNo != null and clrCenterNo != ''">
+		AND RULE_ID like CONCAT(CONCAT('%',#{clrCenterNo,jdbcType=VARCHAR}),'%')
+	</if>
+	</select>
+
+</mapper>

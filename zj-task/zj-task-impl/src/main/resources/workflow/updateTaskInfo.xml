@@ -1,0 +1,22 @@
+<zj-orchestration id="updateTaskInfo" name="更新任务单信息"
+				  requestObject="com.zjft.microservice.treasurybrain.task.dto.TaskInfoDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+	</zj-component>
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.task.component.TaskFlowResourceComponent.updateTaskInfoCheck"
+				  next="">
+		<exit path="ok" next="2"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+	<zj-component id="2" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.task.component.TaskFlowResourceComponent.updateTaskInfo"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

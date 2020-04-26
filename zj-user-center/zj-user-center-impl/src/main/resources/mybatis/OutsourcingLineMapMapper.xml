@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.usercenter.repository.OutsourcingLineMapMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.usercenter.po.OutsourcingLineMapPO">
+		<id column="LINE_RUN_NO" property="lineRunNo" jdbcType="VARCHAR"/>
+		<result column="LINE_NO" property="lineNo" jdbcType="VARCHAR"/>
+		<result column="CAR_NO" property="carNo" jdbcType="INTEGER"/>
+		<result column="DUTY_DATE" property="dutyDate" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="ExtendMap" type="com.zjft.microservice.treasurybrain.usercenter.domain.OutsourcingLineMapDO"
+			   extends="BaseResultMap">
+		<result column="LINE_NAME" property="lineName" jdbcType="VARCHAR"/>
+		<result column="CAR_NUMBER" property="carNum" jdbcType="VARCHAR"/>
+		<collection property="outsourcingList" ofType="com.zjft.microservice.treasurybrain.usercenter.po.OutsourcingPO">
+			<id column="OUTSOURCING_OP_NO" property="no" jdbcType="VARCHAR"/>
+			<result column="NAME" property="name" jdbcType="VARCHAR"/>
+			<result column="POST" property="post" jdbcType="NUMERIC"/>
+		</collection>
+ 	</resultMap>
+
+	<sql id="Base_Column_List">LINE_RUN_NO, DUTY_DATE, LINE_NO, CAR_NO</sql>
+
+	<sql id="columns">t.LINE_RUN_NO, t.DUTY_DATE, t.LINE_NO, t.CAR_NO</sql>
+
+	<select id="qryTotalRow" parameterType="map" resultType="int">
+		select count(0) from OUTSOURCING_LINE_MAP ol
+		where 1=1
+		<if test="null!=lineNo and ''!=lineNo ">
+			and ol.LINE_NO =#{lineNo,jdbcType = INTEGER}
+		</if>
+		<if test="null!=startDate and ''!=startDate">
+			and ol.DUTY_DATE &gt;= #{startDate,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=endDate and ''!=endDate">
+			and ol.DUTY_DATE &lt;= #{endDate,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=clrCenterNo and ''!=clrCenterNo">
+			and ol.LINE_NO in (select l.LINE_NO from ADDNOTES_LINE_TABLE l where l.CLR_CENTER_NO=#{clrCenterNo,jdbcType = VARCHAR})
+		</if>
+	</select>
+
+	<select id="qryByPage" parameterType="map" resultMap="ExtendMap">
+		select t.LINE_RUN_NO,t.CAR_NO,c.CAR_NUMBER,t.LINE_NO,l.LINE_NAME,t.DUTY_DATE,
+				d.OUTSOURCING_OP_NO,o.NAME,o.POST
+		from(
+			select r1.* from(
+				select r.*,rownum rn from (
+					select * from OUTSOURCING_LINE_MAP ol
+					where 1=1
+					<if test="null!=lineNo and ''!=lineNo ">
+						and ol.LINE_NO =#{lineNo,jdbcType = INTEGER}
+					</if>
+					<if test="null!=startDate and ''!=startDate">
+						and ol.DUTY_DATE &gt;= #{startDate,jdbcType = VARCHAR}
+					</if>
+					<if test="null!=endDate and ''!=endDate">
+						and ol.DUTY_DATE &lt;= #{endDate,jdbcType = VARCHAR}
+					</if>
+					<if test="null!=clrCenterNo and ''!=clrCenterNo">
+						and ol.LINE_NO in (select l.LINE_NO from ADDNOTES_LINE_TABLE l
+							where l.CLR_CENTER_NO=#{clrCenterNo,jdbcType = VARCHAR})
+					</if>
+					order by ol.DUTY_DATE desc, ol.LINE_NO ASC ) r) r1
+				where r1.rn &gt; #{startRow,jdbcType = VARCHAR}
+					and r1.rn &lt; #{endRow,jdbcType = VARCHAR}) t
+		left join ADDNOTES_LINE_TABLE l on l.LINE_NO = t.LINE_NO
+		left join CAR_INFO c on c.CAR_NO = t.CAR_NO
+		left join OUTSOURCING_LINE_MAP_DETAIL d on t.LINE_RUN_NO = d.LINE_RUN_NO
+		left join OUTSOURCING_INFO o on d.OUTSOURCING_OP_NO = o.NO
+	</select>
+
+	<select id="qryByPrimaryKey" resultMap="BaseResultMap" parameterType="string">
+		select <include refid="columns"/>
+		from OUTSOURCING_LINE_MAP t
+		where t.LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="string" >
+		delete from OUTSOURCING_LINE_MAP o where o.LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+	</delete>
+
+	<update id="modeByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.usercenter.po.OutsourcingLineMapPO">
+		update OUTSOURCING_LINE_MAP o
+		set o.LINE_NO=#{lineNo,jdbcType=VARCHAR} , o.CAR_No = #{carNo,jdbcType=INTEGER} , o.DUTY_DATE = #{dutyDate,jdbcType=VARCHAR}
+		where o.LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+	</update>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.usercenter.po.OutsourcingLineMapPO">
+		insert into OUTSOURCING_LINE_MAP(LINE_RUN_NO, DUTY_DATE, LINE_NO, CAR_NO)
+		VALUES (#{lineRunNo,jdbcType = VARCHAR},#{dutyDate,jdbcType = VARCHAR},#{lineNo,jdbcType = VARCHAR},#{carNo,jdbcType = INTEGER})
+	</insert>
+
+	<delete id="deleteInPeriod">
+		delete
+		from OUTSOURCING_LINE_MAP m
+		where m.DUTY_DATE &gt;= #{startDate,jdbcType = VARCHAR}
+		and m.DUTY_DATE &lt;= #{endDate,jdbcType = VARCHAR}
+		and m.LINE_NO in
+		<foreach collection="lineNos" index="i" open="(" close=")" separator="," item="item">#{item}</foreach>
+	</delete>
+
+	<select id="qryInfoByDate" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select
+		<include refid="Base_Column_List" />
+		from OUTSOURCING_LINE_MAP
+		where DUTY_DATE = #{dutyDate,jdbcType=VARCHAR}
+	</select>
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjft.microservice.treasurybrain.usercenter.repository.PostScheduleMapper">
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.usercenter.po.PostSchedulePO">
+    <id column="PLAN_NO" jdbcType="VARCHAR" property="planNo" />
+    <result column="MOULD_NO" jdbcType="VARCHAR" property="mouldNo" />
+    <result column="ORG_NO" jdbcType="VARCHAR" property="orgNo" />
+    <result column="POST_NO" jdbcType="VARCHAR" property="postNo" />
+	  <result column="SCHEDULE_MONTH" jdbcType="VARCHAR" property="scheduleMonth" />
+	  <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+  </resultMap>
+	<resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.usercenter.domain.PostScheduleDO" extends="BaseResultMap">
+		<result column="MOULD_NAME" jdbcType="VARCHAR" property="mouldName" />
+		<result column="ORG_NAME" jdbcType="VARCHAR" property="orgName" />
+		<result column="POST_NAME" jdbcType="VARCHAR" property="postName" />
+	</resultMap>
+  <sql id="Base_Column_List">
+    PLAN_NO, ORG_NO, MOULD_NO, POST_NO,SCHEDULE_MONTH,CREATE_TIME
+  </sql>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.usercenter.po.PostSchedulePO">
+    insert into POST_SCHEDULE_TABLE (PLAN_NO,
+      ORG_NO,MOULD_NO, POST_NO, SCHEDULE_MONTH, CREATE_TIME)
+    values (#{planNo,jdbcType=VARCHAR}, #{orgNo,jdbcType=VARCHAR}, #{mouldNo,jdbcType=VARCHAR},
+     #{postNo,jdbcType=VARCHAR}, #{scheduleMonth,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR})
+  </insert>
+
+
+	<select id="qryTotalRow" resultType="int" parameterType="java.util.Map">
+		select count(1) from POST_SCHEDULE_TABLE p
+		where 1=1
+		<if test="null!=scheduleMonth and ''!=scheduleMonth">
+			and p.SCHEDULE_MONTH like concat('%',concat(#{scheduleMonth,jdbcType = VARCHAR},'%'))
+		</if>
+		<if test="''!=postType and postType!=null">
+			and p.POST_TYPE = #{postType,jdbcType = VARCHAR}
+		</if>
+		<if test="''!=postNo and postNo!=null">
+			and p.POST_NO = #{postNo,jdbcType = VARCHAR}
+		</if>
+		<if test="''!=orgNo and orgNo!=null">
+			and p.ORG_NO = #{orgNo,jdbcType = VARCHAR}
+		</if>
+	</select>
+
+	<select id="qryByPage" resultMap="DetailMap" parameterType="java.util.Map">
+		select t.* from
+		(select ROWNUM rn ,
+		p.PLAN_NO, p.ORG_NO, p.MOULD_NO, p.POST_NO,p.SCHEDULE_MONTH,p.create_time,m.name as org_name,o.mould_name, s.post_Name
+		from POST_SCHEDULE_TABLE p
+		left join SYS_ORG m on p.ORG_NO=m.NO
+		left join POST_SCHEDULE_MOULD_TABLE o on p.mould_no=o.mould_no
+		left join sys_post s on p.post_no=s.post_no
+		<where>
+			<if test="null!=scheduleMonth and ''!=scheduleMonth">
+				and p.SCHEDULE_MONTH like concat('%',concat(#{scheduleMonth,jdbcType = VARCHAR},'%'))
+			</if>
+			<if test="''!=postType and postType!=null">
+				and p.POST_TYPE = #{postType,jdbcType = VARCHAR}
+			</if>
+			<if test="''!=mouldNo and mouldNo!=null">
+				and p.MOULD_NO = #{mouldNo,jdbcType = VARCHAR}
+			</if>
+			<if test="''!=postNo and postNo!=null">
+				and p.POST_NO = #{postNo,jdbcType = VARCHAR}
+			</if>
+			<if test="''!=orgNo and orgNo!=null"> and exists(select s.NO
+				FROM SYS_ORG s
+				WHERE s.NO=#{orgNo,jdbcType=VARCHAR} and m.LEFT &gt;=s.LEFT and m.RIGHT &lt;=s.RIGHT)
+			</if>
+		</where>
+		order by p.POST_NO)t
+		where t.rn &gt; #{startRow,jdbcType=NUMERIC} and t.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+</mapper>

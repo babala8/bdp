@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.managecenter.repository.EntityBaseInfoMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.managecenter.domain.BaseEntityInfoDO">
+		<id column="ENTITY_NO" property="entityNo" jdbcType="VARCHAR"/>
+		<result column="GOODS_NO" property="goodsNo" jdbcType="VARCHAR"/>
+		<result column="GOODS_NAME" property="goodsName" jdbcType="VARCHAR"/>
+		<result column="PARAMS" property="prams" jdbcType="VARCHAR"/>
+		<result column="CUSTOMER_NO" property="customerNo" jdbcType="VARCHAR"/>
+		<result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR"/>
+		<result column="CUSTOMER_TYPE" property="customerType" jdbcType="NUMERIC"/>
+		<result column="CUSTOMER_TYPE_NAME" property="customerTypeName" jdbcType="VARCHAR"/>
+		<result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR"/>
+		<result column="MODE_TIME" property="modTime" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+    ENTITY_NO, GOODS_NO, GOODS_NAME, PARAMS, CUSTOMER_NO, CUSTOMER_NAME, CUSTOMER_TYPE, CUSTOMER_TYPE_NAME,
+     CREATE_TIME, MODE_TIME
+  	</sql>
+
+	<select id="qryContainerNoList" parameterType="java.util.Map" resultType="java.lang.String">
+		select  ENTITY_NO as "entityNo" from BASE_ENTITY_INFO t
+		where t.CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insert">
+		insert into BASE_ENTITY_INFO (
+		ENTITY_NO, GOODS_NO, PARAMS, CUSTOMER_NO, CUSTOMER_TYPE, CREATE_TIME
+		)
+		values (
+		#{entityNo,jdbcType=VARCHAR}, #{goodsNo,jdbcType=VARCHAR}, #{prams,jdbcType=VARCHAR},
+		#{customerNo,jdbcType=VARCHAR}, #{customerType,jdbcType=NUMERIC}, #{createTime,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update">
+		update BASE_ENTITY_INFO
+		<set>
+			<if test="goodsNo != null">
+				GOODS_NO = #{goodsNo,jdbcType=VARCHAR},
+			</if>
+			<if test="prams != null">
+				PARAMS = #{prams,jdbcType=VARCHAR},
+			</if>
+			<if test="customerNo != null">
+				CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerType != null">
+				CUSTOMER_TYPE = #{customerType,jdbcType=NUMERIC},
+			</if>
+			<if test="modTime != null">
+				MODE_TIME = #{modTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delete">
+		delete from BASE_ENTITY_INFO where ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="queryEntityByPage" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from (
+		select entity.*,goods.GOODS_NAME,type.NAME as CUSTOMER_TYPE_NAME,rownum rn,
+		case CUSTOMER_TYPE when 3 then org.NAME else CUSTOMER_NO end as CUSTOMER_NAME
+		from BASE_ENTITY_INFO entity
+		left join GOODS_BASE_TABLE goods on entity.GOODS_NO = goods.GOODS_NO
+		left join PRODUCT_CUSTOMER_TYPE type on entity.CUSTOMER_TYPE = type.CUSTOMER_TYPE
+		left join SYS_ORG org on entity.CUSTOMER_NO = org.NO
+		<where>
+			<if test="entityNo!= null and entityNo!=''">
+				and entity.ENTITY_NO like concat(concat('%',#{entityNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="goodsNo != null and goodsNo != ''">
+				and entity.GOODS_NO = #{goodsNo,jdbcType=VARCHAR}
+			</if>
+			<if test="customerType != null and customerType != -1">
+				and entity.CUSTOMER_TYPE = #{customerType,jdbcType=NUMERIC}
+			</if>
+			<if test="customerNo != null and customerNo != ''">
+				and entity.CUSTOMER_NO like concat(concat('%',#{customerNo,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+		)
+		where rn &gt; #{startRow} and rn &lt;= #{endRow}
+	</select>
+
+	<select id="qryTotalRowEntity" resultType="java.lang.Integer">
+		select count(1) from BASE_ENTITY_INFO
+		<where>
+			<if test="entityNo!= null and entityNo!=''">
+				and ENTITY_NO like concat(concat('%',#{entityNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="goodsNo != null and goodsNo != ''">
+				and GOODS_NO = #{goodsNo,jdbcType=VARCHAR}
+			</if>
+			<if test="customerType != null and customerType != -1">
+				and CUSTOMER_TYPE = #{customerType,jdbcType=NUMERIC}
+			</if>
+			<if test="customerNo != null and customerNo != ''">
+				and CUSTOMER_NO like concat(concat('%',#{customerNo,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="queryByEntityNo" resultType="java.lang.Integer">
+		select count(1) from BASE_ENTITY_INFO where ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+	</select>
+
+	<resultMap id="GoodsPropertyKeyMap"
+			   type="com.zjft.microservice.treasurybrain.managecenter.domain.GoodsPropertyKeyDO">
+		<id column="PROPERTY_NO" property="propertyNo" jdbcType="VARCHAR"/>
+		<result column="PROPERTY_NAME" property="propertyName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+
+</mapper>

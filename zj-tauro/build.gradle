@@ -1,0 +1,24 @@
+project("zj-tauro-impl") {
+    dependencies {
+        compile project(":zj-tauro:zj-tauro-api")
+
+        compile project(":zj-user-center:zj-user-center-api")
+
+        compile project(":zj-channel-center:zj-channel-center-api")
+
+        compile project(":zj-push-server:zj-push-server-api")
+
+        compile project(":zj-task:zj-task-api")
+
+        compile project(":zj-product-center:zj-product-center-api")
+
+        compile project(":zj-storage:zj-storage-api")
+
+        compile project(":zj-manage-center:zj-manage-center-api")
+
+        compile project(":zj-business:zj-business-api")
+
+        compile project(":zj-line-center:zj-line-center-api")
+
+    }
+}

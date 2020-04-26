@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.usercenter.repository.SysLogMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.usercenter.dto.SysWebLogDTO">
+		<result column="USERNAME" property="username" jdbcType="VARCHAR"/>
+		<result column="TID" property="tid" jdbcType="VARCHAR"/>
+		<result column="METHOD" property="method" jdbcType="VARCHAR"/>
+		<result column="URL" property="url" jdbcType="VARCHAR"/>
+		<result column="RESULT" property="result" jdbcType="VARCHAR"/>
+		<result column="START_TIME" property="startTime" jdbcType="VARCHAR"/>
+		<result column="COST_TIME" property="costTime" jdbcType="VARCHAR"/>
+		<result column="CLIENT_IP" property="clientIP" jdbcType="VARCHAR"/>
+		<result column="SERVER_IP" property="serverIP" jdbcType="VARCHAR"/>
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+		<result column="NAME" property="name" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<select id="qryTotalRow" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from SYS_WEB_LOG s left join BRAINTOERP.SYS_USER u on s.USERNAME=u.USERNAME
+		<where>
+			<if test="name != null and name !=''">
+				and u.name LIKE '%' || #{name,jdbcType=VARCHAR} || '%'
+			</if>
+			<if test="method != null and method !=''">
+				and s.METHOD = #{method,jdbcType=VARCHAR}
+			</if>
+			<if test="result != null and result !=''">
+				and s.RESULT = #{result,jdbcType=VARCHAR}
+			</if>
+			<if test="requestStartDate != null and requestStartDate !=''">
+				and substr(s.START_TIME,1,10) >= #{requestStartDate,jdbcType=VARCHAR}
+			</if>
+			<if test="requestEndDate != null and requestEndDate !=''">
+				and substr(s.START_TIME,1,10) &lt;= #{requestEndDate,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="qrySysWebLogByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select tt.* from (select t.*, ROWNUM rn from (
+		select s.*,u.NAME
+		from SYS_WEB_LOG s left join BRAINTOERP.SYS_USER u on s.USERNAME=u.USERNAME
+		<where>
+			<if test="name != null and name !=''">
+				and u.NAME LIKE '%' || #{name,jdbcType=VARCHAR} || '%'
+			</if>
+			<if test="method != null and method !=''">
+				and s.METHOD = #{method,jdbcType=VARCHAR}
+			</if>
+			<if test="result != null and result !=''">
+				and s.RESULT = #{result,jdbcType=VARCHAR}
+			</if>
+			<if test="requestStartDate != null and requestStartDate !=''">
+				and substr(s.START_TIME,1,10) >= #{requestStartDate,jdbcType=VARCHAR}
+			</if>
+			<if test="requestEndDate != null and requestEndDate !=''">
+				and substr(s.START_TIME,1,10) &lt;= #{requestEndDate,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by s.START_TIME desc)t)tt
+		where tt.rn > #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+</mapper>

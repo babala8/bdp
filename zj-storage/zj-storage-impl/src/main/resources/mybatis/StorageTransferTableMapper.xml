@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.storage.repository.StorageTransferTableMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.storage.po.StorageTransferTablePO">
+		<id column="RECORD_NO" property="recordNo" jdbcType="VARCHAR"/>
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR"/>
+		<result column="DIRECTION" property="direction" jdbcType="INTEGER"/>
+		<result column="TRANSFER_DATE" property="transferDate" jdbcType="INTEGER"/>
+		<result column="TRANSFER_TIME" property="transferTime" jdbcType="INTEGER"/>
+		<result column="DELIVERER_NO1" property="delivererNo1" jdbcType="VARCHAR"/>
+		<result column="DELIVERER_NO2" property="delivererNo2" jdbcType="VARCHAR"/>
+		<result column="RECEIVER_NO1" property="receiverNo1" jdbcType="VARCHAR"/>
+		<result column="RECEIVER_NO2" property="receiverNo2" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="expandResultMap" type="com.zjft.microservice.treasurybrain.storage.domain.StorageSortedTransferTableDO" extends="BaseResultMap">
+		<result column="clrCenterName" property="clrCenterName" jdbcType="VARCHAR"/>
+		<result column="delivererName1" property="delivererName1" jdbcType="VARCHAR"/>
+		<result column="delivererName2" property="delivererName2" jdbcType="VARCHAR"/>
+		<result column="receiverName1" property="receiverName1" jdbcType="VARCHAR"/>
+		<result column="receiverName2" property="receiverName2" jdbcType="VARCHAR"/>
+	</resultMap>
+
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.storage.po.StorageTransferTablePO">
+		insert into STORAGE_TRANSFER_TABLE(record_no, clr_center_no, direction, TRANSFER_DATE, TRANSFER_TIME,
+                                    deliverer_no1, deliverer_no2, receiver_no1, receiver_no2)
+		values (#{recordNo,jdbcType = VARCHAR},#{clrCenterNo,jdbcType = VARCHAR},
+		#{direction,jdbcType = INTEGER},
+		#{transferDate,jdbcType = VARCHAR},#{transferTime,jdbcType = VARCHAR},
+		#{delivererNo1,jdbcType = VARCHAR},#{delivererNo2,jdbcType = VARCHAR},
+		#{receiverNo1,jdbcType = VARCHAR},#{receiverNo2,jdbcType = VARCHAR})
+	</insert>
+
+	<select id="qryTotalRowForPage" resultType="INTEGER" parameterType="java.util.Map">
+		select count(0)
+		from STORAGE_TRANSFER_TABLE st
+		where 1=1
+		<if test="clrCenterNo!=null and clrCenterNo!=''">
+			and st.CLR_CENTER_NO = #{clrCenterNo,jdbcType = VARCHAR}
+		</if>
+	</select>
+
+	<select id="qryByPage" parameterType="java.util.Map" resultMap="expandResultMap">
+		select t.*,c.CENTER_NAME as clrCenterName,u1.NAME as delivererName1,u2.NAME as delivererName2,
+		u3.NAME as receiverName1,u4.NAME as receiverName2
+		from(
+		select st.*,rownum rn
+		from STORAGE_TRANSFER_TABLE st
+		where 1=1
+		<if test="clrCenterNo!=null and clrCenterNo!=''">
+			and st.CLR_CENTER_NO = #{clrCenterNo,jdbcType = VARCHAR}
+		</if>) t
+		left join CLR_CENTER_TABLE c on c.clr_center_no =  t.clr_center_no
+		left join sys_user u1 on u1.USERNAME = t.DELIVERER_NO1
+		left join sys_user u2 on u2.USERNAME = t.DELIVERER_NO2
+		left join sys_user u3 on u3.USERNAME = t.RECEIVER_NO1
+		left join sys_user u4 on u4.USERNAME = t.RECEIVER_NO2
+		where rn &gt; #{startRow,jdbcType = INTEGER}
+		and rn &lt;= #{endRow,jdbcType = INTEGER}
+	</select>
+</mapper>

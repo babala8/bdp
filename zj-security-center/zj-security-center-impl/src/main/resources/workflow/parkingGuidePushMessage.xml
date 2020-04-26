@@ -1,0 +1,36 @@
+<zj-orchestration id="parkingGuidePushMessage" name="泊车引导"
+				  requestObject="java.util.HashMap"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="java.util.HashMap"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+	</zj-component>
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.securitycenter.component.ParkingManageFlowComponent.parkingGuideTypeCheck"
+				  next="">
+		<exit path="parkingCall" next="2"/>
+		<exit path="enterType" next="3"/>
+		<exit path="leaveType" next="4"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+	<zj-component id="2" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.securitycenter.component.ParkingManageFlowComponent.parkingCall"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+	<zj-component id="3" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.securitycenter.component.ParkingManageFlowComponent.enterType"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+	<zj-component id="4" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.securitycenter.component.ParkingManageFlowComponent.leaveType"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

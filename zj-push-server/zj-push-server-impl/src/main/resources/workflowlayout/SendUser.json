@@ -1,0 +1,19 @@
+{
+  "zj_component": [
+    {
+      "top": 30,
+      "id": "start",
+      "left": 508
+    },
+    {
+      "top": 155,
+      "id": "1",
+      "left": 483
+    },
+    {
+      "top": 320,
+      "id": "end",
+      "left": 661
+    }
+  ]
+}

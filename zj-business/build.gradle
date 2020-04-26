@@ -1,0 +1,14 @@
+project("zj-business-impl"){
+    dependencies {
+        compile project(":zj-business:zj-business-api")
+        compile project(":zj-product-center:zj-product-center-impl")
+        compile project(":zj-push-server:zj-push-server-api")
+        compile project(":zj-user-center:zj-user-center-api")
+        compile project(":zj-channel-center:zj-channel-center-api")
+        compile project(":zj-param-center:zj-param-center-api")
+        compile project(":zj-task:zj-task-api")
+        compile project(":zj-line-center:zj-line-center-api")
+        compile project(":zj-accounts-center:zj-accounts-center-api")
+    }
+
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.usercenter.repository.SysUserMapper">
+	<select id="qryUserNumByGroupType" resultType="int" parameterType="int">
+		select count(0) from SYS_USER u where u.GROUP_TYPE=#{groupType}
+	</select>
+
+	<select id="getUserEmail" resultType="java.lang.String" parameterType="java.lang.String">
+		select EMAIL from SYS_USER where USERNAME = #{userName,jdbcType = VARCHAR}
+	</select>
+
+	<select id="qryRolesEmail" resultType="com.zjft.microservice.treasurybrain.common.domain.SysUserDO" parameterType="java.lang.String">
+		select distinct SYS_USER.username,name,email from SYS_USER left join SYS_USER_ROLE on SYS_USER_ROLE.USERNAME = SYS_USER.USERNAME
+		where SYS_USER_ROLE.ROLE_NO in
+		<foreach collection="list" item="roleList" index="index" open="(" close=")" separator=",">
+			#{roleList}
+		</foreach>
+	</select>
+
+	<select id="getUserAndPhoneNumber" resultType="com.zjft.microservice.treasurybrain.common.domain.SysUserDO"
+			parameterType="java.lang.String">
+		select distinct SYS_USER.username,name,mobile from SYS_USER left join SYS_USER_ROLE on SYS_USER_ROLE.USERNAME = SYS_USER.USERNAME
+		where SYS_USER_ROLE.ROLE_NO in
+		<foreach collection="list" item="roleList" index="index" open="(" close=")" separator=",">
+			#{roleList}
+		</foreach>
+	</select>
+
+	<select id="getAllUserInfo" resultType="com.zjft.microservice.treasurybrain.common.domain.SysUserDO"
+			parameterType="java.lang.String">
+		select USERNAME, NAME, MOBILE, EMAIL
+		from sys_user
+	</select>
+</mapper>

@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.channelcenter.repository.DevStatusTableMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.common.domain.DevStatusTable" >
+    <id column="DEV_NO" property="devNo" jdbcType="VARCHAR" />
+    <result column="STATUS_LAST_TIME" property="statusLastTime" jdbcType="CHAR" />
+    <result column="DEV_RUN_STATUS" property="devRunStatus" jdbcType="VARCHAR" />
+    <result column="Dev_Mod_Status" property="devModStatus" jdbcType="VARCHAR" />
+    <result column="DEV_CASHBOX_STATUS" property="devCashboxStatus" jdbcType="VARCHAR" />
+    <result column="Idc_Device_Status" property="idcDeviceStatus" jdbcType="VARCHAR" />
+    <result column="Chk_Device_Status" property="chkDeviceStatus" jdbcType="VARCHAR" />
+    <result column="Pbk_Device_Status" property="pbkDeviceStatus" jdbcType="VARCHAR" />
+    <result column="Pin_Device_Status" property="pinDeviceStatus" jdbcType="VARCHAR" />
+    <result column="Siu_Device_Status" property="siuDeviceStatus" jdbcType="VARCHAR" />
+    <result column="Dep_Device_Status" property="depDeviceStatus" jdbcType="VARCHAR" />
+    <result column="Cam_Device_Status" property="camDeviceStatus" jdbcType="VARCHAR" />
+    <result column="Cim_Device_Status" property="cimDeviceStatus" jdbcType="VARCHAR" />
+    <result column="Cdm_Device_Status" property="cdmDeviceStatus" jdbcType="VARCHAR" />
+    <result column="Spr_Device_Status" property="sprDeviceStatus" jdbcType="VARCHAR" />
+    <result column="Rpr_Device_Status" property="rprDeviceStatus" jdbcType="VARCHAR" />
+    <result column="Jpr_Device_Status" property="jprDeviceStatus" jdbcType="VARCHAR" />
+    <result column="Ttu_Device_Status" property="ttuDeviceStatus" jdbcType="VARCHAR" />
+    <result column="RPR_PAPER_STATUS" property="rprPaperStatus" jdbcType="VARCHAR" />
+    <result column="JPR_PAPER_STATUS" property="jprPaperStatus" jdbcType="VARCHAR" />
+    <result column="CDM_SHUTTER_STATUS" property="cdmShutterStatus" jdbcType="VARCHAR" />
+    <result column="CDM_STACKER_STATUS" property="cdmStackerStatus" jdbcType="VARCHAR" />
+    <result column="CDM_INPUT_OUTPUT_STATUS" property="cdmInputOutputStatus" jdbcType="VARCHAR" />
+    <result column="CIM_SHUTTER_STATUS" property="cimShutterStatus" jdbcType="VARCHAR" />
+    <result column="CIM_ESCROW_STATUS" property="cimEscrowStatus" jdbcType="VARCHAR" />
+    <result column="CIM_INPUT_OUTPUT_STATUS" property="cimInputOutputStatus" jdbcType="VARCHAR" />
+    <result column="IDC_CAPTURE_BIN_COUNT" property="idcCaptureBinCount" jdbcType="VARCHAR" />
+    <result column="AVAILABLE_AMT" property="availableAmt" jdbcType="INTEGER" />
+    <result column="LAST_ADDNOTE_DATE" property="lastAddnoteDate" jdbcType="VARCHAR" />
+    <result column="LAST_ADDNOTE_TIME" property="lastAddnoteTime" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    DEV_NO, STATUS_LAST_TIME, DEV_RUN_STATUS, Dev_Mod_Status, DEV_CASHBOX_STATUS, Idc_Device_Status, 
+    Chk_Device_Status, Pbk_Device_Status, Pin_Device_Status, Siu_Device_Status, Dep_Device_Status, 
+    Cam_Device_Status, Cim_Device_Status, Cdm_Device_Status, Spr_Device_Status, Rpr_Device_Status, 
+    Jpr_Device_Status, Ttu_Device_Status, RPR_PAPER_STATUS, JPR_PAPER_STATUS, CDM_SHUTTER_STATUS, 
+    CDM_STACKER_STATUS, CDM_INPUT_OUTPUT_STATUS, CIM_SHUTTER_STATUS, CIM_ESCROW_STATUS, 
+    CIM_INPUT_OUTPUT_STATUS, IDC_CAPTURE_BIN_COUNT, AVAILABLE_AMT, LAST_ADDNOTE_DATE, 
+    LAST_ADDNOTE_TIME
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from dev_status_table
+    where DEV_NO = #{devNo,jdbcType=VARCHAR}
+  </select>
+
+
+	<select id="queryForList" resultType="java.util.Map" parameterType="java.lang.String" >
+		select dev_no as "devNo",available_amt as "availableAmt"
+		from  dev_status_table
+		where dev_no in (#{devNosSb,jdbcType=VARCHAR})
+	</select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from dev_status_table
+    where DEV_NO = #{devNo,jdbcType=VARCHAR}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.common.domain.DevStatusTable" >
+    insert into dev_status_table (DEV_NO, STATUS_LAST_TIME, DEV_RUN_STATUS, 
+      Dev_Mod_Status, DEV_CASHBOX_STATUS, Idc_Device_Status, 
+      Chk_Device_Status, Pbk_Device_Status, Pin_Device_Status, 
+      Siu_Device_Status, Dep_Device_Status, Cam_Device_Status, 
+      Cim_Device_Status, Cdm_Device_Status, Spr_Device_Status, 
+      Rpr_Device_Status, Jpr_Device_Status, Ttu_Device_Status, 
+      RPR_PAPER_STATUS, JPR_PAPER_STATUS, CDM_SHUTTER_STATUS, 
+      CDM_STACKER_STATUS, CDM_INPUT_OUTPUT_STATUS, 
+      CIM_SHUTTER_STATUS, CIM_ESCROW_STATUS, CIM_INPUT_OUTPUT_STATUS, 
+      IDC_CAPTURE_BIN_COUNT, AVAILABLE_AMT, LAST_ADDNOTE_DATE, 
+      LAST_ADDNOTE_TIME)
+    values (#{devNo,jdbcType=VARCHAR}, #{statusLastTime,jdbcType=CHAR}, #{devRunStatus,jdbcType=VARCHAR}, 
+      #{devModStatus,jdbcType=VARCHAR}, #{devCashboxStatus,jdbcType=VARCHAR}, #{idcDeviceStatus,jdbcType=VARCHAR}, 
+      #{chkDeviceStatus,jdbcType=VARCHAR}, #{pbkDeviceStatus,jdbcType=VARCHAR}, #{pinDeviceStatus,jdbcType=VARCHAR}, 
+      #{siuDeviceStatus,jdbcType=VARCHAR}, #{depDeviceStatus,jdbcType=VARCHAR}, #{camDeviceStatus,jdbcType=VARCHAR}, 
+      #{cimDeviceStatus,jdbcType=VARCHAR}, #{cdmDeviceStatus,jdbcType=VARCHAR}, #{sprDeviceStatus,jdbcType=VARCHAR}, 
+      #{rprDeviceStatus,jdbcType=VARCHAR}, #{jprDeviceStatus,jdbcType=VARCHAR}, #{ttuDeviceStatus,jdbcType=VARCHAR}, 
+      #{rprPaperStatus,jdbcType=VARCHAR}, #{jprPaperStatus,jdbcType=VARCHAR}, #{cdmShutterStatus,jdbcType=VARCHAR}, 
+      #{cdmStackerStatus,jdbcType=VARCHAR}, #{cdmInputOutputStatus,jdbcType=VARCHAR}, 
+      #{cimShutterStatus,jdbcType=VARCHAR}, #{cimEscrowStatus,jdbcType=VARCHAR}, #{cimInputOutputStatus,jdbcType=VARCHAR}, 
+      #{idcCaptureBinCount,jdbcType=VARCHAR}, #{availableAmt,jdbcType=INTEGER}, #{lastAddnoteDate,jdbcType=VARCHAR}, 
+      #{lastAddnoteTime,jdbcType=VARCHAR})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.common.domain.DevStatusTable" >
+    insert into dev_status_table
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="devNo != null" >
+        DEV_NO,
+      </if>
+      <if test="statusLastTime != null" >
+        STATUS_LAST_TIME,
+      </if>
+      <if test="devRunStatus != null" >
+        DEV_RUN_STATUS,
+      </if>
+      <if test="devModStatus != null" >
+        Dev_Mod_Status,
+      </if>
+      <if test="devCashboxStatus != null" >
+        DEV_CASHBOX_STATUS,
+      </if>
+      <if test="idcDeviceStatus != null" >
+        Idc_Device_Status,
+      </if>
+      <if test="chkDeviceStatus != null" >
+        Chk_Device_Status,
+      </if>
+      <if test="pbkDeviceStatus != null" >
+        Pbk_Device_Status,
+      </if>
+      <if test="pinDeviceStatus != null" >
+        Pin_Device_Status,
+      </if>
+      <if test="siuDeviceStatus != null" >
+        Siu_Device_Status,
+      </if>
+      <if test="depDeviceStatus != null" >
+        Dep_Device_Status,
+      </if>
+      <if test="camDeviceStatus != null" >
+        Cam_Device_Status,
+      </if>
+      <if test="cimDeviceStatus != null" >
+        Cim_Device_Status,
+      </if>
+      <if test="cdmDeviceStatus != null" >
+        Cdm_Device_Status,
+      </if>
+      <if test="sprDeviceStatus != null" >
+        Spr_Device_Status,
+      </if>
+      <if test="rprDeviceStatus != null" >
+        Rpr_Device_Status,
+      </if>
+      <if test="jprDeviceStatus != null" >
+        Jpr_Device_Status,
+      </if>
+      <if test="ttuDeviceStatus != null" >
+        Ttu_Device_Status,
+      </if>
+      <if test="rprPaperStatus != null" >
+        RPR_PAPER_STATUS,
+      </if>
+      <if test="jprPaperStatus != null" >
+        JPR_PAPER_STATUS,
+      </if>
+      <if test="cdmShutterStatus != null" >
+        CDM_SHUTTER_STATUS,
+      </if>
+      <if test="cdmStackerStatus != null" >
+        CDM_STACKER_STATUS,
+      </if>
+      <if test="cdmInputOutputStatus != null" >
+        CDM_INPUT_OUTPUT_STATUS,
+      </if>
+      <if test="cimShutterStatus != null" >
+        CIM_SHUTTER_STATUS,
+      </if>
+      <if test="cimEscrowStatus != null" >
+        CIM_ESCROW_STATUS,
+      </if>
+      <if test="cimInputOutputStatus != null" >
+        CIM_INPUT_OUTPUT_STATUS,
+      </if>
+      <if test="idcCaptureBinCount != null" >
+        IDC_CAPTURE_BIN_COUNT,
+      </if>
+      <if test="availableAmt != null" >
+        AVAILABLE_AMT,
+      </if>
+      <if test="lastAddnoteDate != null" >
+        LAST_ADDNOTE_DATE,
+      </if>
+      <if test="lastAddnoteTime != null" >
+        LAST_ADDNOTE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="devNo != null" >
+        #{devNo,jdbcType=VARCHAR},
+      </if>
+      <if test="statusLastTime != null" >
+        #{statusLastTime,jdbcType=CHAR},
+      </if>
+      <if test="devRunStatus != null" >
+        #{devRunStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="devModStatus != null" >
+        #{devModStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="devCashboxStatus != null" >
+        #{devCashboxStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="idcDeviceStatus != null" >
+        #{idcDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="chkDeviceStatus != null" >
+        #{chkDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="pbkDeviceStatus != null" >
+        #{pbkDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="pinDeviceStatus != null" >
+        #{pinDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="siuDeviceStatus != null" >
+        #{siuDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="depDeviceStatus != null" >
+        #{depDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="camDeviceStatus != null" >
+        #{camDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cimDeviceStatus != null" >
+        #{cimDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cdmDeviceStatus != null" >
+        #{cdmDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="sprDeviceStatus != null" >
+        #{sprDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="rprDeviceStatus != null" >
+        #{rprDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="jprDeviceStatus != null" >
+        #{jprDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="ttuDeviceStatus != null" >
+        #{ttuDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="rprPaperStatus != null" >
+        #{rprPaperStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="jprPaperStatus != null" >
+        #{jprPaperStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cdmShutterStatus != null" >
+        #{cdmShutterStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cdmStackerStatus != null" >
+        #{cdmStackerStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cdmInputOutputStatus != null" >
+        #{cdmInputOutputStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cimShutterStatus != null" >
+        #{cimShutterStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cimEscrowStatus != null" >
+        #{cimEscrowStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cimInputOutputStatus != null" >
+        #{cimInputOutputStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="idcCaptureBinCount != null" >
+        #{idcCaptureBinCount,jdbcType=VARCHAR},
+      </if>
+      <if test="availableAmt != null" >
+        #{availableAmt,jdbcType=INTEGER},
+      </if>
+      <if test="lastAddnoteDate != null" >
+        #{lastAddnoteDate,jdbcType=VARCHAR},
+      </if>
+      <if test="lastAddnoteTime != null" >
+        #{lastAddnoteTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.common.domain.DevStatusTable" >
+    update dev_status_table
+    <set >
+      <if test="statusLastTime != null" >
+        STATUS_LAST_TIME = #{statusLastTime,jdbcType=CHAR},
+      </if>
+      <if test="devRunStatus != null" >
+        DEV_RUN_STATUS = #{devRunStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="devModStatus != null" >
+        Dev_Mod_Status = #{devModStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="devCashboxStatus != null" >
+        DEV_CASHBOX_STATUS = #{devCashboxStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="idcDeviceStatus != null" >
+        Idc_Device_Status = #{idcDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="chkDeviceStatus != null" >
+        Chk_Device_Status = #{chkDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="pbkDeviceStatus != null" >
+        Pbk_Device_Status = #{pbkDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="pinDeviceStatus != null" >
+        Pin_Device_Status = #{pinDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="siuDeviceStatus != null" >
+        Siu_Device_Status = #{siuDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="depDeviceStatus != null" >
+        Dep_Device_Status = #{depDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="camDeviceStatus != null" >
+        Cam_Device_Status = #{camDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cimDeviceStatus != null" >
+        Cim_Device_Status = #{cimDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cdmDeviceStatus != null" >
+        Cdm_Device_Status = #{cdmDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="sprDeviceStatus != null" >
+        Spr_Device_Status = #{sprDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="rprDeviceStatus != null" >
+        Rpr_Device_Status = #{rprDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="jprDeviceStatus != null" >
+        Jpr_Device_Status = #{jprDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="ttuDeviceStatus != null" >
+        Ttu_Device_Status = #{ttuDeviceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="rprPaperStatus != null" >
+        RPR_PAPER_STATUS = #{rprPaperStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="jprPaperStatus != null" >
+        JPR_PAPER_STATUS = #{jprPaperStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cdmShutterStatus != null" >
+        CDM_SHUTTER_STATUS = #{cdmShutterStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cdmStackerStatus != null" >
+        CDM_STACKER_STATUS = #{cdmStackerStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cdmInputOutputStatus != null" >
+        CDM_INPUT_OUTPUT_STATUS = #{cdmInputOutputStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cimShutterStatus != null" >
+        CIM_SHUTTER_STATUS = #{cimShutterStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cimEscrowStatus != null" >
+        CIM_ESCROW_STATUS = #{cimEscrowStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="cimInputOutputStatus != null" >
+        CIM_INPUT_OUTPUT_STATUS = #{cimInputOutputStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="idcCaptureBinCount != null" >
+        IDC_CAPTURE_BIN_COUNT = #{idcCaptureBinCount,jdbcType=VARCHAR},
+      </if>
+      <if test="availableAmt != null" >
+        AVAILABLE_AMT = #{availableAmt,jdbcType=INTEGER},
+      </if>
+      <if test="lastAddnoteDate != null" >
+        LAST_ADDNOTE_DATE = #{lastAddnoteDate,jdbcType=VARCHAR},
+      </if>
+      <if test="lastAddnoteTime != null" >
+        LAST_ADDNOTE_TIME = #{lastAddnoteTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DEV_NO = #{devNo,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.common.domain.DevStatusTable" >
+    update dev_status_table
+    set STATUS_LAST_TIME = #{statusLastTime,jdbcType=CHAR},
+      DEV_RUN_STATUS = #{devRunStatus,jdbcType=VARCHAR},
+      Dev_Mod_Status = #{devModStatus,jdbcType=VARCHAR},
+      DEV_CASHBOX_STATUS = #{devCashboxStatus,jdbcType=VARCHAR},
+      Idc_Device_Status = #{idcDeviceStatus,jdbcType=VARCHAR},
+      Chk_Device_Status = #{chkDeviceStatus,jdbcType=VARCHAR},
+      Pbk_Device_Status = #{pbkDeviceStatus,jdbcType=VARCHAR},
+      Pin_Device_Status = #{pinDeviceStatus,jdbcType=VARCHAR},
+      Siu_Device_Status = #{siuDeviceStatus,jdbcType=VARCHAR},
+      Dep_Device_Status = #{depDeviceStatus,jdbcType=VARCHAR},
+      Cam_Device_Status = #{camDeviceStatus,jdbcType=VARCHAR},
+      Cim_Device_Status = #{cimDeviceStatus,jdbcType=VARCHAR},
+      Cdm_Device_Status = #{cdmDeviceStatus,jdbcType=VARCHAR},
+      Spr_Device_Status = #{sprDeviceStatus,jdbcType=VARCHAR},
+      Rpr_Device_Status = #{rprDeviceStatus,jdbcType=VARCHAR},
+      Jpr_Device_Status = #{jprDeviceStatus,jdbcType=VARCHAR},
+      Ttu_Device_Status = #{ttuDeviceStatus,jdbcType=VARCHAR},
+      RPR_PAPER_STATUS = #{rprPaperStatus,jdbcType=VARCHAR},
+      JPR_PAPER_STATUS = #{jprPaperStatus,jdbcType=VARCHAR},
+      CDM_SHUTTER_STATUS = #{cdmShutterStatus,jdbcType=VARCHAR},
+      CDM_STACKER_STATUS = #{cdmStackerStatus,jdbcType=VARCHAR},
+      CDM_INPUT_OUTPUT_STATUS = #{cdmInputOutputStatus,jdbcType=VARCHAR},
+      CIM_SHUTTER_STATUS = #{cimShutterStatus,jdbcType=VARCHAR},
+      CIM_ESCROW_STATUS = #{cimEscrowStatus,jdbcType=VARCHAR},
+      CIM_INPUT_OUTPUT_STATUS = #{cimInputOutputStatus,jdbcType=VARCHAR},
+      IDC_CAPTURE_BIN_COUNT = #{idcCaptureBinCount,jdbcType=VARCHAR},
+      AVAILABLE_AMT = #{availableAmt,jdbcType=INTEGER},
+      LAST_ADDNOTE_DATE = #{lastAddnoteDate,jdbcType=VARCHAR},
+      LAST_ADDNOTE_TIME = #{lastAddnoteTime,jdbcType=VARCHAR}
+    where DEV_NO = #{devNo,jdbcType=VARCHAR}
+  </update>
+</mapper>

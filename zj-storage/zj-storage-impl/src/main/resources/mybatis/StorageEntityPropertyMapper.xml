@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.storage.repository.StorageEntityPropertyMapper">
+	<resultMap id="BaseResultMapper" type="com.zjft.microservice.treasurybrain.storage.po.StorageEntityPropertyPO">
+		<id column="ID" property="id" jdbcType="VARCHAR"/>
+		<result column="PROPERTY_TYPE" property="propertyType" jdbcType="INTEGER"/>
+		<result column="KEY" property="key" jdbcType="VARCHAR"/>
+		<result column="NAME" property="name" jdbcType="VARCHAR"/>
+		<result column="VALUE" property="value" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="baseColumns">ID, PROPERTY_TYPE, KEY, NAME, VALUE
+	</sql>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.storage.po.StorageEntityPropertyPO">
+		insert into STORAGE_ENTITY_PROPERTY (ID, PROPERTY_TYPE, KEY, NAME, VALUE) values (#{id,jdbcType=VARCHAR}, #{propertyType,jdbcType=INTEGER},
+		#{key,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{value,jdbcType=VARCHAR},);
+	</insert>
+
+	<select id="qryEntityDetailById" resultMap="BaseResultMapper"
+			parameterType="java.lang.String">
+		select id, key,value,name,property_type
+		from STORAGE_ENTITY_PROPERTY
+		where id = #{id,jdbcType = VARCHAR}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.String">
+		delete from STORAGE_ENTITY_PROPERTY where id = #{id,jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

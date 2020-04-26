@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.channelcenter.repository.OrgBusinessTimeMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.channelcenter.domain.OrgbusinessTimeDO">
+		<result column="ORG_NO" property="orgNo" jdbcType="VARCHAR"/>
+		<result column="ORG_TIME_INTERVAL" property="orgTimeInterval" jdbcType="CHAR"/>
+		<result column="OPEN_TIME" property="openTime" jdbcType="VARCHAR"/>
+		<result column="CLOSE_TIME" property="closeTime" jdbcType="VARCHAR"/>
+		<result column="ORG_DAY" property="orgDay" jdbcType="NUMERIC"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ORG_NO, ORG_TIME_INTERVAL, OPEN_TIME, CLOSE_TIME, ORG_DAY
+    </sql>
+
+	<select id="qryOrgBusinessTime" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+			<include refid="Base_Column_List"/>
+		from ORG_BUSINESS_TIME where ORG_NO = #{orgNo,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="delOrgBusinessTimeByorgNo" parameterType="java.lang.String" >
+		delete from ORG_BUSINESS_TIME where ORG_NO = #{orgNo,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.channelcenter.domain.OrgbusinessTimeDO">
+		insert into ORG_BUSINESS_TIME (ORG_NO,ORG_TIME_INTERVAL,OPEN_TIME,CLOSE_TIME,ORG_DAY)
+		 values (#{orgNo,jdbcType=VARCHAR},#{orgTimeInterval,jdbcType=CHAR},#{openTime,jdbcType=VARCHAR},#{closeTime,jdbcType=CHAR},#{orgDay,jdbcType=NUMERIC})
+	</insert>
+
+
+</mapper>

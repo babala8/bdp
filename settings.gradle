@@ -1,0 +1,62 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+rootProject.name = 'treasury-brain'
+
+include 'zj-common'
+
+include 'zj-data-insight:zj-data-insight-api'
+include 'zj-data-insight:zj-data-insight-impl'
+
+include 'zj-user-center:zj-user-center-api'
+include 'zj-user-center:zj-user-center-impl'
+
+include 'zj-channel-center:zj-channel-center-api'
+include 'zj-channel-center:zj-channel-center-impl'
+
+include 'zj-tauro:zj-tauro-api'
+include 'zj-tauro:zj-tauro-impl'
+
+include 'zj-push-server:zj-push-server-api'
+include 'zj-push-server:zj-push-server-impl'
+
+include 'zj-lock:zj-lock-api'
+include 'zj-lock:zj-lock-impl'
+
+include 'zj-time-job:zj-time-job-api'
+include 'zj-time-job:zj-time-job-impl'
+
+include 'zj-task:zj-task-api'
+include 'zj-task:zj-task-impl'
+
+include 'zj-clear-center:zj-clear-center-api'
+include 'zj-clear-center:zj-clear-center-impl'
+
+include 'zj-storage:zj-storage-api'
+include 'zj-storage:zj-storage-impl'
+
+include 'zj-business:zj-business-api'
+include 'zj-business:zj-business-impl'
+
+include 'zj-product-center:zj-product-center-api'
+include 'zj-product-center:zj-product-center-impl'
+
+include 'zj-security-center:zj-security-center-api'
+include 'zj-security-center:zj-security-center-impl'
+
+include 'zj-accounts-center:zj-accounts-center-api'
+include 'zj-accounts-center:zj-accounts-center-impl'
+
+include 'zj-line-center:zj-line-center-api'
+include 'zj-line-center:zj-line-center-impl'
+
+include 'zj-manage-center:zj-manage-center-api'
+include 'zj-manage-center:zj-manage-center-impl'
+
+include 'zj-tolly-center:zj-tolly-center-api'
+include 'zj-tolly-center:zj-tolly-center-impl'
+
+include 'zj-param-center:zj-param-center-api'
+include 'zj-param-center:zj-param-center-impl'

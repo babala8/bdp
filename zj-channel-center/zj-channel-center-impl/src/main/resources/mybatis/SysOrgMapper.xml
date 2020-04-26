@@ -1,0 +1,885 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.channelcenter.repository.SysOrgMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.common.domain.SysOrg">
+		<id column="NO" property="no" jdbcType="VARCHAR"/>
+		<result column="NAME" property="name" jdbcType="VARCHAR"/>
+		<result column="PARENT_ORG" property="parentOrgNo" jdbcType="VARCHAR"/>
+		<result column="LEFT" property="left" jdbcType="DECIMAL"/>
+		<result column="RIGHT" property="right" jdbcType="DECIMAL"/>
+		<result column="ORG_GRADE_NO" property="orgGradeNo" jdbcType="DECIMAL"/>
+		<result column="MONEYORG_FLAG" property="moneyorgFlag" jdbcType="VARCHAR"/>
+		<result column="X" property="x" jdbcType="VARCHAR"/>
+		<result column="Y" property="y" jdbcType="VARCHAR"/>
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+		<result column="LINKMAN" property="linkman" jdbcType="VARCHAR"/>
+		<result column="TELEPHONE" property="telephone" jdbcType="VARCHAR"/>
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR"/>
+		<result column="FAX" property="fax" jdbcType="VARCHAR"/>
+		<result column="EMAIL" property="email" jdbcType="VARCHAR"/>
+		<result column="BUSINESS_RANGE" property="businessRange" jdbcType="VARCHAR"/>
+		<result column="CUP_AREA_CODE" property="cupAreaCode" jdbcType="VARCHAR"/>
+		<result column="ADDRESS_CODE" property="addressCode" jdbcType="VARCHAR"/>
+		<result column="AREA_NO" property="areaNo" jdbcType="VARCHAR"/>
+		<result column="AREA_TYPE" property="areaType" jdbcType="VARCHAR"/>
+		<result column="ORG_PHYSICS_CATALOG" property="orgPhysicsCatalog" jdbcType="VARCHAR"/>
+		<result column="NOTE" property="note" jdbcType="VARCHAR"/>
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR"/>
+		<result column="CITY" property="city" jdbcType="VARCHAR"/>
+		<result column="REGION" property="region" jdbcType="VARCHAR"/>
+		<result column="STATUS" property="status" jdbcType="DECIMAL"/>
+		<result column="CLR_CENTER_FLAG" property="clrCenterFlag" jdbcType="DECIMAL"/>
+		<result column="ORG_NO" property="orgNo" jdbcType="VARCHAR"/>
+		<result column="SHORT_NAME" property="shortName" jdbcType="VARCHAR"/>
+		<result column="FULL_NAME" property="fullName" jdbcType="VARCHAR"/>
+		<result column="AWAY_FLAG" property="awayFlag" jdbcType="DECIMAL"/>
+		<result column="CLR_CENTER_NO_CASH" property="clrCenterNoCash" jdbcType="VARCHAR"/>
+		<result column="LINE_NO" property="networkLineNo" jdbcType="VARCHAR"/>
+		<result column="DELIVERY_TIME" property="deliveryTime" jdbcType="VARCHAR"/>
+		<result column="BACK_TIME" property="backTime" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.common.domain.SysOrg" extends="BaseResultMap">
+		<association property="orgGrade" column="ORG_GRADE_NO"
+					 javaType="com.zjft.microservice.treasurybrain.common.domain.SysOrgGrade"
+					 select="com.zjft.microservice.treasurybrain.channelcenter.repository.SysOrgGradeMapper.selectByPrimaryKey">
+		</association>
+		<association property="parentOrg" column="PARENT_ORG"
+					 javaType="com.zjft.microservice.treasurybrain.common.domain.SysOrg"
+					 select="selectByPrimaryKey">
+		</association>
+		<association property="clrCenter" column="CLR_CENTER_NO"
+					 javaType="com.zjft.microservice.treasurybrain.common.domain.ClrCenterTable"
+					 select="com.zjft.microservice.treasurybrain.channelcenter.repository.ClrCenterTableMapper.selectByPrimaryKey">
+		</association>
+	</resultMap>
+	<sql id="Base_Column_List">
+		NO, NAME, PARENT_ORG, LEFT, RIGHT, ORG_GRADE_NO, MONEYORG_FLAG, X, Y, ADDRESS, LINKMAN,
+		TELEPHONE, MOBILE, FAX, EMAIL, BUSINESS_RANGE, CUP_AREA_CODE, ADDRESS_CODE, AREA_NO,
+		AREA_TYPE, ORG_PHYSICS_CATALOG, NOTE, CLR_CENTER_NO, CITY, REGION, STATUS, CLR_CENTER_FLAG,
+		ORG_NO, SHORT_NAME, FULL_NAME, AWAY_FLAG, CLR_CENTER_NO_CASH,BACK_TIME
+    </sql>
+
+	<resultMap id="BaseResultMap1" type="com.zjft.microservice.treasurybrain.common.domain.AddnotesPlan" >
+		<id column="ADDNOTES_PLAN_NO" property="addnotesPlanNo" jdbcType="VARCHAR" />
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR" />
+		<result column="PLAN_ADDNOTES_DATE" property="planAddnotesDate" jdbcType="VARCHAR" />
+		<result column="PLAN_START_TIME" property="planStartTime" jdbcType="VARCHAR" />
+		<result column="LASTEST_END_TIME" property="lastestEndTime" jdbcType="VARCHAR" />
+		<result column="PLAN_DEV_COUNT" property="planDevCount" jdbcType="INTEGER" />
+		<result column="PLAN_ADDNOTES_AMT" property="planAddnotesAmt" jdbcType="DECIMAL" />
+		<result column="PLAN_GEN_MODE" property="planGenMode" jdbcType="INTEGER" />
+		<result column="PLAN_GEN_OP_NO" property="planGenOpNo" jdbcType="VARCHAR" />
+		<result column="PLAN_GEN_DATE" property="planGenDate" jdbcType="VARCHAR" />
+		<result column="PLAN_GEN_TIME" property="planGenTime" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="INTEGER" />
+		<result column="SUBMIT_OP_NO" property="submitOpNo" jdbcType="VARCHAR" />
+		<result column="SUBMIT_DATE" property="submitDate" jdbcType="VARCHAR" />
+		<result column="SUBMIT_TIME" property="submitTime" jdbcType="VARCHAR" />
+		<result column="MOD_OP_NO" property="modOpNo" jdbcType="VARCHAR" />
+		<result column="MOD_DATE" property="modDate" jdbcType="VARCHAR" />
+		<result column="MOD_TIME" property="modTime" jdbcType="VARCHAR" />
+		<result column="LINE_MODE" property="lineMode" jdbcType="INTEGER" />
+		<result column="LINE_NO" property="lineNo" jdbcType="VARCHAR" />
+		<result column="AUDIT_OP_NO" property="auditOpNo" jdbcType="VARCHAR" />
+		<result column="AUDIT_DATE" property="auditDate" jdbcType="VARCHAR" />
+		<result column="AUDIT_TIME" property="auditTime" jdbcType="VARCHAR" />
+		<result column="REFUSE_SUGGESTION" property="refuseSuggestion" jdbcType="VARCHAR" />
+		<result column="NOTE" property="note" jdbcType="VARCHAR" />
+		<result column="IS_URGENCY" property="isUrgency" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<sql id="Base_Column_List1" >
+    ADDNOTES_PLAN_NO, CLR_CENTER_NO, PLAN_ADDNOTES_DATE, PLAN_START_TIME, LASTEST_END_TIME,
+    PLAN_DEV_COUNT, PLAN_ADDNOTES_AMT, PLAN_GEN_MODE, PLAN_GEN_OP_NO, PLAN_GEN_DATE,
+    PLAN_GEN_TIME, STATUS, SUBMIT_OP_NO, SUBMIT_DATE, SUBMIT_TIME, MOD_OP_NO, MOD_DATE,
+    MOD_TIME, LINE_MODE, LINE_NO, AUDIT_OP_NO, AUDIT_DATE, AUDIT_TIME, REFUSE_SUGGESTION,
+    NOTE, IS_URGENCY
+  </sql>
+
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select
+		<include refid="Base_Column_List" />
+		from SYS_ORG
+		where NO = #{no,jdbcType=VARCHAR}
+	</select>
+
+
+	<select id="selectDetailByPrimaryKey" resultMap="DetailMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_ORG
+		where NO = #{sysOrg,jdbcType=VARCHAR}
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from SYS_ORG
+		where NO = #{no,jdbcType=VARCHAR}
+    </delete>
+
+
+	<select id="checkPermissionByOrgNo" parameterType="java.lang.String" resultType="Integer">
+		select count(1) from (select o.no from SYS_ORG o left join SYS_ORG tOrg  on tOrg.no=#{authOrgNo,jdbcType=VARCHAR} where o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+		where NO=#{no,jdbcType=VARCHAR}
+	</select>
+
+
+	<select id="getOrgGradeNo"  parameterType="java.lang.String" resultType="Integer">
+		select ORG_GRADE_NO from SYS_ORG where NO = #{no,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.common.domain.SysOrg">
+		insert into SYS_ORG (NO, NAME, PARENT_ORG,
+		  LEFT, RIGHT, ORG_GRADE_NO,
+		  MONEYORG_FLAG, X, Y,
+		  ADDRESS, LINKMAN, TELEPHONE,
+		  MOBILE, FAX, EMAIL,
+		  BUSINESS_RANGE, CUP_AREA_CODE, ADDRESS_CODE,
+		  AREA_NO, AREA_TYPE, ORG_PHYSICS_CATALOG,
+		  NOTE, CLR_CENTER_NO, CITY,
+		  REGION, STATUS, CLR_CENTER_FLAG,
+		  ORG_NO, SHORT_NAME, FULL_NAME,
+		  AWAY_FLAG, CLR_CENTER_NO_CASH,
+		  DELIVERY_TIME,BACK_TIME)
+		values (#{no,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{parentOrgNo,jdbcType=VARCHAR},
+		  #{left,jdbcType=DECIMAL}, #{right,jdbcType=DECIMAL}, #{orgGradeNo,jdbcType=DECIMAL},
+		  #{moneyorgFlag,jdbcType=VARCHAR}, #{x,jdbcType=VARCHAR}, #{y,jdbcType=VARCHAR},
+		  #{address,jdbcType=VARCHAR}, #{linkman,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR},
+		  #{mobile,jdbcType=VARCHAR}, #{fax,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+		  #{businessRange,jdbcType=VARCHAR}, #{cupAreaCode,jdbcType=VARCHAR}, #{addressCode,jdbcType=VARCHAR},
+		  #{areaNo,jdbcType=VARCHAR}, #{areaType,jdbcType=VARCHAR}, #{orgPhysicsCatalog,jdbcType=VARCHAR},
+		  #{note,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
+		  #{region,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL}, #{clrCenterFlag,jdbcType=DECIMAL},
+		  #{orgNo,jdbcType=VARCHAR}, #{shortName,jdbcType=VARCHAR}, #{fullName,jdbcType=VARCHAR},
+		  #{awayFlag,jdbcType=DECIMAL}, #{clrCenterNoCash,jdbcType=VARCHAR}, #{deliveryTime,jdbcType=VARCHAR},
+		  #{backTime,jdbcType=VARCHAR})
+    </insert>
+
+
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.common.domain.SysOrg">
+		insert into SYS_ORG
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="no != null">
+				NO,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="parentOrgNo != null">
+				PARENT_ORG,
+			</if>
+			<if test="left != null">
+				LEFT,
+			</if>
+			<if test="right != null">
+				RIGHT,
+			</if>
+			<if test="orgGradeNo != null">
+				ORG_GRADE_NO,
+			</if>
+			<if test="moneyorgFlag != null">
+				MONEYORG_FLAG,
+			</if>
+			<if test="x != null">
+				X,
+			</if>
+			<if test="y != null">
+				Y,
+			</if>
+			<if test="address != null">
+				ADDRESS,
+			</if>
+			<if test="linkman != null">
+				LINKMAN,
+			</if>
+			<if test="telephone != null">
+				TELEPHONE,
+			</if>
+			<if test="mobile != null">
+				MOBILE,
+			</if>
+			<if test="fax != null">
+				FAX,
+			</if>
+			<if test="email != null">
+				EMAIL,
+			</if>
+			<if test="businessRange != null">
+				BUSINESS_RANGE,
+			</if>
+			<if test="cupAreaCode != null">
+				CUP_AREA_CODE,
+			</if>
+			<if test="addressCode != null">
+				ADDRESS_CODE,
+			</if>
+			<if test="areaNo != null">
+				AREA_NO,
+			</if>
+			<if test="areaType != null">
+				AREA_TYPE,
+			</if>
+			<if test="orgPhysicsCatalog != null">
+				ORG_PHYSICS_CATALOG,
+			</if>
+			<if test="note != null">
+				NOTE,
+			</if>
+			<if test="clrCenterNo != null">
+				CLR_CENTER_NO,
+			</if>
+			<if test="city != null">
+				CITY,
+			</if>
+			<if test="region != null">
+				REGION,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="clrCenterFlag != null">
+				CLR_CENTER_FLAG,
+			</if>
+			<if test="orgNo != null">
+				ORG_NO,
+			</if>
+			<if test="shortName != null">
+				SHORT_NAME,
+			</if>
+			<if test="fullName != null">
+				FULL_NAME,
+			</if>
+			<if test="awayFlag != null">
+				AWAY_FLAG,
+			</if>
+			<if test="clrCenterNoCash != null">
+				CLR_CENTER_NO_CASH,
+			</if>
+			<if test="deliveryTime != null">
+				DELIVERY_TIME,
+			</if>
+			<if test="backTime != null">
+				BACK_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="no != null">
+				#{no,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="parentOrgNo != null">
+				#{parentOrgNo,jdbcType=VARCHAR},
+			</if>
+			<if test="left != null">
+				#{left,jdbcType=DECIMAL},
+			</if>
+			<if test="right != null">
+				#{right,jdbcType=DECIMAL},
+			</if>
+			<if test="orgGradeNo != null">
+				#{orgGradeNo,jdbcType=DECIMAL},
+			</if>
+			<if test="moneyorgFlag != null">
+				#{moneyorgFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="x != null">
+				#{x,jdbcType=VARCHAR},
+			</if>
+			<if test="y != null">
+				#{y,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="linkman != null">
+				#{linkman,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">
+				#{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="fax != null">
+				#{fax,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="businessRange != null">
+				#{businessRange,jdbcType=VARCHAR},
+			</if>
+			<if test="cupAreaCode != null">
+				#{cupAreaCode,jdbcType=VARCHAR},
+			</if>
+			<if test="addressCode != null">
+				#{addressCode,jdbcType=VARCHAR},
+			</if>
+			<if test="areaNo != null">
+				#{areaNo,jdbcType=VARCHAR},
+			</if>
+			<if test="areaType != null">
+				#{areaType,jdbcType=VARCHAR},
+			</if>
+			<if test="orgPhysicsCatalog != null">
+				#{orgPhysicsCatalog,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null">
+				#{note,jdbcType=VARCHAR},
+			</if>
+			<if test="clrCenterNo != null">
+				#{clrCenterNo,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="region != null">
+				#{region,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=DECIMAL},
+			</if>
+			<if test="clrCenterFlag != null">
+				#{clrCenterFlag,jdbcType=DECIMAL},
+			</if>
+			<if test="orgNo != null">
+				#{orgNo,jdbcType=VARCHAR},
+			</if>
+			<if test="shortName != null">
+				#{shortName,jdbcType=VARCHAR},
+			</if>
+			<if test="fullName != null">
+				#{fullName,jdbcType=VARCHAR},
+			</if>
+			<if test="awayFlag != null">
+				#{awayFlag,jdbcType=DECIMAL},
+			</if>
+			<if test="clrCenterNoCash != null">
+				#{clrCenterNoCash,jdbcType=VARCHAR},
+			</if>
+			<if test="deliveryTime != null">
+				#{deliveryTime,jdbcType=VARCHAR},
+			</if>
+			<if test="backTime != null">
+				#{backTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.common.domain.SysOrg">
+		update SYS_ORG
+		<set>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="parentOrgNo != null">
+				PARENT_ORG = #{parentOrgNo,jdbcType=VARCHAR},
+			</if>
+			<if test="left != null">
+				LEFT = #{left,jdbcType=DECIMAL},
+			</if>
+			<if test="right != null">
+				RIGHT = #{right,jdbcType=DECIMAL},
+			</if>
+			<if test="orgGradeNo != null">
+				ORG_GRADE_NO = #{orgGradeNo,jdbcType=DECIMAL},
+			</if>
+			<if test="moneyorgFlag != null">
+				MONEYORG_FLAG = #{moneyorgFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="x != null">
+				X = #{x,jdbcType=VARCHAR},
+			</if>
+			<if test="y != null">
+				Y = #{y,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="linkman != null">
+				LINKMAN = #{linkman,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">
+				TELEPHONE = #{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				MOBILE = #{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="fax != null">
+				FAX = #{fax,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				EMAIL = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="businessRange != null">
+				BUSINESS_RANGE = #{businessRange,jdbcType=VARCHAR},
+			</if>
+			<if test="cupAreaCode != null">
+				CUP_AREA_CODE = #{cupAreaCode,jdbcType=VARCHAR},
+			</if>
+			<if test="addressCode != null">
+				ADDRESS_CODE = #{addressCode,jdbcType=VARCHAR},
+			</if>
+			<if test="areaNo != null">
+				AREA_NO = #{areaNo,jdbcType=VARCHAR},
+			</if>
+			<if test="areaType != null">
+				AREA_TYPE = #{areaType,jdbcType=VARCHAR},
+			</if>
+			<if test="orgPhysicsCatalog != null">
+				ORG_PHYSICS_CATALOG = #{orgPhysicsCatalog,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null">
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+			<if test="clrCenterNo != null">
+				CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				CITY = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="region != null">
+				REGION = #{region,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=DECIMAL},
+			</if>
+			<if test="clrCenterFlag != null">
+				CLR_CENTER_FLAG = #{clrCenterFlag,jdbcType=DECIMAL},
+			</if>
+			<if test="orgNo != null">
+				ORG_NO = #{orgNo,jdbcType=VARCHAR},
+			</if>
+			<if test="shortName != null">
+				SHORT_NAME = #{shortName,jdbcType=VARCHAR},
+			</if>
+			<if test="fullName != null">
+				FULL_NAME = #{fullName,jdbcType=VARCHAR},
+			</if>
+			<if test="awayFlag != null">
+				AWAY_FLAG = #{awayFlag,jdbcType=DECIMAL},
+			</if>
+			<if test="clrCenterNoCash != null">
+				CLR_CENTER_NO_CASH = #{clrCenterNoCash,jdbcType=VARCHAR},
+			</if>
+			<if test="deliveryTime != null">
+				DELIVERY_TIME=#{deliveryTime,jdbcType=VARCHAR},
+			</if>
+			<if test="backTime != null">
+				BACK_TIME=#{backTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where NO = #{no,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.common.domain.SysOrg">
+		update SYS_ORG
+		set NAME = #{name,jdbcType=VARCHAR},
+		  PARENT_ORG = #{parentOrgNo,jdbcType=VARCHAR},
+		  LEFT = #{left,jdbcType=DECIMAL},
+		  RIGHT = #{right,jdbcType=DECIMAL},
+		  ORG_GRADE_NO = #{orgGradeNo,jdbcType=DECIMAL},
+		  MONEYORG_FLAG = #{moneyorgFlag,jdbcType=VARCHAR},
+		  X = #{x,jdbcType=VARCHAR},
+		  Y = #{y,jdbcType=VARCHAR},
+		  ADDRESS = #{address,jdbcType=VARCHAR},
+		  LINKMAN = #{linkman,jdbcType=VARCHAR},
+		  TELEPHONE = #{telephone,jdbcType=VARCHAR},
+		  MOBILE = #{mobile,jdbcType=VARCHAR},
+		  FAX = #{fax,jdbcType=VARCHAR},
+		  EMAIL = #{email,jdbcType=VARCHAR},
+		  BUSINESS_RANGE = #{businessRange,jdbcType=VARCHAR},
+		  CUP_AREA_CODE = #{cupAreaCode,jdbcType=VARCHAR},
+		  ADDRESS_CODE = #{addressCode,jdbcType=VARCHAR},
+		  AREA_NO = #{areaNo,jdbcType=VARCHAR},
+		  AREA_TYPE = #{areaType,jdbcType=VARCHAR},
+		  ORG_PHYSICS_CATALOG = #{orgPhysicsCatalog,jdbcType=VARCHAR},
+		  NOTE = #{note,jdbcType=VARCHAR},
+		  CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+		  CITY = #{city,jdbcType=VARCHAR},
+		  REGION = #{region,jdbcType=VARCHAR},
+		  STATUS = #{status,jdbcType=DECIMAL},
+		  CLR_CENTER_FLAG = #{clrCenterFlag,jdbcType=DECIMAL},
+		  ORG_NO = #{orgNo,jdbcType=VARCHAR},
+		  SHORT_NAME = #{shortName,jdbcType=VARCHAR},
+		  FULL_NAME = #{fullName,jdbcType=VARCHAR},
+		  AWAY_FLAG = #{awayFlag,jdbcType=DECIMAL},
+		  CLR_CENTER_NO_CASH = #{clrCenterNoCash,jdbcType=VARCHAR},
+		  DELIVERY_TIME = #{deliveryTime,jdbcType=VARCHAR},
+		  BACK_TIME = #{backTime,jdbcType=VARCHAR}
+		where NO = #{no,jdbcType=VARCHAR}
+    </update>
+
+
+	<select id="selectChildren" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_ORG o
+		where exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{id,jdbcType=VARCHAR} and o.left &gt; tOrg.LEFT
+		and o.right &lt; tOrg.RIGHT)
+	</select>
+
+
+	<select id="getChildrenLevel1" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_ORG o
+		where ${parentOrgNo} and
+		exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{id,jdbcType=VARCHAR} and o.left &gt;= tOrg.LEFT
+		and o.right &lt;= tOrg.RIGHT)
+	</select>
+
+	<select id="selectUserByPrimaryKey" parameterType="java.lang.String" resultType="Integer">
+		SELECT count(1)
+		FROM SYS_USER
+		WHERE ORG_NO = #{orgNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_ORG
+	</select>
+
+	<select id="qryAllOrg" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_ORG
+		<where>
+			<if test="orgNo!= null">
+				AND NO like CONCAT('%',#{orgNo,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="orgName!= null">
+				AND NAME like CONCAT('%',#{orgName,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="orgGrade!= null">
+				AND ORG_GRADE_NO = #{orgGrade,jdbcType=NUMERIC}
+			</if>
+			AND exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{authOrgNo,jdbcType=VARCHAR} and o.left &gt;=
+			tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+		</where>
+		order by ORG_TYPE_NO, ORG_GRADE_NO, NAME
+	</select>
+
+
+	<select id="qryTotalRowOrg" parameterType="java.util.Map" resultType="Integer">
+		select count(1)
+		from (
+		select * from SYS_ORG o
+		<where>
+				<if test="orgNo!= null and orgNo!=''">
+					AND exists(select s.NO from SYS_ORG s where s.NO=#{orgNo,jdbcType=VARCHAR} and o.LEFT &gt;=s.LEFT and o.RIGHT &lt;=s.RIGHT)
+				</if>
+				<if test="fuzzyOrgNo!= null and fuzzyOrgNo!=''">
+				AND o.NO like concat(concat('%',#{fuzzyOrgNo,jdbcType=VARCHAR}),'%')
+				</if>
+				<if test="orgName!= null and orgName!=''">
+					AND o.NAME like concat(concat('%',#{orgName,jdbcType=VARCHAR}),'%')
+				</if>
+				<if test="orgGrade!= null and orgGrade!=''">
+					AND o.ORG_GRADE_NO = #{orgGrade,jdbcType=NUMERIC}
+				</if>
+				<if test="authOrgNo!= null and authOrgNo!= ''">
+					AND exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{authOrgNo,jdbcType=VARCHAR} and o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+				</if>
+			</where>
+		)
+	</select>
+
+
+	<!-- 分页查询机构信息-->
+	<select id="qryOrgByPage" parameterType="java.util.Map" resultMap="DetailMap">
+		select
+		<include refid="Base_Column_List"/>
+		from (
+			select o.*,rownum rn from SYS_ORG o
+			<trim prefix='WHERE' prefixOverrides='AND'>
+				<if test="orgNo!= null and orgNo!=''">exists(select s.NO from SYS_ORG s where s.NO=#{orgNo,jdbcType=VARCHAR} and o.LEFT &gt;=s.LEFT and o.RIGHT &lt;=s.RIGHT)</if>
+				<if test="fuzzyOrgNo!= null and fuzzyOrgNo!=''">AND o.NO like concat(concat('%',#{fuzzyOrgNo,jdbcType=VARCHAR}),'%')</if>
+				<if test="orgName!= null and orgName!=''">AND o.NAME like concat(concat('%',#{orgName,jdbcType=VARCHAR}),'%')</if>
+				<if test="orgGrade!= null and orgGrade!=''">AND o.ORG_GRADE_NO =#{orgGrade,jdbcType=VARCHAR}</if>
+				and exists(select tOrg.NO from SYS_ORG tOrg where tOrg.NO=#{authOrgNo,jdbcType=VARCHAR} and o.LEFT &gt;=tOrg.LEFT and o.RIGHT &lt;=tOrg.RIGHT)
+			</trim>
+		)
+		where rn &gt; #{startRow} and rn &lt;= #{endRow}
+	</select>
+
+	<select id="qryOrgFuzzyByAuth" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from (
+		select o.*,rownum rn from SYS_ORG o
+		<where>
+			<if test="orgName!= null and orgName!=''"> NAME like concat(concat('%',#{orgName,jdbcType=VARCHAR}),'%')</if>
+			and exists(select tOrg.NO from SYS_ORG tOrg where tOrg.NO=#{authOrgNo,jdbcType=VARCHAR} and o.LEFT &gt;=tOrg.LEFT and o.RIGHT &lt;=tOrg.RIGHT)
+		</where>
+		)
+	</select>
+
+
+
+	<!--
+
+	<select id="qryOrgByFilter" resultType="java.util.Map">
+	select a.NO,a.UPPER1,a.NAME,count(o.NO) as COUNT from (
+	<choose>
+	<when test ="orgTypeId == null || orgTypeId == '1'">
+	<choose>
+	<when test="limit =='0'">
+	select t.NO, t.UPPER1, t.NAME
+	from SYS_ORG t
+	where t.NO in (
+	select t.NO     from SYS_ORG t where t.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%') OR t.NAME like CONCAT('%',#{orgName,filter=VARCHAR},'%') union
+	select t.UPPER1 from SYS_ORG t where t.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%') OR t.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')  union
+	select t.upper2 from SYS_ORG t where t.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%') OR t.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')  union
+	select t.upper3 from SYS_ORG t where t.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%') OR t.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')  union
+	select t.upper4 from SYS_ORG t where t.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%') OR t.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')  union
+	select t.upper5 from SYS_ORG t where t.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%') OR t.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%'))
+	<choose>
+	<when test="filter == null">
+	AND t.NO= #{org,jdbcType=VARCHAR}
+	OR  t.UPPER1=#{org,jdbcType=VARCHAR}
+	</when>
+	<otherwise>
+	AND ( t.NO= #{org,jdbcType=VARCHAR}
+	OR  t.UPPER1=#{org,jdbcType=VARCHAR}
+	OR  t.UPPER2=#{org,jdbcType=VARCHAR}
+	OR  t.UPPER3=#{org,jdbcType=VARCHAR}
+	OR  t.UPPER4=#{org,jdbcType=VARCHAR}
+	OR  t.UPPER5=#{org,jdbcType=VARCHAR} )
+	</otherwise>
+	</choose>
+	order by t.NAME
+	</when>
+	<when test="limit =='2'">
+	select t.NO, t.UPPER1, t.NAME
+	from SYS_ORG t where t.NO in (
+	select t.UPPER1 from SYS_ORG t where t.NO=#{org,jdbcType=VARCHAR} union
+	select t.UPPER2 from SYS_ORG t where t.NO=#{org,jdbcType=VARCHAR} union
+	select t.UPPER3 from SYS_ORG t where t.NO=#{org,jdbcType=VARCHAR} union
+	select t.UPPER4 from SYS_ORG t where t.NO=#{org,jdbcType=VARCHAR} union
+	select t.UPPER5 from SYS_ORG t where t.NO=#{org,jdbcType=VARCHAR} union
+	select t.NO, t.UPPER1, t.NAME from SYS_ORG t where t.UPPER1 in
+	(
+	select t.UPPER1 from SYS_ORG t
+	<where>
+	<if test="org != null">
+	t.NO=#{org,jdbcType=VARCHAR}
+	</if>
+	<if test="filter != null">
+	AND t.no   like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')
+	OR  t.name like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')
+	</if>
+	</where>
+	)
+	</when>
+	<otherwise>
+	select t.NO, t.UPPER1, t.NAME from SYS_ORG t where t.NO in
+	(
+	select t.NO from SYS_ORG t where t.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%') OR t.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')  union
+	select t.UPPER1 from SYS_ORG t where t.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%') OR t.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')  union
+	select t.UPPER2 from SYS_ORG t where t.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%') OR t.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')  union
+	select t.UPPER3 from SYS_ORG t where t.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%') OR t.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')  union
+	select t.UPPER4 from SYS_ORG t where t.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%') OR t.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')  union
+	select t.UPPER5 from SYS_ORG t where t.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%') OR t.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')
+	)
+	<choose>
+	<when test="limit =='3'">
+	AND t.UPPER1 = #{org,jdbcType=VARCHAR}
+	</when>
+	<otherwise>
+	<choose>
+	<when test="filte ==null">
+	AND t.NO =#{org,jdbcType=VARCHAR}
+	OR  t.UPPER1=#{org,jdbcType=VARCHAR}
+	</when>
+	<otherwise>
+	AND ( t.NO =#{org,jdbcType=VARCHAR}
+	OR  t.UPPER1=#{org,jdbcType=VARCHAR}
+	OR  t.UPPER2=#{org,jdbcType=VARCHAR}
+	OR  t.UPPER3=#{org,jdbcType=VARCHAR}
+	OR  t.UPPER4=#{org,jdbcType=VARCHAR}
+	OR  t.UPPER5=#{org,jdbcType=VARCHAR} )
+	</otherwise>
+	</choose>
+	</otherwise>
+	</choose>
+	order by t.NAME
+	</otherwise>
+	</choose>
+	</when>
+	<otherwise>
+	select t.NO, t.UPPER1, t.NAME
+	from SYS_ORG t
+	<where>
+	<if test="filter != null">
+	AND t.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')
+	OR t.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')
+	</if>
+	</where>
+	order by t.NAME
+	</otherwise>
+	</choose>
+	) A LEFT JOIN SYS_ORG o ON (o.UPPER1 = a.NO OR o.UPPER2 = a.NO OR o.UPPER3 = a.NO OR o.UPPER4 = a.NO OR o.UPPER5 = a.NO) AND (o.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%') OR o.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')) group by a.NO,a.UPPER1,a.NAME
+	</select>-->
+
+	<!--<select id="selectOrg" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_ORG o
+		<where>
+			<if test="filter != null">
+				<if test="filter !=''">
+					AND o.NO like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')
+					OR o.NAME like CONCAT('%',#{filter,jdbcType=VARCHAR},'%')
+				</if>
+			</if>
+			AND exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{userOrgNo,jdbcType=VARCHAR} and o.left &gt;=
+			tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+		</where>
+	</select>-->
+
+	<select id="qryBranchOrg" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_ORG
+		where ORG_GRADE_NO = 2
+	</select>
+
+
+	<select id="getNetpointsByClrNo" parameterType="java.lang.String" resultType="java.util.Map">
+		select NO as "no", NAME as "name", X as "x", Y as "y"
+		from SYS_ORG
+		where CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+    </select>
+
+
+	<select id="qryMessageForRegion" resultType="java.util.Map">
+		select t.region ,count(1) as count
+		from SYS_ORG t
+		where t.region is not null group by t.region
+    </select>
+
+
+	<select id="qryMessageForCity" resultType="java.util.Map">
+		select t.city ,count(1) as count
+		from SYS_ORG t
+		where t.city is not null group by t.city
+	</select>
+
+
+	<select id="qryOrgByCity" parameterType="java.lang.String" resultMap="DetailMap">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_ORG t
+		where t.city= #{cityName,jdbcType=VARCHAR}
+	</select>
+
+
+	<select id="qryOrgDevsForMap" resultType="java.util.Map">
+ 	  select o.city ,count(1) as orgNums  ,(select count(1) from dev_base_info where ORG_NO in (select no from org_table where CITY =o.city) )as devNums from org_table o  where o.city is not null GROUP BY o.city
+    </select>
+
+
+	<select id="qryOrgListByCityName" parameterType="java.lang.String" resultType="java.util.Map">
+		select
+		<include refid="Base_Column_List"/>
+		, 0 as transTotal
+		from SYS_ORG
+		where CITY = #{cityName,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryOrgListByCity" parameterType="java.lang.String" resultType="java.util.Map">
+		select
+		<include refid="Base_Column_List"/>
+		, (select total
+		from(select m.no as no, sum(m.aaa) as total
+		from (select o.no as no,
+		(select sum(amount_cdm)
+		from BIZTXLOG_INIT t
+		where t.termid = d.no
+		and substr(t.trandate, 0, 7) = to_char(sysdate,'yyyy-mm')) as aaa
+		from dev_base_info d, sys_org o
+		where d.org_no = o.no) m
+		group by m.no)
+		where no = SYS_ORG.no)  as transTotal
+		from SYS_ORG
+		where CITY = #{cityName,jdbcType=VARCHAR}
+		and X is not null
+		and Y is not null
+	</select>
+
+	<select id="qryChildrenMap" resultType="java.util.Map">
+  		select m.no as masterOrgNo, s.no as childrenOrgNo
+  		from SYS_ORG m left join SYS_ORG s
+  		on s.no=m.no or s.upper1=m.no or s.upper2=m.no or s.upper3=m.no or s.upper4=m.no or s.upper5=m.no
+    </select>
+
+	<select id="qryOrgRegion" parameterType="java.lang.String" resultType="java.lang.String">
+  		select o.CITY from SYS_ORG o where o.NO = #{orgNo, jdbcType = VARCHAR}
+    </select>
+
+	<select id="qryNetworksByNetworkLineNo" parameterType="java.util.Map" resultMap="DetailMap">
+		select
+		NO, NAME, PARENT_ORG, LEFT, RIGHT, ORG_GRADE_NO, MONEYORG_FLAG, X, Y, ADDRESS, LINKMAN, TELEPHONE, MOBILE, FAX, EMAIL,
+       BUSINESS_RANGE, CUP_AREA_CODE, ADDRESS_CODE, AREA_NO, AREA_TYPE, ORG_PHYSICS_CATALOG, t.NOTE, t.CLR_CENTER_NO,
+       CITY, REGION, STATUS, CLR_CENTER_FLAG, ORG_NO, SHORT_NAME, FULL_NAME, AWAY_FLAG, CLR_CENTER_NO_CASH,DELIVERY_TIME,BACK_TIME
+		from SYS_ORG t left join netpoint_matrix_table t1
+		on t.no = t1.end_point_no
+		where t1.start_point_no = #{clrCenterNo,jdbcType=VARCHAR} and t1.data_type = 2 and t.line_no= #{networkLineNo,jdbcType=VARCHAR} and t.org_grade_no = 5
+		order by t1.tactic
+	</select>
+
+
+	<select id="getNetPointsWithGroup" resultType="java.util.Map" parameterType="java.util.Map" >
+    select distinct d.no as "devNo", o.no as "orgNo", o.name as "orgName", o.address as "address", o.x as "x", o.y as "y", a.sort_no as "sortNo" , a.KEY_EVENT_DETAIL as "keyEventDetail",a.PLAN_ADDNOTES_AMT as "planAddnotesAmt"
+    from addnotes_plan_detail a, dev_base_info d, SYS_ORG o
+    where a.dev_no = d.no
+        and d.org_no = o.no
+        and a.ADDNOTES_PLAN_NO = #{addnotesPlanNo,jdbcType=VARCHAR}
+        and a.line_no = #{lineNo,jdbcType=VARCHAR}
+    	order by a.sort_no, o.no, d.no
+  </select>
+
+	<select id="checkPermissionByUsername" parameterType="java.lang.String" resultType="integer">
+		select count(1) from sys_org
+		where
+		    no in (select o.no from SYS_ORG o left join SYS_ORG tOrg  on tOrg.no=#{authOrgNo,jdbcType=VARCHAR} where o.left >= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+		    and no = (select ORG_NO from sys_user where username = #{username,jdbcType=VARCHAR})
+	</select>
+
+	<select id="qryOrgGradeNoByOrgNo" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select ORG_GRADE_NO as orgGradeNo
+		from SYS_ORG
+		where NO = #{orgNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryClrCenterFlag" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select CLR_CENTER_FLAG as clrCenterFlag
+		from SYS_ORG
+		where NO = #{orgNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryCenterByNo" parameterType="java.lang.String" resultType="java.util.Map">
+		select NAME as name,ADDRESS as address,X as x,Y as y from SYS_ORG
+		where NO = #{no,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryDevInfoByNo" parameterType="java.lang.String" resultType="java.util.Map">
+		select d.ORG_NO as orgNO,s.ADDRESS as address,s.X as x,s.Y as y,s.NAME as name from SYS_ORG s left join DEV_BASE_INFO d on d.ORG_NO=S.NO
+		where d.NO = #{devNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectOrgNoList"  resultType="string" >
+		SELECT NO as "no" FROM SYS_ORG  WHERE LINE_NO = #{lineNo,jdbcType=VARCHAR} and ORG_GRADE_NO= #{orgGradeNo,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectLineNo" parameterType="java.lang.String" resultType="java.lang.String">
+    select LINE_NO from SYS_ORG where NO = #{no,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

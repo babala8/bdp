@@ -1,0 +1,17 @@
+<zj-orchestration id="cashInStorage" name="现金入库"
+				  requestObject="java.util.ArrayList"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="java.lang.String"
+				  transaction="@Transactional(rollbackFor = Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+	</zj-component>
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.clearcenter.component.CashBusinessComponent.cashInStorage"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>
+    

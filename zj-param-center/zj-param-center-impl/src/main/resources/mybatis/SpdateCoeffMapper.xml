@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.param.repository.SpdateCoeffMapper" >
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.param.domain.SpdateCoeff" >
+		<id column="START_DATE" property="startDate" jdbcType="VARCHAR" />
+		<id column="END_DATE" property="endDate" jdbcType="VARCHAR" />
+		<id column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR" />
+		<result column="ADDNOTES_COEFF" property="addnotesCoeff" jdbcType="DECIMAL" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+		START_DATE, END_DATE, CLR_CENTER_NO, ADDNOTES_COEFF
+	</sql>
+  
+	<select id="isConflict" parameterType="com.zjft.microservice.treasurybrain.param.domain.SpdateCoeff" resultMap="BaseResultMap">
+		select * from (
+			select
+				<include refid="Base_Column_List" />
+			from spdate_coeff_table
+			where
+				CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR} AND (
+				(START_DATE &lt;= #{startDate,jdbcType=VARCHAR}
+				AND END_DATE &gt;= #{startDate,jdbcType=VARCHAR})
+				or  (START_DATE &lt;= #{endDate,jdbcType=VARCHAR}
+				AND END_DATE &gt;= #{endDate,jdbcType=VARCHAR})
+				or  (START_DATE &gt;= #{startDate,jdbcType=VARCHAR}
+				AND END_DATE &lt;= #{endDate,jdbcType=VARCHAR}) )
+				) a
+		where ROWNUM &lt; 2
+	</select>
+  
+	<select id="qrySpdateCoeff" resultType="java.util.Map" parameterType="java.util.Map">
+		select tt.* from (select t.*, rownum as rn from  (select
+			START_DATE as "startDate",END_DATE as "endDate",CLR_CENTER_NO as "clrCenterNo",ADDNOTES_COEFF as "addnotesCoeff"
+		from spdate_coeff_table s
+		<where>
+			<if test="specialDateStart != null and specialDateStart != ''" >
+				AND s.START_DATE &gt;= #{specialDateStart,jdbcType=VARCHAR}
+			</if>
+			<if test="specialDateEnd != null and specialDateEnd != ''" >
+				AND s.END_DATE &lt;= #{specialDateEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND s.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+			<if test=" addnotesCoeff != null and addnotesCoeff != ''">
+				AND s.ADDNOTES_COEFF = #{addnotesCoeff,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by s.START_DATE )t)tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+  
+	<select id="qryTotalRowRule"  parameterType="java.util.Map"  resultType="int">
+		select
+			count(1)
+		from spdate_coeff_table s
+		<where>
+		<if test="specialDateStart != null and specialDateStart != ''" >
+			AND s.START_DATE = #{specialDateStart,jdbcType=VARCHAR}
+		</if>
+		<if test="specialDateEnd != null and specialDateEnd != ''" >
+			AND s.END_DATE = #{specialDateEnd,jdbcType=VARCHAR}
+		</if>
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND s.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+		<if test=" addnotesCoeff != null and addnotesCoeff != ''">
+			AND s.ADDNOTES_COEFF = #{addnotesCoeff,jdbcType=VARCHAR}
+		</if>
+		</where>
+	</select>
+  
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.param.domain.SpdateCoeffKey" >
+		select
+			<include refid="Base_Column_List" />
+		from spdate_coeff_table
+		where START_DATE = #{startDate,jdbcType=VARCHAR}
+			and END_DATE = #{endDate,jdbcType=VARCHAR}
+			and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.param.domain.SpdateCoeffKey" >
+		delete from spdate_coeff_table
+		where START_DATE = #{startDate,jdbcType=VARCHAR}
+			and END_DATE = #{endDate,jdbcType=VARCHAR}
+			and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.param.domain.SpdateCoeff" >
+		insert into spdate_coeff_table (START_DATE, END_DATE, CLR_CENTER_NO,
+			ADDNOTES_COEFF)
+		values (#{startDate,jdbcType=VARCHAR}, #{endDate,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR},
+			#{addnotesCoeff,jdbcType=DECIMAL})
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.param.domain.SpdateCoeff" >
+		insert into spdate_coeff_table
+			<trim prefix="(" suffix=")" suffixOverrides="," >
+				<if test="startDate != null" >
+					START_DATE,
+				</if>
+				<if test="endDate != null" >
+					END_DATE,
+				</if>
+				<if test="clrCenterNo != null" >
+					CLR_CENTER_NO,
+				</if>
+				<if test="addnotesCoeff != null" >
+					ADDNOTES_COEFF,
+				</if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides="," >
+				<if test="startDate != null" >
+					#{startDate,jdbcType=VARCHAR},
+				</if>
+				<if test="endDate != null" >
+					#{endDate,jdbcType=VARCHAR},
+				</if>
+				<if test="clrCenterNo != null" >
+					#{clrCenterNo,jdbcType=VARCHAR},
+				</if>
+				<if test="addnotesCoeff != null" >
+					#{addnotesCoeff,jdbcType=DECIMAL},
+				</if>
+			</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.param.domain.SpdateCoeff" >
+		update spdate_coeff_table
+			<set >
+				<if test="addnotesCoeff != null" >
+					ADDNOTES_COEFF = #{addnotesCoeff,jdbcType=DECIMAL},
+				</if>
+			</set>
+		where START_DATE = #{startDate,jdbcType=VARCHAR}
+			and END_DATE = #{endDate,jdbcType=VARCHAR}
+			and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.param.domain.SpdateCoeff" >
+		update spdate_coeff_table
+			set ADDNOTES_COEFF = #{addnotesCoeff,jdbcType=DECIMAL}
+		where START_DATE = #{startDate,jdbcType=VARCHAR}
+			and END_DATE = #{endDate,jdbcType=VARCHAR}
+			and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectSpdateCoeffByKey" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.param.domain.SpdateCoeffKey" >
+		select * from (
+			select
+				<include refid="Base_Column_List" />
+			from spdate_coeff_table
+				where START_DATE &lt;= #{startDate,jdbcType=VARCHAR}
+				and END_DATE &gt;= #{endDate,jdbcType=VARCHAR}
+				and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+				order by START_DATE desc
+				) a
+		where ROWNUM &lt; 2
+	</select>
+
+</mapper>

@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.clearcenter.repository.BanknoteTaskCheckMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.clearcenter.po.TaskCheckPO" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="TASK_NO" property="taskNo" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_NO" property="customerNo" jdbcType="VARCHAR" />
+    <result column="CONTAINER_NO" property="containerNo" jdbcType="VARCHAR" />
+    <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+    <result column="CURRENCY_CODE" property="currencyCode" jdbcType="VARCHAR" />
+    <result column="CURRENCY_TYPE" property="currencyType" jdbcType="DECIMAL" />
+    <result column="DENOMINATION" property="denomination" jdbcType="DECIMAL" />
+    <result column="OP_NO" property="opNo" jdbcType="VARCHAR" />
+	<result column="OP_NAME" property="opName" jdbcType="VARCHAR" />
+    <result column="OP_TIME" property="opTime" jdbcType="VARCHAR" />
+    <result column="CLEAR_MACHINE_NO" property="clearMachineNo" jdbcType="VARCHAR" />
+    <result column="CASH_SHORT_OVER" property="cashShortOver" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    t.ID, t.TASK_NO, t.CUSTOMER_NO, t.CONTAINER_NO, t.AMOUNT, t.CURRENCY_CODE, t.CURRENCY_TYPE, t.DENOMINATION,
+    t.OP_NO, t.OP_TIME, t.CLEAR_MACHINE_NO, t.CASH_SHORT_OVER
+  </sql>
+  <select id="selectByTaskNoAndCustomerNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from TASK_CHECK_TABLE t
+    where t.TASK_NO = #{taskNo,jdbcType=VARCHAR} and t.CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByTaskNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />,tt.NAME as "OP_NAME"
+    from TASK_CHECK_TABLE t
+	 left join SYS_USER tt on t.OP_NO = tt.USERNAME
+    where t.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  </select>
+
+	<select id="selectAmountByTaskNoAndCustomerNo" resultType="double" parameterType="java.lang.String" >
+    select NVL(sum(AMOUNT) ,0)
+    from TASK_CHECK_TABLE
+    where TASK_NO = #{taskNo,jdbcType=VARCHAR} and CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from TASK_CHECK_TABLE t
+    where t.ID = #{id,jdbcType=VARCHAR}
+  </select>
+
+	<select id="selectByMap" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		select
+		<include refid="Base_Column_List" />
+		from TASK_CHECK_TABLE t
+		where t.TASK_NO = #{taskNo,jdbcType=VARCHAR} and t.CONTAINER_NO = #{containerNo,jdbcType=VARCHAR} and t.DENOMINATION = #{denomination,jdbcType=DECIMAL}
+	</select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from TASK_CHECK_TABLE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByTaskNoAndCustomerNo" parameterType="java.lang.String" >
+    delete from TASK_CHECK_TABLE
+    where TASK_NO = #{taskNo,jdbcType=VARCHAR} and CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.clearcenter.po.TaskCheckPO" >
+    insert into TASK_CHECK_TABLE (ID, TASK_NO, CUSTOMER_NO, 
+      CONTAINER_NO, AMOUNT, CURRENCY_CODE, 
+      CURRENCY_TYPE, DENOMINATION, OP_NO, 
+      OP_TIME, CLEAR_MACHINE_NO, CASH_SHORT_OVER
+      )
+    values (#{id,jdbcType=VARCHAR}, #{taskNo,jdbcType=VARCHAR}, #{customerNo,jdbcType=VARCHAR}, 
+      #{containerNo,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, #{currencyCode,jdbcType=VARCHAR}, 
+      #{currencyType,jdbcType=DECIMAL}, #{denomination,jdbcType=DECIMAL}, #{opNo,jdbcType=VARCHAR}, 
+      #{opTime,jdbcType=VARCHAR}, #{clearMachineNo,jdbcType=VARCHAR}, #{cashShortOver,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.clearcenter.po.TaskCheckPO" >
+	insert into TASK_CHECK_TABLE
+	<trim prefix="(" suffix=")" suffixOverrides="," >
+		<if test="id != null" >
+			ID,
+		</if>
+		<if test="taskNo != null" >
+			TASK_NO,
+		</if>
+		<if test="customerNo != null" >
+			CUSTOMER_NO,
+		</if>
+		<if test="containerNo != null" >
+			CONTAINER_NO,
+		</if>
+		<if test="amount != null" >
+			AMOUNT,
+		</if>
+		<if test="currencyCode != null" >
+			CURRENCY_CODE,
+		</if>
+		<if test="currencyType != null" >
+			CURRENCY_TYPE,
+		</if>
+		<if test="denomination != null" >
+			DENOMINATION,
+		</if>
+		<if test="opNo != null" >
+			OP_NO,
+		</if>
+		<if test="opTime != null" >
+			OP_TIME,
+		</if>
+		<if test="clearMachineNo != null" >
+			CLEAR_MACHINE_NO,
+		</if>
+		<if test="cashShortOver != null" >
+			CASH_SHORT_OVER,
+		</if>
+	</trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="taskNo != null" >
+        #{taskNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNo != null" >
+        #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="containerNo != null" >
+        #{containerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="currencyCode != null" >
+        #{currencyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="currencyType != null" >
+        #{currencyType,jdbcType=DECIMAL},
+      </if>
+      <if test="denomination != null" >
+        #{denomination,jdbcType=DECIMAL},
+      </if>
+      <if test="opNo != null" >
+        #{opNo,jdbcType=VARCHAR},
+      </if>
+      <if test="opTime != null" >
+        #{opTime,jdbcType=VARCHAR},
+      </if>
+      <if test="clearMachineNo != null" >
+        #{clearMachineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cashShortOver != null" >
+        #{cashShortOver,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+
+	<insert id="insertByMap" parameterType="java.util.Map">
+		insert into TASK_CHECK_TABLE
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				ID,
+			</if>
+			<if test="taskNo != null" >
+				TASK_NO,
+			</if>
+			<if test="customerNo != null" >
+				CUSTOMER_NO,
+			</if>
+			<if test="containerNo != null" >
+				CONTAINER_NO,
+			</if>
+			<if test="amount != null" >
+				AMOUNT,
+			</if>
+			<if test="currencyCode != null" >
+				CURRENCY_CODE,
+			</if>
+			<if test="currencyType != null" >
+				CURRENCY_TYPE,
+			</if>
+			<if test="denomination != null" >
+				DENOMINATION,
+			</if>
+			<if test="opNo != null" >
+				OP_NO,
+			</if>
+			<if test="opTime != null" >
+				OP_TIME,
+			</if>
+			<if test="clearMachineNo != null" >
+				CLEAR_MACHINE_NO,
+			</if>
+			<if test="cashShortOver != null" >
+				CASH_SHORT_OVER,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="taskNo != null" >
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerNo != null" >
+				#{customerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="containerNo != null" >
+				#{containerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null" >
+				#{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="currencyCode != null" >
+				#{currencyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="currencyType != null" >
+				#{currencyType,jdbcType=DECIMAL},
+			</if>
+			<if test="denomination != null" >
+				#{denomination,jdbcType=DECIMAL},
+			</if>
+			<if test="opNo != null" >
+				#{opNo,jdbcType=VARCHAR},
+			</if>
+			<if test="opTime != null" >
+				#{opTime,jdbcType=VARCHAR},
+			</if>
+			<if test="clearMachineNo != null" >
+				#{clearMachineNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cashShortOver != null" >
+				#{cashShortOver,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.clearcenter.po.TaskCheckPO" >
+    update TASK_CHECK_TABLE
+    <set >
+      <if test="taskNo != null" >
+        TASK_NO = #{taskNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNo != null" >
+        CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="containerNo != null" >
+        CONTAINER_NO = #{containerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        AMOUNT = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="currencyCode != null" >
+        CURRENCY_CODE = #{currencyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="currencyType != null" >
+        CURRENCY_TYPE = #{currencyType,jdbcType=DECIMAL},
+      </if>
+      <if test="denomination != null" >
+        DENOMINATION = #{denomination,jdbcType=DECIMAL},
+      </if>
+      <if test="opNo != null" >
+        OP_NO = #{opNo,jdbcType=VARCHAR},
+      </if>
+      <if test="opTime != null" >
+        OP_TIME = #{opTime,jdbcType=VARCHAR},
+      </if>
+      <if test="clearMachineNo != null" >
+        CLEAR_MACHINE_NO = #{clearMachineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cashShortOver != null" >
+        CASH_SHORT_OVER = #{cashShortOver,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+	<update id="updateByID" parameterType="java.util.Map" >
+		update TASK_CHECK_TABLE
+		<set >
+			<if test="taskNo != null" >
+				TASK_NO = #{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerNo != null" >
+				CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="containerNo != null" >
+				CONTAINER_NO = #{containerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null" >
+				AMOUNT = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="currencyCode != null" >
+				CURRENCY_CODE = #{currencyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="currencyType != null" >
+				CURRENCY_TYPE = #{currencyType,jdbcType=DECIMAL},
+			</if>
+			<if test="denomination != null" >
+				DENOMINATION = #{denomination,jdbcType=DECIMAL},
+			</if>
+			<if test="opNo != null" >
+				OP_NO = #{opNo,jdbcType=VARCHAR},
+			</if>
+			<if test="opTime != null" >
+				OP_TIME = #{opTime,jdbcType=VARCHAR},
+			</if>
+			<if test="clearMachineNo != null" >
+				CLEAR_MACHINE_NO = #{clearMachineNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cashShortOver != null" >
+				CASH_SHORT_OVER = #{cashShortOver,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.clearcenter.po.TaskCheckPO" >
+    update TASK_CHECK_TABLE
+    set TASK_NO = #{taskNo,jdbcType=VARCHAR},
+      CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+      CONTAINER_NO = #{containerNo,jdbcType=VARCHAR},
+      AMOUNT = #{amount,jdbcType=DECIMAL},
+      CURRENCY_CODE = #{currencyCode,jdbcType=VARCHAR},
+      CURRENCY_TYPE = #{currencyType,jdbcType=DECIMAL},
+      DENOMINATION = #{denomination,jdbcType=DECIMAL},
+      OP_NO = #{opNo,jdbcType=VARCHAR},
+      OP_TIME = #{opTime,jdbcType=VARCHAR},
+      CLEAR_MACHINE_NO = #{clearMachineNo,jdbcType=VARCHAR},
+      CASH_SHORT_OVER = #{cashShortOver,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+	<select id="selectCheckAmount" resultType="java.math.BigDecimal" parameterType="java.lang.String" >
+		select
+		NVL(sum(AMOUNT) ,0)
+		from TASK_CHECK_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+</mapper>

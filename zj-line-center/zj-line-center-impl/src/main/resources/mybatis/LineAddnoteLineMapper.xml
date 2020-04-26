@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.linecenter.repository.LineAddnoteLineMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.LineTableDO" >
+    <id column="LINE_NO" property="lineNo" jdbcType="VARCHAR" />
+    <result column="LINE_NAME" property="lineName" jdbcType="VARCHAR" />
+    <result column="ADD_CLR_PERIOD" property="addClrPeriod" jdbcType="DECIMAL" />
+    <result column="NOTE" property="note" jdbcType="VARCHAR" />
+    <result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR" />
+    <result column="LINE_TYPE" property="lineType" jdbcType="NUMERIC" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    LINE_NO, LINE_NAME, ADD_CLR_PERIOD, NOTE, CLR_CENTER_NO, LINE_TYPE
+  </sql>
+
+
+	<select id="getAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from addnotes_line_table
+	</select>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from addnotes_line_table
+    where LINE_NO = #{lineNo,jdbcType=VARCHAR}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from addnotes_line_table
+    where LINE_NO = #{lineNo,jdbcType=VARCHAR}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineTableDO" >
+    insert into ADDNOTES_LINE_TABLE (LINE_NO, LINE_NAME, ADD_CLR_PERIOD,
+      NOTE, CLR_CENTER_NO,LINE_TYPE)
+    values (#{lineNo,jdbcType=VARCHAR}, #{lineName,jdbcType=VARCHAR}, #{addClrPeriod,jdbcType=DECIMAL},
+      #{note,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR},#{lineType,jdbcType=INTEGER})
+  </insert>
+
+	<insert id="insertbyMap" parameterType="java.util.Map" >
+    insert into ADDNOTES_LINE_TABLE (LINE_NO, LINE_NAME, ADD_CLR_PERIOD,
+      NOTE, CLR_CENTER_NO,LINE_TYPE)
+    values (#{lineNo,jdbcType=VARCHAR}, #{lineName,jdbcType=VARCHAR}, #{addClrPeriod,jdbcType=DECIMAL},
+      #{note,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR},#{lineType,jdbcType=INTEGER})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineTableDO" >
+    insert into addnotes_line_table
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="lineNo != null" >
+        LINE_NO,
+      </if>
+      <if test="lineName != null" >
+        LINE_NAME,
+      </if>
+      <if test="addClrPeriod != null" >
+        ADD_CLR_PERIOD,
+      </if>
+      <if test="note != null" >
+        NOTE,
+      </if>
+      <if test="clrCenterNo != null" >
+        CLR_CENTER_NO,
+      </if>
+		<if test="lineType != null" >
+			LINE_TYPE,
+		</if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="lineNo != null" >
+        #{lineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="lineName != null" >
+        #{lineName,jdbcType=VARCHAR},
+      </if>
+      <if test="addClrPeriod != null" >
+        #{addClrPeriod,jdbcType=DECIMAL},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="clrCenterNo != null" >
+        #{clrCenterNo,jdbcType=VARCHAR},
+      </if>
+		<if test="lineType != null" >
+			#{lineType,jdbcType=INTEGER},
+		</if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineTableDO" >
+    update addnotes_line_table
+    <set >
+      <if test="lineName != null" >
+        LINE_NAME = #{lineName,jdbcType=VARCHAR},
+      </if>
+      <if test="addClrPeriod != null" >
+        ADD_CLR_PERIOD = #{addClrPeriod,jdbcType=DECIMAL},
+      </if>
+      <if test="note != null" >
+        NOTE = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="clrCenterNo != null" >
+        CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+      </if>
+		<if test="lineType != null" >
+			LINE_TYPE = #{lineType,jdbcType=INTEGER},
+		</if>
+    </set>
+    where LINE_NO = #{lineNo,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineTableDO" >
+    update ADDNOTES_LINE_TABLE
+    set LINE_NAME = #{lineName,jdbcType=VARCHAR},
+      ADD_CLR_PERIOD = #{addClrPeriod,jdbcType=DECIMAL},
+      NOTE = #{note,jdbcType=VARCHAR},
+      CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+       LINE_TYPE = #{lineType,jdbcType=INTEGER}
+    where LINE_NO = #{lineNo,jdbcType=VARCHAR}
+  </update>
+
+	<update id="updateByMap" parameterType="java.util.Map" >
+		update addnotes_line_table
+		<set >
+			<if test="lineName != null and lineName!=''" >
+				LINE_NAME = #{lineName,jdbcType=VARCHAR},
+			</if>
+			<if test="addClrPeriod != null" >
+				ADD_CLR_PERIOD = #{addClrPeriod,jdbcType=DECIMAL},
+			</if>
+			<if test="note != null and note!=''" >
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo!=''" >
+				CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+			</if>
+			<if test="lineType != null" >
+				LINE_TYPE = #{lineType,jdbcType=INTEGER},
+			</if>
+		</set>
+		where LINE_NO = #{lineNo,jdbcType=VARCHAR}
+	</update>
+
+
+  <select id="getLineListByClrNo" resultMap="BaseResultMap" >
+	select t.line_no, t.LINE_NAME
+	from addnotes_line_table t
+	where t.clr_center_no = #{clrCenterNo,jdbcType=VARCHAR}
+	  <if test="lineType != null and lineType != ''" >
+		  and t.LINE_TYPE = #{lineType,jdbcType=NUMERIC}
+	  </if>
+	order by t.line_no
+  </select>
+
+  <select id="getLineListByType" resultMap="BaseResultMap" >
+		select <include refid="Base_Column_List" />
+		from addnotes_line_table
+		where LINE_TYPE=#{lineType,jdbcType=INTEGER}
+		order by LINE_NO
+  </select>
+
+
+  <select id="getLineListByDateAndClrNo" resultMap="BaseResultMap" >
+	select t.line_no, t.LINE_NAME
+	 from addnotes_line_table t
+	 where t.clr_center_no = #{clrCenterNo,jdbcType=VARCHAR}
+    	and t.line_no in (
+		select distinct r.LINE_NO from LINE_RUN_INFO r
+		where r.the_year_month = substr(#{lineDate,jdbcType=VARCHAR}, 0, 7)
+		and r.the_day = substr(#{lineDate,jdbcType=VARCHAR}, 9)
+		)
+    	order by t.line_no
+  </select>
+
+
+  <select id="qryTotalRowPlan"  parameterType="java.util.Map"  resultType="java.lang.Integer">
+	 select
+	 count(1)
+	 from LINE_TABLE t
+	 <where>
+		 <if test="clrCenterNo != null and clrCenterNo != ''" >
+		     AND t.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+		 </if>
+		 <if test="lineName != null and lineName != ''">
+             AND t.LINE_Name like concat(concat('%',#{lineName,jdbcType=VARCHAR}),'%')
+		 </if>
+		 <if test="lineType != null and lineType != -1">
+			 AND t.LINE_TYPE = #{lineType,jdbcType=INTEGER}
+		 </if>
+	 </where>
+ </select>
+
+ <select id="qryAddnotesLine" resultMap="BaseResultMap">
+	 select tt.* from (select t.*, rownum as rn from (
+	 select
+	 <include refid="Base_Column_List"/>
+	 from ADDNOTES_LINE_TABLE o
+	 <where>
+		 <if test="clrCenterNo != null and clrCenterNo != ''">
+			 AND o.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+		 </if>
+		 <if test="lineName != null and lineName != ''">
+			 AND o.LINE_NAME like concat(concat('%',#{lineName,jdbcType=VARCHAR}),'%')
+		 </if>
+		 <if test="lineType != null and lineType != -1">
+			 AND o.LINE_TYPE = #{lineType,jdbcType=INTEGER}
+		 </if>
+	 </where>
+	 order by o.LINE_NO asc
+	 ) t ) tt
+	 where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+ </select>
+
+
+ <select id="getLineNoMax" resultType="string">
+    select max(LINE_NO) from ADDNOTES_LINE_TABLE where LINE_NO like concat((#{clrCenterNo,jdbcType=VARCHAR}),'%')
+ </select>
+
+	<select id="rowSetList" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from addnotes_line_table
+		WHERE LINE_NO LIKE concat((#{clrCenterNo,jdbcType=VARCHAR}),'%')
+		AND LINE_TYPE = 1
+	</select>
+
+	<select id="rowSetList1" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from addnotes_line_table
+		WHERE LINE_NO = #{lineNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryLineNameExist" resultType="int">
+		select count(1) from addnotes_line_table where line_name= #{lineName,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryLineListByMap" resultMap="BaseResultMap" >
+		select <include refid="Base_Column_List" />
+		from addnotes_line_table o
+		<where>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND o.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+			<if test="lineType != null and lineType != -1">
+				AND o.LINE_TYPE = #{lineType,jdbcType=INTEGER}
+			</if>
+		</where>
+		order by o.LINE_NO
+	</select>
+
+	<select id="getLineNosWithTypeAndClrNo" resultType="string" parameterType="map">
+		select l.LINE_NO
+		from addnotes_line_table l
+		where 1=1
+		<if test="null!=lineType"> and l.LINE_TYPE=#{lineType,jdbcType=INTEGER} </if>
+		<if test="null!=clrCenterNo and ''!=clrCenterNo">and l.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}</if>
+	</select>
+</mapper>

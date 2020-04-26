@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.business.repository.TaskInOutMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.business.po.TransferTaskInOutPo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="TASK_NO" property="taskNo" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_NO" property="customerNo" jdbcType="VARCHAR" />
+    <result column="DIRECTION" property="direction" jdbcType="DECIMAL" />
+    <result column="CONTAINER_TYPE" property="containerType" jdbcType="DECIMAL" />
+    <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+    <result column="CURRENCY_TYPE" property="currencyType" jdbcType="DECIMAL" />
+    <result column="CURRENCY_CODE" property="currencyCode" jdbcType="VARCHAR" />
+    <result column="DENOMINATION" property="denomination" jdbcType="DECIMAL" />
+  </resultMap>
+
+	<resultMap id="CurrencyTypeMap" type="com.zjft.microservice.treasurybrain.business.dto.CurrencyTypeListDTO">
+		<result column="ID" jdbcType="VARCHAR" property="id"/>
+		<result column="CUSTOMER_NO" jdbcType="VARCHAR" property="customerNo"/>
+		<result column="AMOUNT" jdbcType="DECIMAL" property="amount"/>
+		<result column="CURRENCY_TYPE" jdbcType="DECIMAL" property="currencyType"/>
+		<result column="CURRENCY_CODE" jdbcType="VARCHAR" property="currencyCode"/>
+		<result column="DENOMINATION" jdbcType="DECIMAL" property="denomination"/>
+	</resultMap>
+
+  <sql id="Base_Column_List" >
+    ID, TASK_NO, CUSTOMER_NO, DIRECTION, CONTAINER_TYPE, AMOUNT, CURRENCY_TYPE, CURRENCY_CODE,
+    DENOMINATION
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from TASK_IN_OUT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+
+	<select id="qryTaskInOutList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		select
+		<include refid="Base_Column_List" />
+		from TASK_IN_OUT
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from TASK_IN_OUT
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByTaskNo" parameterType="String" >
+    delete from TASK_IN_OUT
+    where TASK_NO = #{taskNo,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByTaskNoAndCustomerNo" parameterType="String" >
+    delete from TASK_IN_OUT
+    where TASK_NO = #{taskNo,jdbcType=DECIMAL} and CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.business.po.TransferTaskInOutPo" >
+    insert into TASK_IN_OUT (ID, TASK_NO, CUSTOMER_NO, 
+      DIRECTION, CONTAINER_TYPE, AMOUNT, 
+      CURRENCY_TYPE, CURRENCY_CODE, DENOMINATION
+      )
+    values (#{id,jdbcType=DECIMAL}, #{taskNo,jdbcType=VARCHAR}, #{customerNo,jdbcType=VARCHAR}, 
+      #{direction,jdbcType=DECIMAL}, #{containerType,jdbcType=DECIMAL}, #{amount,jdbcType=DECIMAL}, 
+      #{currencyType,jdbcType=DECIMAL}, #{currencyCode,jdbcType=VARCHAR}, #{denomination,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.business.po.TransferTaskInOutPo" >
+    insert into TASK_IN_OUT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="taskNo != null" >
+        TASK_NO,
+      </if>
+      <if test="customerNo != null" >
+        CUSTOMER_NO,
+      </if>
+      <if test="direction != null" >
+        DIRECTION,
+      </if>
+      <if test="containerType != null" >
+        CONTAINER_TYPE,
+      </if>
+      <if test="amount != null" >
+        AMOUNT,
+      </if>
+      <if test="currencyType != null" >
+        CURRENCY_TYPE,
+      </if>
+      <if test="currencyCode != null" >
+        CURRENCY_CODE,
+      </if>
+      <if test="denomination != null" >
+        DENOMINATION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="taskNo != null" >
+        #{taskNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNo != null" >
+        #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="direction != null" >
+        #{direction,jdbcType=DECIMAL},
+      </if>
+      <if test="containerType != null" >
+        #{containerType,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="currencyType != null" >
+        #{currencyType,jdbcType=DECIMAL},
+      </if>
+      <if test="currencyCode != null" >
+        #{currencyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="denomination != null" >
+        #{denomination,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+
+	<insert id="insertSelectiveByMap" parameterType="java.util.Map" >
+		insert into TASK_IN_OUT
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				ID,
+			</if>
+			<if test="taskNo != null" >
+				TASK_NO,
+			</if>
+			<if test="customerNo != null" >
+				CUSTOMER_NO,
+			</if>
+			<if test="direction != null" >
+				DIRECTION,
+			</if>
+			<if test="containerType != null" >
+				CONTAINER_TYPE,
+			</if>
+			<if test="amount != null" >
+				AMOUNT,
+			</if>
+			<if test="currencyType != null" >
+				CURRENCY_TYPE,
+			</if>
+			<if test="currencyCode != null" >
+				CURRENCY_CODE,
+			</if>
+			<if test="denomination != null" >
+				DENOMINATION,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="taskNo != null" >
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerNo != null" >
+				#{customerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="direction != null" >
+				#{direction,jdbcType=DECIMAL},
+			</if>
+			<if test="containerType != null" >
+				#{containerType,jdbcType=DECIMAL},
+			</if>
+			<if test="amount != null" >
+				#{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="currencyType != null" >
+				#{currencyType,jdbcType=DECIMAL},
+			</if>
+			<if test="currencyCode != null" >
+				#{currencyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="denomination != null" >
+				#{denomination,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.business.po.TransferTaskInOutPo" >
+    update TASK_IN_OUT
+    <set >
+      <if test="taskNo != null" >
+        TASK_NO = #{taskNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNo != null" >
+        CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="direction != null" >
+        DIRECTION = #{direction,jdbcType=DECIMAL},
+      </if>
+      <if test="containerType != null" >
+        CONTAINER_TYPE = #{containerType,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        AMOUNT = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="currencyType != null" >
+        CURRENCY_TYPE = #{currencyType,jdbcType=DECIMAL},
+      </if>
+      <if test="currencyCode != null" >
+        CURRENCY_CODE = #{currencyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="denomination != null" >
+        DENOMINATION = #{denomination,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+	<update id="updateByTaskNo" parameterType="com.zjft.microservice.treasurybrain.business.po.TransferTaskInOutPo" >
+    update TASK_IN_OUT
+    <set >
+	  <if test="id != null" >
+        ID = #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNo != null" >
+        CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="direction != null" >
+        DIRECTION = #{direction,jdbcType=DECIMAL},
+      </if>
+      <if test="containerType != null" >
+        CONTAINER_TYPE = #{containerType,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        AMOUNT = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="currencyType != null" >
+        CURRENCY_TYPE = #{currencyType,jdbcType=DECIMAL},
+      </if>
+      <if test="currencyCode != null" >
+        CURRENCY_CODE = #{currencyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="denomination != null" >
+        DENOMINATION = #{denomination,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where TASK_NO = #{taskNo,jdbcType=DECIMAL}
+  </update>
+
+	<update id="updateByPrimaryKeyMap" parameterType="java.util.Map" >
+		update TASK_IN_OUT
+		<set >
+			<if test="taskNo != null" >
+				TASK_NO = #{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerNo != null" >
+				CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="direction != null" >
+				DIRECTION = #{direction,jdbcType=DECIMAL},
+			</if>
+			<if test="containerType != null" >
+				CONTAINER_TYPE = #{containerType,jdbcType=DECIMAL},
+			</if>
+			<if test="amount != null" >
+				AMOUNT = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="currencyType != null" >
+				CURRENCY_TYPE = #{currencyType,jdbcType=DECIMAL},
+			</if>
+			<if test="currencyCode!= null" >
+				CURRENCY_CODE = #{currencyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="denomination != null" >
+				DENOMINATION = #{denomination,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where TASK_NO = #{taskNo,jdbcType=DECIMAL}
+	</update>
+
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.business.po.TransferTaskInOutPo" >
+    update TASK_IN_OUT
+    set TASK_NO = #{taskNo,jdbcType=VARCHAR},
+      CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+      DIRECTION = #{direction,jdbcType=DECIMAL},
+      CONTAINER_TYPE = #{containerType,jdbcType=DECIMAL},
+      AMOUNT = #{amount,jdbcType=DECIMAL},
+      CURRENCY_TYPE = #{currencyType,jdbcType=DECIMAL},
+      CURRENCY_CODE = #{currencyCode,jdbcType=VARCHAR},
+      DENOMINATION = #{denomination,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+	<select id="selectSumAmount" parameterType="java.util.Map" resultType="java.lang.String">
+		select  sum(AMOUNT) from TASK_IN_OUT where TASK_NO =  #{taskNo,jdbcType=VARCHAR} and DIRECTION = #{direction,jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="selectCurrencyTypeList" parameterType="java.util.Map" resultMap="CurrencyTypeMap">
+		select ID, CUSTOMER_NO,AMOUNT,CURRENCY_CODE,CURRENCY_TYPE,DENOMINATION,CONTAINER_TYPE from TASK_IN_OUT t
+		where t.TASK_NO = #{taskNo,jdbcType=VARCHAR} and t.CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByTaskNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from TASK_IN_OUT
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+</mapper>

@@ -1,0 +1,16 @@
+<zj-orchestration id="delDevCountByNo" name="清分机信息删除"
+				  requestObject="java.lang.String"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="com.zjft.microservice.treasurybrain.channelcenter.dto.DevCountDTO"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="v3i0s4wtvz40">
+	</zj-component>
+	<zj-component id="v3i0s4wtvz40" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.channelcenter.component.DevComponent.delDevCountByNo"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

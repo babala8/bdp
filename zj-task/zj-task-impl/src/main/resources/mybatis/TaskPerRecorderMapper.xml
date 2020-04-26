@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.task.repository.TaskPerRecorderMapper" >
+  <sql id="Base_Column_List" >
+    ID, TASK_NO, CONTAINER_NO, PERFORM_TIME, PERFORM_TYPE, OP_NO1, OP_NO2, CONTAINER_TYPE
+  </sql>
+
+  <insert id="insertByMap" parameterType="java.util.Map" >
+	  insert into TASK_PER_RECORDER
+	  <trim prefix="(" suffix=")" suffixOverrides="," >
+		  <if test="id != null" >
+			  ID,
+		  </if>
+		  <if test="taskNo != null" >
+			  TASK_NO,
+		  </if>
+		  <if test="containerNo != null" >
+			  CONTAINER_NO,
+		  </if>
+		  <if test="performTime != null" >
+			  PERFORM_TIME,
+		  </if>
+		  <if test="performType != null" >
+			  PERFORM_TYPE,
+		  </if>
+		  <if test="opNo1 != null" >
+			  OP_NO1,
+		  </if>
+		  <if test="opNo2 != null and opNo2 !=''" >
+			  OP_NO2,
+		  </if>
+		  <if test="containerType != null" >
+			  CONTAINER_TYPE,
+		  </if>
+	  </trim>
+	  <trim prefix="values (" suffix=")" suffixOverrides="," >
+		  <if test="id != null" >
+			  #{id,jdbcType=VARCHAR},
+		  </if>
+		  <if test="taskNo != null" >
+			  #{taskNo,jdbcType=VARCHAR},
+		  </if>
+		  <if test="containerNo != null" >
+			  #{containerNo,jdbcType=VARCHAR},
+		  </if>
+		  <if test="performTime != null" >
+			  #{performTime,jdbcType=VARCHAR},
+		  </if>
+		  <if test="performType != null" >
+			  #{performType,jdbcType=INTEGER},
+		  </if>
+		  <if test="opNo1 != null" >
+			  #{opNo1,jdbcType=VARCHAR},
+		  </if>
+		  <if test="opNo2 != null and opNo2 !=''" >
+			  #{opNo2,jdbcType=VARCHAR},
+		  </if>
+		  <if test="containerType != null" >
+			  #{containerType,jdbcType=INTEGER},
+		  </if>
+	  </trim>
+  </insert>
+
+</mapper>

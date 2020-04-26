@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjft.microservice.treasurybrain.timejob.repository.JobLogMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.timejob.po.JobLogPO">
+		<id column="LOGIC_ID" jdbcType="VARCHAR" property="logicId"/>
+		<result column="JOB_NAME" jdbcType="VARCHAR" property="jobName"/>
+		<result column="JOB_TYPE" jdbcType="DECIMAL" property="jobType"/>
+		<result column="JOB_RESULT" jdbcType="DECIMAL" property="jobResult"/>
+		<result column="JOB_CREATOR" jdbcType="VARCHAR" property="jobCreator"/>
+		<result column="START_TIME" jdbcType="VARCHAR" property="startTime"/>
+		<result column="END_TIME" jdbcType="VARCHAR" property="endTime"/>
+		<result column="RESULT_DESC" jdbcType="VARCHAR" property="resultDesc"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		LOGIC_ID, JOB_NAME, JOB_TYPE, JOB_RESULT, JOB_CREATOR, START_TIME, END_TIME, RESULT_DESC
+	</sql>
+
+	<select id="qryTotalRow" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from TIME_JOB_LOG t
+		<where>
+			<if test="jobName != null and jobName !=''">
+				and t.JOB_NAME LIKE concat(concat('%',#{jobName,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="jobType != null and jobType !=''">
+				and t.JOB_TYPE = #{jobType,jdbcType=DECIMAL}
+			</if>
+			<if test="jobResult != null and jobResult !=''">
+				and t.JOB_RESULT = #{jobResult,jdbcType=DECIMAL}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND t.START_TIME &gt;= #{startTime,jdbcType=VARCHAR}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND t.END_TIME &lt;= #{endTime,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="qryTimeJobLogByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select tt.*
+		from (
+		select ROWNUM rn,
+		<include refid="Base_Column_List"/>
+		from TIME_JOB_LOG t
+		<where>
+			<if test="jobName != null and jobName !=''">
+				and t.JOB_NAME LIKE '%' || #{jobName,jdbcType=VARCHAR} || '%'
+			</if>
+			<if test="jobType != null and jobType !=''">
+				and t.JOB_TYPE = #{jobType,jdbcType=DECIMAL}
+			</if>
+			<if test="jobResult != null and jobResult !=''">
+				and t.JOB_RESULT = #{jobResult,jdbcType=DECIMAL}
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND t.START_TIME &gt;= #{startTime,jdbcType=VARCHAR}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND t.END_TIME &lt;= #{endTime,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by t.START_TIME desc) tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.task.repository.TaskNodeVariateMapper">
+
+	<insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false" >
+		insert into TASK_NODE_VARIATE
+		(
+		TASK_NODE_NO,
+		NAME,
+		VAR_TYPE,
+		VALUE
+		)
+		<foreach close=")" collection="list" item="item" index="index" open="(" separator="union all">
+			select
+			#{item.taskNodeNo,jdbcType=VARCHAR},
+			#{item.name,jdbcType=VARCHAR},
+			#{item.varType,jdbcType=DECIMAL},
+			#{item.value,jdbcType=VARCHAR}
+			from dual
+		</foreach>
+	</insert>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.task.dto.TaskNodeVariateDTO" >
+		insert into TASK_NODE_VARIATE
+			(TASK_NODE_NO,NAME,VALUE)
+		values (#{taskNodeNo,jdbcType=VARCHAR},
+				#{name,jdbcType=VARCHAR},
+				#{value,jdbcType=VARCHAR})
+    </insert>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.usercenter.repository.OutsourcingLineMapDetailMapper">
+
+
+	<delete id="deleteByLineRunNo" parameterType="string">
+		delete from OUTSOURCING_LINE_MAP_DETAIL d
+		where d.LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+	</delete>
+
+	<delete id="deleteInPeriod">
+		delete
+		from OUTSOURCING_LINE_MAP_DETAIL md
+		where md.LINE_RUN_NO in (select m.LINE_RUN_NO
+		from OUTSOURCING_LINE_MAP m
+		where m.DUTY_DATE &gt;= #{startDate,jdbcType = VARCHAR}
+		and m.DUTY_DATE &lt;= #{endDate,jdbcType = VARCHAR}
+		and m.LINE_NO in
+		<foreach collection="lineNos" index="i" open="(" close=")" separator="," item="item">#{item}</foreach>)
+	</delete>
+
+	<insert id="insertList" parameterType="com.zjft.microservice.treasurybrain.usercenter.domain.OutsourcingLineMapDO">
+		insert into OUTSOURCING_LINE_MAP_DETAIL(LINE_RUN_NO, OUTSOURCING_OP_NO)
+		(<foreach collection="outsourcingList" item="item" separator="union all">
+		select #{lineRunNo,jdbcType=VARCHAR},#{item.no,jdbcType=VARCHAR} from dual
+		</foreach>)
+	</insert>
+
+</mapper>

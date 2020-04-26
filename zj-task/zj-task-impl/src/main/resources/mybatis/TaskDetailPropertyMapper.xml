@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.task.repository.TaskDetailPropertyMapper" >
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.task.domain.TaskDetailPropertyDO" >
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="DETAIL_ID" property="detailId" jdbcType="VARCHAR" />
+		<result column="KEY" property="key" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="VALUE" property="value" jdbcType="VARCHAR" />
+		<result column="TASK_NO" property="taskNo" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+    ID, DETAIL_ID, KEY, NAME, VALUE, TASK_NO
+  </sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select
+		<include refid="Base_Column_List" />
+		from TASK_DETAIL_PROPERTY_TABLE
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByDetailId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select
+		<include refid="Base_Column_List" />
+		from TASK_DETAIL_PROPERTY_TABLE
+		where DETAIL_ID = #{detailId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from TASK_DETAIL_PROPERTY_TABLE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+
+	<delete id="deleteByTaskNo" parameterType="java.lang.String" >
+    delete from TASK_DETAIL_PROPERTY_TABLE
+    where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  </delete>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskDetailPropertyDO" >
+    insert into TASK_DETAIL_PROPERTY_TABLE (ID, DETAIL_ID, KEY,
+      NAME, VALUE, TASK_NO)
+    values (#{id,jdbcType=VARCHAR}, #{detailId,jdbcType=VARCHAR}, #{key,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, #{taskNo,jdbcType=VARCHAR})
+  </insert>
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskDetailPropertyDO" >
+		insert into TASK_DETAIL_PROPERTY_TABLE
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				ID,
+			</if>
+			<if test="detailId != null" >
+				DETAIL_ID,
+			</if>
+			<if test="key != null" >
+				KEY,
+			</if>
+			<if test="name != null" >
+				NAME,
+			</if>
+			<if test="value != null" >
+				VALUE,
+			</if>
+			<if test="taskNo != null" >
+				TASK_NO,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="detailId != null" >
+				#{detailId,jdbcType=VARCHAR},
+			</if>
+			<if test="key != null" >
+				#{key,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null" >
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null" >
+				#{value,jdbcType=VARCHAR},
+			</if>
+			<if test="taskNo != null" >
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<insert id="insertSelectiveByMap" parameterType="java.util.Map" >
+		insert into TASK_DETAIL_PROPERTY_TABLE
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				ID,
+			</if>
+			<if test="detailId != null" >
+				DETAIL_ID,
+			</if>
+			<if test="key != null" >
+				KEY,
+			</if>
+			<if test="name != null" >
+				NAME,
+			</if>
+			<if test="value != null" >
+				VALUE,
+			</if>
+			<if test="taskNo != null" >
+				TASK_NO,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="detailId != null" >
+				#{detailId,jdbcType=VARCHAR},
+			</if>
+			<if test="key != null" >
+				#{key,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null" >
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null" >
+				#{value,jdbcType=VARCHAR},
+			</if>
+			<if test="taskNo != null" >
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskDetailPropertyDO" >
+		update TASK_DETAIL_PROPERTY_TABLE
+		<set >
+			<if test="detailId != null" >
+				DETAIL_ID = #{detailId,jdbcType=VARCHAR},
+			</if>
+			<if test="key != null" >
+				KEY = #{key,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null" >
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null" >
+				VALUE = #{value,jdbcType=VARCHAR},
+			</if>
+			<if test="taskNo != null" >
+				TASK_NO = #{taskNo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.task.domain.TaskDetailPropertyDO" >
+    update TASK_DETAIL_PROPERTY_TABLE
+    set DETAIL_ID = #{detailId,jdbcType=VARCHAR},
+      KEY = #{key,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      VALUE = #{value,jdbcType=VARCHAR},
+      TASK_NO = #{taskNo,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

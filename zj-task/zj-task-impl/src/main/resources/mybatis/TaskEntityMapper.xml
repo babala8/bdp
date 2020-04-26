@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.task.repository.TaskEntityMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.task.po.TaskEntityPO">
+		<id column="ID" property="id" jdbcType="VARCHAR"/>
+		<result column="TASK_NO" property="taskNo" jdbcType="VARCHAR"/>
+		<result column="ENTITY_NO" property="entityNo" jdbcType="VARCHAR"/>
+		<result column="PRODUCT_NO" property="productNo" jdbcType="VARCHAR"/>
+		<result column="AMOUNT" property="amount" jdbcType="DECIMAL"/>
+		<result column="PARENT_ENTITY" property="parentEntity" jdbcType="VARCHAR"/>
+		<result column="DIRECTION" property="direction" jdbcType="VARCHAR"/>
+		<result column="LEAF_FLAG" property="leafFlag" jdbcType="DECIMAL"/>
+		<result column="STATUS" property="status" jdbcType="DECIMAL"/>
+		<result column="NOTE" property="note" jdbcType="VARCHAR"/>
+		<result column="DEPOSIT_TYPE" property="depositType" jdbcType="DECIMAL"/>
+		<result column="CUSTOMER_NO" property="customerNo" jdbcType="DECIMAL"/>
+	</resultMap>
+
+	<resultMap id="ContainerInfoMap" type="com.zjft.microservice.treasurybrain.task.dto.ContainerInfoDTO">
+		<result column="ENTITY_NO" jdbcType="VARCHAR" property="entityNo"/>
+		<result column="CONTAINER_TYPE" jdbcType="INTEGER" property="containerType"/>
+		<result column="CONTAINER_NAME" jdbcType="VARCHAR" property="containerName"/>
+	</resultMap>
+
+	<resultMap id="expendResultMap" type="com.zjft.microservice.treasurybrain.task.dto.TaskEntityTableInfoDTO" >
+		<id column="TASK_NO" property="taskNo" jdbcType="VARCHAR" />
+		<id column="ENTITY_NO" property="entityNo" jdbcType="VARCHAR" />
+		<result column="CUSTOMER_NO" property="customerNo" jdbcType="VARCHAR" />
+		<result column="ENTITY_TYPE" property="entityType" jdbcType="INTEGER" />
+		<result column="DIRECTION" property="direction" jdbcType="INTEGER" />
+		<result column="UPPER_NO" property="upperNo" jdbcType="VARCHAR" />
+		<result column="LEAF_FLAG" property="leafFlag" jdbcType="INTEGER" />
+		<result column="STATUS" property="status" jdbcType="INTEGER" />
+		<result column="TASK_TYPE" property="taskType" jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap id="CassetteBagMap" type="com.zjft.microservice.treasurybrain.task.dto.StorageUseCassetteBagDTO">
+		<result column="ID" property="id" jdbcType="VARCHAR"/>
+		<result column="ENTITY_NO" property="cassetteBagNo" jdbcType="VARCHAR"/>
+		<result column="AMOUNT" property="amount" jdbcType="NUMERIC"/>
+	</resultMap>
+
+	<resultMap id="CassetteMap" type="com.zjft.microservice.treasurybrain.task.dto.StorageUseCassetteDTO">
+		<result column="ID" property="id" jdbcType="VARCHAR"/>
+		<result column="ENTITY_NO" property="cassetteNo" jdbcType="VARCHAR"/>
+		<result column="AMOUNT" property="amount" jdbcType="NUMERIC"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+    t.ID, t.TASK_NO, t.ENTITY_NO, t.PRODUCT_NO, t.AMOUNT, t.PARENT_ENTITY, t.DIRECTION,
+    t.LEAF_FLAG, t.NOTE
+  </sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+			parameterType="com.zjft.microservice.treasurybrain.task.po.TaskEntityPO">
+		select
+		<include refid="Base_Column_List"/>
+		from TASK_ENTITY_TABLE t
+		where t.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		and t.ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.task.po.TaskEntityPO">
+		delete from TASK_ENTITY_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		  and ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+  	</delete>
+
+	<delete id="deleteByTaskNo" parameterType="java.lang.String">
+		delete from TASK_ENTITY_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  	</delete>
+
+	<delete id="deleteByTaskNoAndEntityNo" parameterType="java.lang.String" >
+		delete from TASK_ENTITY_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR} and ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+  	</delete>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.task.po.TaskEntityPO">
+		insert into TASK_ENTITY_TABLE (TASK_NO, ENTITY_NO, CUSTOMER_NO,
+		  ENTITY_TYPE, DIRECTION, UPPER_NO,
+		  LEAF_FLAG, STATUS, NOTE
+		  )
+		values (#{taskNo,jdbcType=VARCHAR}, #{entityNo,jdbcType=VARCHAR}, #{customerNo,jdbcType=VARCHAR},
+		  #{entityType,jdbcType=DECIMAL}, #{direction,jdbcType=DECIMAL}, #{upperNo,jdbcType=VARCHAR},
+		  #{leafFlag,jdbcType=DECIMAL}, #{status,jdbcType=DECIMAL}, #{note,jdbcType=VARCHAR}
+		  )
+  	</insert>
+
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.task.po.TaskEntityPO">
+		insert into TASK_ENTITY_TABLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="taskNo != null">
+				TASK_NO,
+			</if>
+			<if test="entityNo != null">
+				ENTITY_NO,
+			</if>
+			<if test="customerNo != null">
+				CUSTOMER_NO,
+			</if>
+			<if test="entityType != null">
+				ENTITY_TYPE,
+			</if>
+			<if test="direction != null">
+				DIRECTION,
+			</if>
+			<if test="upperNo != null">
+				UPPER_NO,
+			</if>
+			<if test="leafFlag != null">
+				LEAF_FLAG,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="note != null">
+				NOTE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="taskNo != null">
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="entityNo != null">
+				#{entityNo,jdbcType=VARCHAR},
+			</if>
+			<if test="customerNo != null">
+				#{customerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="entityType != null">
+				#{entityType,jdbcType=DECIMAL},
+			</if>
+			<if test="direction != null">
+				#{direction,jdbcType=DECIMAL},
+			</if>
+			<if test="upperNo != null">
+				#{upperNo,jdbcType=VARCHAR},
+			</if>
+			<if test="leafFlag != null">
+				#{leafFlag,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=DECIMAL},
+			</if>
+			<if test="note != null">
+				#{note,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertSelectiveByMap" parameterType="java.util.Map">
+		insert into TASK_ENTITY_TABLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id !=''">
+				ID,
+			</if>
+			<if test="taskNo != null and taskNo !=''">
+				TASK_NO,
+			</if>
+			<if test="entityNo != null and entityNo !=''">
+				ENTITY_NO,
+			</if>
+			<if test="productNo != null and productNo !=''">
+				PRODUCT_NO,
+			</if>
+			<if test="amount != null and amount !=''">
+				AMOUNT,
+			</if>
+			<if test="parentEntity != null and parentEntity !=''">
+				PARENT_ENTITY,
+			</if>
+			<if test="direction != null and direction !=''">
+				DIRECTION,
+			</if>
+			<if test="leafFlag != null and leafFlag !=''">
+				LEAF_FLAG,
+			</if>
+			<if test="note != null and note !=''">
+				NOTE,
+			</if>
+			<if test="depositType != null and depositType !=''">
+				DEPOSIT_TYPE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id !=''">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="taskNo != null and taskNo !=''">
+				#{taskNo,jdbcType=VARCHAR},
+			</if>
+			<if test="entityNo != null and entityNo !=''">
+				#{entityNo,jdbcType=VARCHAR},
+			</if>
+			<if test="productNo != null and productNo !=''">
+				#{productNo,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null and amount !=''">
+				#{amount,jdbcType=VARCHAR},
+			</if>
+			<if test="parentEntity != null and parentEntity !=''">
+				#{parentEntity,jdbcType=VARCHAR},
+			</if>
+			<if test="direction != null and direction !=''">
+				#{direction,jdbcType=DECIMAL},
+			</if>
+			<if test="leafFlag != null and leafFlag !=''">
+				#{leafFlag,jdbcType=DECIMAL},
+			</if>
+			<if test="note != null and note !=''">
+				#{note,jdbcType=VARCHAR},
+			</if>
+			<if test="depositType != null and depositType !=''">
+				#{depositType,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.task.po.TaskEntityPO">
+		update TASK_ENTITY_TABLE
+		<set>
+			<if test="customerNo != null">
+				CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+			</if>
+			<if test="entityType != null">
+				ENTITY_TYPE = #{entityType,jdbcType=DECIMAL},
+			</if>
+			<if test="direction != null">
+				DIRECTION = #{direction,jdbcType=DECIMAL},
+			</if>
+			<if test="upperNo != null">
+				UPPER_NO = #{upperNo,jdbcType=VARCHAR},
+			</if>
+			<if test="leafFlag != null">
+				LEAF_FLAG = #{leafFlag,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=DECIMAL},
+			</if>
+			<if test="note != null">
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		and ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.task.po.TaskEntityPO">
+    update TASK_ENTITY_TABLE
+    set CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR},
+      ENTITY_TYPE = #{entityType,jdbcType=DECIMAL},
+      DIRECTION = #{direction,jdbcType=DECIMAL},
+      UPPER_NO = #{upperNo,jdbcType=VARCHAR},
+      LEAF_FLAG = #{leafFlag,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=DECIMAL},
+      NOTE = #{note,jdbcType=VARCHAR}
+    where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+      and ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+  </update>
+
+	<select id="selectByTaskNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from TASK_ENTITY_TABLE t
+		where t.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectContainerCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(ENTITY_NO)
+		from TASK_ENTITY_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectOutInfo" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select t.*,tt.CUSTOMER_NO from TASK_ENTITY_TABLE t
+	left join TASK_TABLE tt on tt.TASK_NO = t.TASK_NO
+	left join TASK_ENTITY_DETAIL TED on t.TASK_NO = TED.TASK_NO
+    where TED.KEY = 'outDate' and TED.value = #{outDate,jdbcType=VARCHAR}
+     and tt.TASK_TYPE = 2 and tt.STATUS in (304,402) and t.PRODUCT_NO ='R0001'
+  </select>
+
+	<select id="qryLowerContainterNoListByNo" resultType="java.lang.String" parameterType="java.lang.String">
+    select
+    ENTITY_NO
+    from TASK_ENTITY_TABLE
+    where PARENT_ENTITY = #{containterNo,jdbcType=VARCHAR} and TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  </select>
+
+	<select id="qryRecoverContainterNoListByNo" resultType="java.lang.String" parameterType="java.lang.String">
+    select
+    ENTITY_NO
+    from TASK_ENTITY_TABLE
+    where PARENT_ENTITY = #{containterNo,jdbcType=VARCHAR} and TASK_NO = #{taskNo,jdbcType=VARCHAR} and DIRECTION = '2'
+  </select>
+
+	<select id="qryByContainerNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List"/>
+		from
+		(select a.*,ROWNUM r from TASK_ENTITY_TABLE a where ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+		order by TASK_NO desc) t
+		where t.r=1
+	</select>
+
+	<select id="qryByTaskNoAndContainerNo" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List"/>
+		from
+		(select a.*,ROWNUM r from TASK_ENTITY_TABLE a where ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+		and TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		order by
+		TASK_NO desc) t
+		where t.r=1
+	</select>
+
+	<select id="qryNewCustomerNoBycontainerNo" resultType="java.lang.String" parameterType="java.lang.String">
+		select
+		TASK_TABLE.CUSTOMER_NO
+		from TASK_ENTITY_TABLE
+        left join TASK_TABLE on TASK_TABLE.TASK_NO = TASK_ENTITY_TABLE.TASK_NO
+		where TASK_ENTITY_TABLE.ENTITY_NO = #{entityNo,jdbcType=VARCHAR} and TASK_ENTITY_TABLE.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectCassetteNos" resultType="java.lang.String" parameterType="java.lang.String">
+		select
+		ENTITY_NO
+		from TASK_ENTITY_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR} and ENTITY_NO =#{entityNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectContainerNoByTaskNo" resultType="java.lang.String" parameterType="java.lang.String">
+		select
+		ENTITY_NO
+		from TASK_ENTITY_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR} and PARENT_ENTITY is null
+	</select>
+
+	<select id="qryContainerInfo" parameterType="java.lang.String" resultMap="ContainerInfoMap">
+		select tt.*,td.CONTAINER_TYPE,ct.NAME as CONTAINER_NAME from
+			(select distinct t.ENTITY_NO,t.TASK_NO
+			from TASK_ENTITY_TABLE t
+			where t.CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR} and t.TASK_NO = #{taskNo,jdbcType=VARCHAR})tt
+		left join TASK_ENTITY_DETAIL td on tt.ENTITY_NO = td.ENTITY_NO and tt.TASK_NO = td.TASK_NO
+		left join CASSETTE_BAG_INFO cbi on tt.ENTITY_NO = cbi.BAG_NO
+		left join CASSETTE_INFO ci on tt.ENTITY_NO = ci.CASSETTE_NO
+		left join CONTAINER_TYPE ct on ct.CONTAINER_TYPE = td.CONTAINER_TYPE
+	</select>
+
+	<select id="selectContainerNoList" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select t.ID,t.TASK_NO,t.ENTITY_NO,
+		t.PRODUCT_NO,t.AMOUNT,t.PARENT_ENTITY,t.DIRECTION,t.LEAF_FLAG,t.DEPOSIT_TYPE,t.NOTE,c.STATUS
+		from TASK_ENTITY_TABLE t
+		left join CASSETTE_INFO c on t.ENTITY_NO = c.CASSETTE_NO
+		where t.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		<if test="direction != null and direction != ''">
+			AND t.DIRECTION = #{direction,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="selectCountByContainerNo" resultType="integer" parameterType="java.lang.String" >
+		select count(1)
+		from TASK_ENTITY_TABLE
+		WHERE ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insertOrUpdateByPrimaryKey"  parameterType="java.util.Map">
+		<selectKey keyProperty="count" resultType="int" order="BEFORE">
+			select count(1) count from TASK_ENTITY_TABLE tet
+			where tet.TASK_NO=#{taskNo,jdbcType = VARCHAR} and tet.ENTITY_NO=#{entityNo,jdbcType = VARCHAR}
+		</selectKey>
+		<if test="count==0">
+			insert into TASK_ENTITY_TABLE( ID, TASK_NO, ENTITY_NO, PRODUCT_NO, AMOUNT, DIRECTION, PARENT_ENTITY, LEAF_FLAG,
+			NOTE, DEPOSIT_TYPE)
+			values (#{id,jdbcType=VARCHAR},#{taskNo,jdbcType=VARCHAR}, #{entityNo,jdbcType=VARCHAR}, #{productNo,jdbcType=VARCHAR},
+			#{amount,jdbcType=DECIMAL}, #{direction,jdbcType=INTEGER}, #{parentEntity,jdbcType=VARCHAR},
+			#{leafFlag,jdbcType=INTEGER}, #{note,jdbcType=VARCHAR},#{depositType,jdbcType=INTEGER})
+		</if>
+		<if test="count>0">
+			update TASK_ENTITY_TABLE
+			set
+			ENTITY_NO = #{entityNo,jdbcType=VARCHAR},
+			PRODUCT_NO = #{productNo,jdbcType=INTEGER},
+			DIRECTION = #{direction,jdbcType=INTEGER},
+			PARENT_ENTITY = #{parentEntity,jdbcType=VARCHAR},
+			LEAF_FLAG = #{leafFlag,jdbcType=INTEGER},
+			NOTE = #{note,jdbcType=INTEGER},
+			AMOUNT = #{amount,jdbcType=DECIMAL},
+			DEPOSIT_TYPE = #{depositType,jdbcType=INTEGER}
+			where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+			and ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+		</if>
+	</insert>
+
+	<select id="selectByCustomerNo" resultMap="expendResultMap" parameterType="java.util.Map" >
+    select
+    t.ID, t.TASK_NO, t.ENTITY_NO, tt.CUSTOMER_NO, t.PRODUCT_NO, t.DIRECTION, t.PARENT_ENTITY, t.amount, t.LEAF_FLAG, t.DEPOSIT_TYPE, t.NOTE,tt.PLAN_FINISH_DATE,tt.TASK_TYPE
+    from TASK_ENTITY_TABLE t
+    left join TASK_TABLE tt on  t.TASK_NO = tt.TASK_NO
+      WHERE tt.CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR} and tt.STATUS = #{status,jdbcType=VARCHAR}
+      order by tt.PLAN_FINISH_DATE desc
+  </select>
+
+	<update id="updateByTaskNoAndCustomerNo" parameterType="java.util.Map" >
+    update TASK_ENTITY_TABLE
+    set   STATUS = #{status,jdbcType=INTEGER}
+    where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+      and CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+  </update>
+
+	<select id="getGoodsByTaskNo" resultType="java.lang.String" parameterType="java.lang.String">
+		select ENTITY_NO from TASK_ENTITY_TABLE
+		where PARENT_ENTITY is null
+		and TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getDevList" resultType="java.lang.String">
+		select distinct CUSTOMER_NO from TASK_ENTITY_TABLE where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByTaskNoAndCustomerNo" resultMap="BaseResultMap" parameterType="java.util.Map"  >
+		select
+		<include refid="Base_Column_List" />
+		from TASK_ENTITY_TABLE t left join task_table b on t.task_no=b.task_no
+		where t.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		and b.customer_no = #{customerNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectTaskNoCount" resultType="integer" parameterType="java.lang.String">
+		select count(1) from TASK_ENTITY_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+    </select>
+
+	<select id="selectAmountByTaskNo" resultType="Double" parameterType="java.lang.String">
+		select NVL(sum(amount) ,0) from TASK_ENTITY_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+    </select>
+
+	<select id="selectByTaskNoAndContainerNo" resultType="integer" parameterType="java.util.Map">
+		select count(1)
+		from TASK_ENTITY_TABLE
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR} and ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getCassetteBagList"
+			resultMap="CassetteBagMap">
+	select a.id,a.ENTITY_NO,a.AMOUNT from TASK_ENTITY_TABLE a left join TASK_TABLE b on a.TASK_NO = b.TASK_NO
+	where a.TASK_NO=#{taskNo,jdbcType=VARCHAR} and b.CUSTOMER_NO=#{devNo,jdbcType=VARCHAR} and  a.PARENT_ENTITY is null
+	</select>
+
+	<select id="getCassetteList" resultMap="CassetteMap">
+	select id,ENTITY_NO,AMOUNT
+	from TASK_ENTITY_TABLE
+	where TASK_NO=#{taskNo,jdbcType=VARCHAR} and PARENT_ENTITY=#{entity,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectOneByTaskNo" resultMap="BaseResultMap" parameterType="java.util.Map"  >
+		select
+		<include refid="Base_Column_List" />
+		from TASK_ENTITY_TABLE t
+		where t.TASK_NO = #{taskNo,jdbcType=VARCHAR}
+		and t.ENTITY_NO = #{entityNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectSumAmount" resultType="java.lang.Integer" parameterType="java.util.Map"  >
+		select  sum(AMOUNT) from TASK_ENTITY_TABLE where TASK_NO =  #{taskNo,jdbcType=VARCHAR} and DIRECTION = #{direction,jdbcType=INTEGER} and PARENT_ENTITY is null
+	</select>
+
+	<select id="selectSumCount" resultType="java.lang.Integer" parameterType="java.util.Map"  >
+		select  count(1) from TASK_ENTITY_TABLE where TASK_NO =  #{taskNo,jdbcType=VARCHAR} and DIRECTION = #{direction,jdbcType=VARCHAR} and PARENT_ENTITY is null
+	</select>
+
+</mapper>

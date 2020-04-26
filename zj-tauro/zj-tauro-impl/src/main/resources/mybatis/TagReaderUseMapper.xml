@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.tauro.repository.TagReaderUseMapper" >
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.tauro.domain.TagReaderUseInfoDO" >
+		<id column="TAGREADER_USE_NO" property="tagReaderUseNo" jdbcType="VARCHAR" />
+		<result column="TAG_READER_NO" property="tagReaderNo" jdbcType="VARCHAR" />
+		<result column="REQUEST_OP_NO" property="requestOpNo" jdbcType="VARCHAR" />
+		<result column="REQUEST_OP_NAME" property="requestOpName" jdbcType="VARCHAR" />
+		<result column="REQUEST_DATE" property="requestDate" jdbcType="VARCHAR" />
+		<result column="REQUEST_TIME" property="requestTime" jdbcType="VARCHAR" />
+		<result column="GRANT_OP_NO" property="grantOpNo" jdbcType="VARCHAR" />
+		<result column="GRANT_OP_NAME" property="grantOpName" jdbcType="VARCHAR" />
+		<result column="REVIEW_RESULT" property="reviewResult" jdbcType="NUMERIC" />
+		<result column="REJECT_REASON" property="rejectReason" jdbcType="VARCHAR" />
+		<result column="GRANT_DATE" property="grantDate" jdbcType="VARCHAR" />
+		<result column="GRANT_TIME" property="grantTime" jdbcType="VARCHAR" />
+		<result column="RETURN_OP_NO" property="returnOpNo" jdbcType="VARCHAR" />
+		<result column="RETURN_OP_NAME" property="returnOpName" jdbcType="VARCHAR" />
+		<result column="RETURN_DATE" property="returnDate" jdbcType="VARCHAR" />
+		<result column="RETURN_TIME" property="returnTime" jdbcType="VARCHAR" />
+		<result column="SIGN_OP_NO" property="signOpNo" jdbcType="VARCHAR" />
+		<result column="SIGN_OP_NAME" property="signOpName" jdbcType="VARCHAR" />
+		<result column="CRASH_FLAG" property="crashFlag" jdbcType="CHAR" />
+		<result column="TAGREADER_USE_STATUS" property="tagReaderUseStatus" jdbcType="NUMERIC" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		TAGREADER_USE_NO, TAG_READER_NO, REQUEST_OP_NO, REQUEST_DATE, REQUEST_TIME,
+		GRANT_OP_NO, REVIEW_RESULT, REJECT_REASON, GRANT_DATE, GRANT_TIME,
+		RETURN_OP_NO, RETURN_DATE, RETURN_TIME, SIGN_OP_NO, CRASH_FLAG, TAGREADER_USE_STATUS
+	</sql>
+
+	<select id="queryTagReaderUseListByPage" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		select t.*, u1.NAME as REQUEST_OP_NAME, u2.NAME as GRANT_OP_NAME ,u3.NAME as RETURN_OP_NAME ,
+		u4.NAME as SIGN_OP_NAME
+		from(
+		select
+		<include refid="Base_Column_List" />
+		from (
+		select o.*,rownum rn from TAG_READER_USE_INFO o
+		<where>
+			<if test="tagReaderNo!= null and tagReaderNo!=''">
+				and TAG_READER_NO like concat(concat('%',#{tagReaderNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="requestOpNo != null and requestOpNo != ''">
+				and
+				<foreach item="item" index="index" collection="userNameList" open="(" separator="or" close=")">
+					REQUEST_OP_NO like concat(concat('%',#{item}),'%')
+					　</foreach>
+			</if>
+			<if test="tagReaderUseStatus != null and tagReaderUseStatus != -1">
+				and TAGREADER_USE_STATUS = #{tagReaderUseStatus,jdbcType=NUMERIC}
+			</if>
+			<if test="requestStartDate != null and requestStartDate != ''">
+				AND REQUEST_DATE &gt;= #{requestStartDate,jdbcType=VARCHAR}
+			</if>
+			<if test="requestEndDate != null and requestEndDate != ''">
+				AND REQUEST_DATE &lt;= #{requestEndDate,jdbcType=VARCHAR}
+			</if>
+			<if test="crashFlag != null and crashFlag != ''">
+				and CRASH_FLAG = #{crashFlag,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by TAGREADER_USE_NO asc)
+		where rn &gt; #{startRow} and rn &lt;= #{endRow})t
+		left join sys_user u1 on t.REQUEST_OP_NO = u1.USERNAME
+		left join sys_user u2 on t.GRANT_OP_NO = u2.USERNAME
+		left join sys_user u3 on t.RETURN_OP_NO = u3.USERNAME
+		left join sys_user u4 on t.SIGN_OP_NO = u4.USERNAME
+	</select>
+
+	<select id="qryTotalRowTagReaderUse" resultType="java.lang.Integer" parameterType="java.util.Map" >
+		select count(1) from TAG_READER_USE_INFO
+		<where>
+			<if test="tagReaderNo!= null and tagReaderNo!=''">
+				and TAG_READER_NO like concat(concat('%',#{tagReaderNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="requestOpNo != null and requestOpNo != ''">
+				and
+				<foreach item="item" index="index" collection="userNameList" open="(" separator="or" close=")">
+					REQUEST_OP_NO like concat(concat('%',#{item}),'%')
+					　</foreach>
+			</if>
+			<if test="tagReaderUseStatus != null and tagReaderUseStatus != -1">
+				and TAGREADER_USE_STATUS = #{tagReaderUseStatus,jdbcType=NUMERIC}
+			</if>
+			<if test="requestStartDate != null and requestStartDate != ''">
+				AND REQUEST_DATE &gt;= #{requestStartDate,jdbcType=VARCHAR}
+			</if>
+			<if test="requestEndDate != null and requestEndDate != ''">
+				AND REQUEST_DATE &lt;= #{requestEndDate,jdbcType=VARCHAR}
+			</if>
+			<if test="crashFlag != null and crashFlag != ''">
+				and CRASH_FLAG = #{crashFlag,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.tauro.po.TagReaderUseInfoPO" >
+		insert into TAG_READER_USE_INFO (
+			TAGREADER_USE_NO, TAG_READER_NO, REQUEST_OP_NO, REQUEST_DATE, REQUEST_TIME,
+			CRASH_FLAG, TAGREADER_USE_STATUS, RETURN_DATE, RETURN_TIME,GRANT_OP_NO
+		)
+		values (
+				   #{tagReaderUseNo,jdbcType=VARCHAR}, #{tagReaderNo,jdbcType=VARCHAR}, #{requestOpNo,jdbcType=VARCHAR},
+				   #{requestDate,jdbcType=VARCHAR}, #{requestTime,jdbcType=VARCHAR},
+				   #{crashFlag,jdbcType=CHAR}, #{tagReaderUseStatus,jdbcType=CHAR},
+				   #{returnDate, jdbcType=VARCHAR}, #{returnTime, jdbcType=VARCHAR}, #{grantOpNo, jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="com.zjft.microservice.treasurybrain.tauro.po.TagReaderUseInfoPO" >
+		update TAG_READER_USE_INFO
+		<set >
+			<if test="tagReaderNo != null" >
+				TAG_READER_NO = #{tagReaderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="requestOpNo != null" >
+				REQUEST_OP_NO = #{requestOpNo,jdbcType=VARCHAR},
+			</if>
+			<if test="requestDate != null" >
+				REQUEST_DATE = #{requestDate,jdbcType=VARCHAR},
+			</if>
+			<if test="requestTime != null" >
+				REQUEST_TIME = #{requestTime,jdbcType=VARCHAR},
+			</if>
+			<if test="crashFlag != null" >
+				CRASH_FLAG = #{crashFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="grantOpNo != null" >
+				GRANT_OP_NO = #{grantOpNo,jdbcType=VARCHAR},
+			</if>
+			<if test="reviewResult != null" >
+				REVIEW_RESULT = #{reviewResult,jdbcType=NUMERIC},
+			</if>
+			<if test="rejectReason != null" >
+				REJECT_REASON = #{rejectReason,jdbcType=VARCHAR},
+			</if>
+			<if test="grantDate != null" >
+				GRANT_DATE = #{grantDate,jdbcType=VARCHAR},
+			</if>
+			<if test="grantTime != null" >
+				GRANT_TIME = #{grantTime,jdbcType=VARCHAR},
+			</if>
+			<if test="returnOpNo != null" >
+				RETURN_OP_NO = #{returnOpNo,jdbcType=VARCHAR},
+			</if>
+			<if test="returnDate != null" >
+				RETURN_DATE = #{returnDate,jdbcType=VARCHAR},
+			</if>
+			<if test="returnTime != null" >
+				RETURN_TIME = #{returnTime,jdbcType=VARCHAR},
+			</if>
+			<if test="signOpNo != null" >
+				SIGN_OP_NO = #{signOpNo,jdbcType=VARCHAR},
+			</if>
+			<if test="tagReaderUseStatus != null" >
+				TAGREADER_USE_STATUS = #{tagReaderUseStatus,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where TAGREADER_USE_NO = #{tagReaderUseNo,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delTagReaderUseInfoByTagReaderUseNo" parameterType="java.lang.String">
+		delete from TAG_READER_USE_INFO
+		where TAGREADER_USE_NO = #{tagReaderUseNo,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="getMaxNo" resultType="java.lang.String" >
+		select max(no) as maxNo from (
+										 select substr(TAGREADER_USE_NO,9,14) as no from TAG_READER_USE_INFO
+									 )
+	</select>
+
+	<update id="updateTagReaderStatus" parameterType="com.zjft.microservice.treasurybrain.tauro.po.TagReaderUseInfoPO" >
+		update TAG_READER_INFO
+		set STATUS = #{status,jdbcType=NUMERIC}
+		where TAG_READER_NO = #{tagReaderNo,jdbcType=VARCHAR}
+	</update>
+
+	<select id="queryTagReaderUseDetail" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select t.*, u1.NAME as REQUEST_OP_NAME, u2.NAME as GRANT_OP_NAME ,u3.NAME as RETURN_OP_NAME ,
+		u4.NAME as SIGN_OP_NAME
+		from (
+		select
+		<include refid="Base_Column_List" />
+		from TAG_READER_USE_INFO
+		where TAGREADER_USE_NO = #{tagReaderUseNo,jdbcType=VARCHAR})t
+		left join sys_user u1 on t.REQUEST_OP_NO = u1.USERNAME
+		left join sys_user u2 on t.GRANT_OP_NO = u2.USERNAME
+		left join sys_user u3 on t.RETURN_OP_NO = u3.USERNAME
+		left join sys_user u4 on t.SIGN_OP_NO = u4.USERNAME
+	</select>
+
+	<update id="audit" parameterType="com.zjft.microservice.treasurybrain.tauro.po.TagReaderUseInfoPO" >
+		update TAG_READER_USE_INFO
+		<set >
+			<if test="grantOpNo != null" >
+				GRANT_OP_NO = #{grantOpNo,jdbcType=VARCHAR},
+			</if>
+			<if test="reviewResult != null" >
+				REVIEW_RESULT = #{reviewResult,jdbcType=NUMERIC},
+			</if>
+			<if test="rejectReason != null" >
+				REJECT_REASON = #{rejectReason,jdbcType=VARCHAR},
+			</if>
+			<if test="grantDate != null" >
+				GRANT_DATE = #{grantDate,jdbcType=VARCHAR},
+			</if>
+			<if test="grantTime != null" >
+				GRANT_TIME = #{grantTime,jdbcType=VARCHAR},
+			</if>
+			<if test="tagReaderUseStatus != null" >
+				TAGREADER_USE_STATUS = #{tagReaderUseStatus,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where TAGREADER_USE_NO = #{tagReaderUseNo,jdbcType=VARCHAR}
+	</update>
+
+	<update id="returnBack" parameterType="com.zjft.microservice.treasurybrain.tauro.po.TagReaderUseInfoPO" >
+		update TAG_READER_USE_INFO
+		<set >
+			<if test="returnOpNo != null" >
+				RETURN_OP_NO = #{returnOpNo,jdbcType=VARCHAR},
+			</if>
+			<if test="returnDate != null" >
+				RETURN_DATE = #{returnDate,jdbcType=VARCHAR},
+			</if>
+			<if test="returnTime != null" >
+				RETURN_TIME = #{returnTime,jdbcType=VARCHAR},
+			</if>
+			<if test="signOpNo != null" >
+				SIGN_OP_NO = #{signOpNo,jdbcType=VARCHAR},
+			</if>
+			<if test="tagReaderUseStatus != null" >
+				TAGREADER_USE_STATUS = #{tagReaderUseStatus,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where TAGREADER_USE_NO = #{tagReaderUseNo,jdbcType=VARCHAR}
+	</update>
+
+</mapper>

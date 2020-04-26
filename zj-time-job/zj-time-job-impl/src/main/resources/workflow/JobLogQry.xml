@@ -1,0 +1,22 @@
+<zj-orchestration id="jobLogQry" name="定时任务日志查询"
+				  requestObject="java.util.HashMap"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.PageDTO"
+				  tempObject="java.lang.String"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+	</zj-component>
+
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.timejob.component.JobLogComponent.jobLogQry" next="">
+
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="F"/>
+	</zj-component>
+
+	<zj-component id="F" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.timejob.component.JobLogComponent.jobLogQryFail" next="">
+
+		<exit path="fail" next="end"/>
+	</zj-component>
+</zj-orchestration>

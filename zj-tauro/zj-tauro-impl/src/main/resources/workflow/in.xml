@@ -1,0 +1,15 @@
+<zj-orchestration id="in" name="入库交接"
+				  requestObject="com.zjft.microservice.treasurybrain.common.dto.TaskTransferDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.ObjectDTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="1fajmhstzrklc">
+	</zj-component>
+	<zj-component id="1fajmhstzrklc" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.tauro.component.InComponent.recover" next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

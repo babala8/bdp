@@ -1,0 +1,16 @@
+<zj-orchestration id="QryBiztxlog" name="分页查询推送信息列表"
+				  requestObject="java.util.HashMap"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.PageDTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+	</zj-component>
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.accountscenter.component.BiztxlogComponent.qryBiztxlog"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

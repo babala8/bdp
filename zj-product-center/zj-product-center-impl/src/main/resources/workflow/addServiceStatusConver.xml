@@ -1,0 +1,27 @@
+<zj-orchestration id="addServiceStatusConver" name="增加产品状态节点信息"
+				  requestObject="com.zjft.microservice.treasurybrain.productcenter.dto.ServiceStatusConvertDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.ObjectDTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="@Transactional(rollbackFor &#x3D; Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="pcqjbrdjxibk">
+	</zj-component>
+	<zj-component id="pcqjbrdjxibk" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.productcenter.component.ServiceComponent.addProductStatusConverCheck"
+				  next="">
+		<exit path="ok" next="1cxs8427s2t4w"/>
+		<exit path="fail" next="78264b8dx0jk"/>
+	</zj-component>
+	<zj-component id="1cxs8427s2t4w" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.productcenter.component.ServiceComponent.addProductStatusConver"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="78264b8dx0jk"/>
+	</zj-component>
+	<zj-component id="78264b8dx0jk" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.productcenter.component.ServiceComponent.addProductStatusConverFail"
+				  next="">
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

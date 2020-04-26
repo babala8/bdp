@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.param.repository.DevRuleExecMapper" >
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.param.domain.DevRuleExec" >
+		<id column="DEV_NO" property="devNo" jdbcType="VARCHAR" />
+		<id column="START_DATE" property="startDate" jdbcType="VARCHAR" />
+		<id column="END_DATE" property="endDate" jdbcType="VARCHAR" />
+		<result column="ADDNOTES_RULE_ID" property="addnotesRuleId" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		DEV_NO, START_DATE, END_DATE, ADDNOTES_RULE_ID, STATUS
+	</sql>
+
+	<select id="qryTotalRowRule"  parameterType="java.util.Map"  resultType="java.lang.Integer">
+		select
+			count(1)
+		from dev_rule_exec_table o
+			<where>
+				<if test="addnotesRuleId != null and addnotesRuleId != ''" >
+					AND o.ADDNOTES_RULE_ID like concat(concat('%',#{addnotesRuleId,jdbcType=VARCHAR}),'%')
+				</if>
+				<if test="devNo != null and devNo != ''" >
+					AND o.DEV_NO like concat(concat('%',#{devNo,jdbcType=VARCHAR}),'%')
+				</if>
+				<if test="status != null and status != -1">
+					AND o.STATUS = #{status,jdbcType=NUMERIC}
+				</if>
+				<if test="startDate != null and startDate != ''">
+					AND o.START_DATE &gt;= #{startDate,jdbcType=VARCHAR}
+				</if>
+				<if test="endDate != null and endDate != ''">
+					AND o.END_DATE &lt;= #{endDate,jdbcType=VARCHAR}
+				</if>
+				<if test="orgNo !=null and orgNo != ''">
+					AND o.dev_no in (
+						select d.no
+						from dev_base_info d,sys_org ot
+						where d.org_no = ot.no
+							AND exists (select tOrg.no from SYS_ORG tOrg
+						where tOrg.no= #{orgNo,jdbcType=VARCHAR} and ot.left &gt;= tOrg.LEFT and ot.right &lt;= tOrg.RIGHT
+						)
+					)
+				</if>
+			</where>
+	</select>
+  
+    <select id="qryDevRuleExec" resultMap="BaseResultMap">
+		select tt.* from(
+		select t.*,rownum as rn from(
+		select
+		<include refid="Base_Column_List" />
+		from dev_rule_exec_table o
+		<where>
+			<if test="addnotesRuleId != null and addnotesRuleId != ''" >
+				AND o.ADDNOTES_RULE_ID like concat(concat('%',#{addnotesRuleId,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="devNo != null and devNo != ''" >
+				AND o.DEV_NO like concat(concat('%',#{devNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="status != null and status != -1">
+				AND o.STATUS = #{status,jdbcType=NUMERIC}
+			</if>
+			<if test="startDate != null and startDate != ''">
+				AND o.START_DATE &gt;= #{startDate,jdbcType=VARCHAR}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND o.END_DATE &lt;= #{endDate,jdbcType=VARCHAR}
+			</if>
+			<if test="orgNo !=null and orgNo != ''">
+				AND o.dev_no in (
+				select d.no
+				from dev_base_info d
+				where
+				d.org_no in (
+				select ot.no from SYS_ORG ot,(select so.no as sono,so.left as soleft,so.right as soright
+				from SYS_ORG so where so.no = #{orgNo,jdbcType=VARCHAR}) so1
+				where
+				ot.left &gt;= so1.soleft
+				AND ot.right &lt;= so1.soright
+				)
+				)
+			</if>
+
+		</where>
+		order by o.DEV_NO desc
+		) t
+		) tt
+		where rn &gt; #{startRow,jdbcType=NUMERIC} and rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+  
+	<select id="isConflict"  resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevRuleExecKey" >
+		select
+			<include refid="Base_Column_List" />
+		from dev_rule_exec_table
+		where DEV_NO = #{devNo,jdbcType=VARCHAR}
+		and ((START_DATE &lt;= #{startDate,jdbcType=VARCHAR}
+			AND END_DATE &gt;= #{startDate,jdbcType=VARCHAR})
+		or  (START_DATE &lt;= #{endDate,jdbcType=VARCHAR}
+			AND END_DATE &gt;= #{endDate,jdbcType=VARCHAR})
+		or  (START_DATE &gt;= #{startDate,jdbcType=VARCHAR}
+			AND END_DATE &lt;= #{endDate,jdbcType=VARCHAR}))
+	</select>
+  
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevRuleExecKey" >
+		select
+			<include refid="Base_Column_List" />
+		from dev_rule_exec_table
+		where DEV_NO = #{devNo,jdbcType=VARCHAR}
+			and START_DATE = #{startDate,jdbcType=VARCHAR}
+			and END_DATE = #{endDate,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevRuleExecKey" >
+		delete from dev_rule_exec_table
+		where DEV_NO = #{devNo,jdbcType=VARCHAR}
+			and START_DATE = #{startDate,jdbcType=VARCHAR}
+			and END_DATE = #{endDate,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevRuleExec" >
+		insert into dev_rule_exec_table (DEV_NO, START_DATE, END_DATE,
+			ADDNOTES_RULE_ID, STATUS)
+		values (#{devNo,jdbcType=VARCHAR}, #{startDate,jdbcType=VARCHAR}, #{endDate,jdbcType=VARCHAR},
+			#{addnotesRuleId,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER})
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevRuleExec" >
+		insert into dev_rule_exec_table
+			<trim prefix="(" suffix=")" suffixOverrides="," >
+				<if test="devNo != null" >
+					DEV_NO,
+				</if>
+				<if test="startDate != null" >
+					START_DATE,
+				</if>
+				<if test="endDate != null" >
+					END_DATE,
+				</if>
+				<if test="addnotesRuleId != null" >
+					ADDNOTES_RULE_ID,
+				</if>
+				<if test="status != null" >
+					STATUS,
+				</if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides="," >
+				<if test="devNo != null" >
+					#{devNo,jdbcType=VARCHAR},
+				</if>
+				<if test="startDate != null" >
+					#{startDate,jdbcType=VARCHAR},
+				</if>
+				<if test="endDate != null" >
+					#{endDate,jdbcType=VARCHAR},
+				</if>
+				<if test="addnotesRuleId != null" >
+					#{addnotesRuleId,jdbcType=VARCHAR},
+				</if>
+				<if test="status != null" >
+					#{status,jdbcType=INTEGER},
+				</if>
+			</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevRuleExec" >
+		update dev_rule_exec_table
+			<set >
+				<if test="addnotesRuleId != null" >
+					ADDNOTES_RULE_ID = #{addnotesRuleId,jdbcType=VARCHAR},
+				</if>
+				<if test="status != null" >
+					STATUS = #{status,jdbcType=INTEGER},
+				</if>
+			</set>
+		where DEV_NO = #{devNo,jdbcType=VARCHAR}
+			and START_DATE = #{startDate,jdbcType=VARCHAR}
+			and END_DATE = #{endDate,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevRuleExec" >
+		update dev_rule_exec_table
+			set ADDNOTES_RULE_ID = #{addnotesRuleId,jdbcType=VARCHAR},
+			STATUS = #{status,jdbcType=INTEGER}
+		where DEV_NO = #{devNo,jdbcType=VARCHAR}
+			and START_DATE = #{startDate,jdbcType=VARCHAR}
+			and END_DATE = #{endDate,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectDevRuleExecByKey" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.param.domain.DevRuleExecKey" >
+		select
+			<include refid="Base_Column_List" />
+		from dev_rule_exec_table
+		where DEV_NO = #{devNo,jdbcType=VARCHAR}
+			and START_DATE &lt;= #{startDate,jdbcType=VARCHAR}
+			and END_DATE &gt;= #{endDate,jdbcType=VARCHAR}
+			and ROWNUM &lt; 2
+			order by START_DATE desc
+	</select>
+
+</mapper>

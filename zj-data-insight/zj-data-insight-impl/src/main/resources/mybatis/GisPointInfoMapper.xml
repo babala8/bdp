@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.datainsight.repository.GisPointInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.datainsight.domain.GisPointInfoDO" >
+    <id column="POINT_ID" property="pointId" jdbcType="VARCHAR" />
+    <result column="POINT_CREATOR" property="pointCreator" jdbcType="VARCHAR" />
+    <result column="POINT_ORGNO" property="pointOrgno" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="LASTEST_MOD_OP" property="lastestModOp" jdbcType="VARCHAR" />
+    <result column="LASTEST_MOD_TIME" property="lastestModTime" jdbcType="VARCHAR" />
+    <result column="POINT_HTML" property="pointHtml" jdbcType="LONGVARCHAR" />
+    <result column="POINT_JS" property="pointJs" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    POINT_ID, POINT_CREATOR, POINT_ORGNO, CREATE_DATE, STATUS, LASTEST_MOD_OP, LASTEST_MOD_TIME
+  </sql>
+
+  <sql id="Blob_Column_List" >
+    POINT_HTML, POINT_JS
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from gis_point_info
+    where POINT_ID = #{pointId,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from gis_point_info
+    where POINT_ID = #{pointId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.datainsight.domain.GisPointInfoDO" >
+    insert into gis_point_info (POINT_ID, POINT_CREATOR, POINT_ORGNO,
+      CREATE_DATE, STATUS, LASTEST_MOD_OP,
+      LASTEST_MOD_TIME, POINT_HTML, POINT_JS
+      )
+    values (#{pointId,jdbcType=VARCHAR}, #{pointCreator,jdbcType=VARCHAR}, #{pointOrgno,jdbcType=VARCHAR},
+      #{createDate,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{lastestModOp,jdbcType=VARCHAR},
+      #{lastestModTime,jdbcType=VARCHAR}, #{pointHtml,jdbcType=LONGVARCHAR}, #{pointJs,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.datainsight.domain.GisPointInfoDO" >
+    insert into gis_point_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pointId != null" >
+        POINT_ID,
+      </if>
+      <if test="pointCreator != null" >
+        POINT_CREATOR,
+      </if>
+      <if test="pointOrgno != null" >
+        POINT_ORGNO,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="lastestModOp != null" >
+        LASTEST_MOD_OP,
+      </if>
+      <if test="lastestModTime != null" >
+        LASTEST_MOD_TIME,
+      </if>
+      <if test="pointHtml != null" >
+        POINT_HTML,
+      </if>
+      <if test="pointJs != null" >
+        POINT_JS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pointId != null" >
+        #{pointId,jdbcType=VARCHAR},
+      </if>
+      <if test="pointCreator != null" >
+        #{pointCreator,jdbcType=VARCHAR},
+      </if>
+      <if test="pointOrgno != null" >
+        #{pointOrgno,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="lastestModOp != null" >
+        #{lastestModOp,jdbcType=VARCHAR},
+      </if>
+      <if test="lastestModTime != null" >
+        #{lastestModTime,jdbcType=VARCHAR},
+      </if>
+      <if test="pointHtml != null" >
+        #{pointHtml,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="pointJs != null" >
+        #{pointJs,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.datainsight.domain.GisPointInfoDO" >
+    update gis_point_info
+    <set >
+      <if test="pointCreator != null" >
+        POINT_CREATOR = #{pointCreator,jdbcType=VARCHAR},
+      </if>
+      <if test="pointOrgno != null" >
+        POINT_ORGNO = #{pointOrgno,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="lastestModOp != null" >
+        LASTEST_MOD_OP = #{lastestModOp,jdbcType=VARCHAR},
+      </if>
+      <if test="lastestModTime != null" >
+        LASTEST_MOD_TIME = #{lastestModTime,jdbcType=VARCHAR},
+      </if>
+      <if test="pointHtml != null" >
+        POINT_HTML = #{pointHtml,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="pointJs != null" >
+        POINT_JS = #{pointJs,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where POINT_ID = #{pointId,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zjft.microservice.treasurybrain.datainsight.domain.GisPointInfoDO" >
+    update gis_point_info
+    set POINT_CREATOR = #{pointCreator,jdbcType=VARCHAR},
+      POINT_ORGNO = #{pointOrgno,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=INTEGER},
+      LASTEST_MOD_OP = #{lastestModOp,jdbcType=VARCHAR},
+      LASTEST_MOD_TIME = #{lastestModTime,jdbcType=VARCHAR},
+      POINT_HTML = #{pointHtml,jdbcType=LONGVARCHAR},
+      POINT_JS = #{pointJs,jdbcType=LONGVARCHAR}
+    where POINT_ID = #{pointId,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.datainsight.domain.GisPointInfoDO" >
+    update gis_point_info
+    set POINT_CREATOR = #{pointCreator,jdbcType=VARCHAR},
+      POINT_ORGNO = #{pointOrgno,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=INTEGER},
+      LASTEST_MOD_OP = #{lastestModOp,jdbcType=VARCHAR},
+      LASTEST_MOD_TIME = #{lastestModTime,jdbcType=VARCHAR}
+    where POINT_ID = #{pointId,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="selectByOrgNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from gis_point_info
+    where POINT_ORGNO = #{pointOrgno,jdbcType=VARCHAR}
+  </select>
+
+
+  <update id="updateByOrgNo" parameterType="com.zjft.microservice.treasurybrain.datainsight.domain.GisPointInfoDO" >
+    update gis_point_info
+    set STATUS = #{status,jdbcType=INTEGER},
+      LASTEST_MOD_OP = #{lastestModOp,jdbcType=VARCHAR},
+      LASTEST_MOD_TIME = #{lastestModTime,jdbcType=VARCHAR},
+      POINT_HTML = #{pointHtml,jdbcType=LONGVARCHAR},
+      POINT_JS = #{pointJs,jdbcType=LONGVARCHAR}
+    where POINT_ORGNO = #{pointOrgno,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="createOrUpdateByOrgNo" parameterType="com.zjft.microservice.treasurybrain.datainsight.domain.GisPointInfoDO">
+	    <selectKey keyProperty="count" resultType="int" order="BEFORE">
+	    	select count(1) from gis_point_info where POINT_ORGNO = #{pointOrgno,jdbcType=VARCHAR}
+	  	</selectKey>
+	  	<if test="count == 0">
+			insert into gis_point_info (POINT_ID, POINT_CREATOR, POINT_ORGNO,
+			CREATE_DATE, STATUS,POINT_HTML, POINT_JS)
+			values (#{pointId,jdbcType=VARCHAR}, #{pointCreator,jdbcType=VARCHAR}, #{pointOrgno,jdbcType=VARCHAR},
+			#{createDate,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{pointHtml,jdbcType=LONGVARCHAR}, #{pointJs,jdbcType=LONGVARCHAR})
+		</if>
+		<if test="count > 0">
+			update gis_point_info
+		    set STATUS = #{status,jdbcType=INTEGER},
+			LASTEST_MOD_OP = #{lastestModOp,jdbcType=VARCHAR},
+			LASTEST_MOD_TIME = #{lastestModTime,jdbcType=VARCHAR},
+			POINT_HTML = #{pointHtml,jdbcType=LONGVARCHAR},
+			POINT_JS = #{pointJs,jdbcType=LONGVARCHAR}
+		    where POINT_ORGNO = #{pointOrgno,jdbcType=VARCHAR}
+		</if>
+    </insert>
+</mapper>

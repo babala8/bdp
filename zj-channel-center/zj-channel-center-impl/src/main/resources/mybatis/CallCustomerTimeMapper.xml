@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.channelcenter.repository.CallCustomerTimeMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.common.domain.CallCustomerTime" >
+		<id column="CUSTOMER_NO" property="customerNo" jdbcType="VARCHAR" />
+		<result column="CLR_TIME_INTERVAL" property="clrTimeInterval" jdbcType="NUMERIC" />
+		<result column="ARRIVAL_TIME" property="arrivalTime" jdbcType="VARCHAR" />
+		<result column="CLR_DAY" property="clrDay" jdbcType="NUMERIC" />
+		<result column="CALL_CUSTOMER_LINE" property="callCustomerLine" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="BaseResultMap2" type="com.zjft.microservice.treasurybrain.channelcenter.po.CallCustomerTimePO">
+		<id column="CUSTOMER_NO" property="customerNo" jdbcType="VARCHAR"/>
+		<result column="CLR_TIME_INTERVAL" property="clrTimeInterval" jdbcType="INTEGER"/>
+		<result column="ARRIVAL_TIME" property="arrivalTime" jdbcType="VARCHAR" />
+		<result column="CLR_DAY" property="clrDay" jdbcType="NUMERIC" />
+		<result column="CALL_CUSTOMER_LINE" property="callCustomerLine" jdbcType="VARCHAR" />
+		<result column="CUSTOMER_SHORT_NAME" property="customerName" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ExtandMap" type="com.zjft.microservice.treasurybrain.channelcenter.domain.CallCustomerTimeDO" extends="BaseResultMap2">
+		<result column="LINE_NAME" property="callCustomerLineName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+    	CUSTOMER_NO, CLR_TIME_INTERVAL, ARRIVAL_TIME, CLR_DAY, CALL_CUSTOMER_LINE
+    </sql>
+
+	<select id="selectByPrimaryKey" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from CALL_CUSTOMER_DATE_TABLE
+		where CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+		and CALL_CUSTOMER_LINE = #{callCustomerLine,jdbcType=VARCHAR}
+		and CLR_DAY=#{clrDay,jdbcType=NUMERIC}
+		and CLR_TIME_INTERVAL = #{clrTimeInterval,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByCustomerNo" parameterType="java.lang.String" >
+		delete from CALL_CUSTOMER_DATE_TABLE
+		where CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+  	</delete>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.common.domain.CallCustomerTime" >
+		insert into CALL_CUSTOMER_DATE_TABLE(CUSTOMER_NO,CALL_CUSTOMER_LINE,CLR_DAY,CLR_TIME_INTERVAL,ARRIVAL_TIME)
+		values (#{customerNo,jdbcType=VARCHAR},#{callCustomerLine,jdbcType=VARCHAR},#{clrDay,jdbcType=NUMERIC},#{clrTimeInterval,jdbcType=VARCHAR},#{arrivalTime,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.common.domain.CallCustomerTime">
+		update CALL_CUSTOMER_DATE_TABLE
+        set  ARRIVAL_TIME = #{arrivalTime,jdbcType=VARCHAR}
+        where CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+              and CALL_CUSTOMER_LINE = #{callCustomerLine,jdbcType=VARCHAR}
+              and CLR_DAY=#{clrDay,jdbcType=NUMERIC}
+              and CLR_TIME_INTERVAL = #{clrTimeInterval,jdbcType=CHAR}
+	</update>
+
+	<select id="selectlineNoList" resultType="java.lang.String" parameterType="java.lang.String">
+		select distinct CALL_CUSTOMER_LINE
+		from CALL_CUSTOMER_DATE_TABLE
+		where CUSTOMER_NO=#{customerNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectDctVOList" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT ct.CALL_CLR_PERIOD,cd.CLR_TIME_INTERVAL,cd.CUSTOMER_NO,cd.ARRIVAL_TIME,
+		cd.CLR_DAY
+		FROM CALL_CUSTOMER_DATE_TABLE cd,CALL_CUSTOMER_TABLE ct
+		WHERE cd.CUSTOMER_NO =ct.CUSTOMER_NO
+		AND cd.CALL_CUSTOMER_LINE = #{callCustomerLine,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryByCustomerNo" resultMap="ExtandMap" parameterType="String">
+		select cd.CUSTOMER_NO, cd.CLR_TIME_INTERVAL, cd.ARRIVAL_TIME, cd.CLR_DAY, cd.CALL_CUSTOMER_LINE,l.LINE_NAME
+		from CALL_CUSTOMER_DATE_TABLE cd
+		left join LINE_TABLE l on cd.CALL_CUSTOMER_LINE = l.LINE_NO
+		where cd.CUSTOMER_NO = #{customerNo,jdbcType = VARCHAR}
+	</select>
+
+	<select id="qryByLineNoAndWeekDay" resultMap="BaseResultMap2">
+		select c.CUSTOMER_NO, c.CLR_TIME_INTERVAL, c.CLR_DAY, c.ARRIVAL_TIME, c.CALL_CUSTOMER_LINE,CCT.CUSTOMER_SHORT_NAME,
+		CCT.ADDRESS
+		from CALL_CUSTOMER_DATE_TABLE c left join CALL_CUSTOMER_TABLE CCT on c.CUSTOMER_NO = CCT.CUSTOMER_NO
+		where c.CLR_DAY=#{weekDay,jdbcType = VARCHAR} and c.CALL_CUSTOMER_LINE = #{lineNo,jdbcType = VARCHAR}
+	</select>
+
+</mapper>

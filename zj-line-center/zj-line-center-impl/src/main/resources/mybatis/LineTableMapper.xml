@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.linecenter.repository.LineTableMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.LineTableDO">
+		<id column="LINE_NO" property="lineNo" jdbcType="VARCHAR"/>
+		<result column="LINE_NAME" property="lineName" jdbcType="VARCHAR"/>
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR"/>
+		<result column="NOTE" property="note" jdbcType="VARCHAR"/>
+		<result column="ADD_CLR_PERIOD" property="addClrPeriod" jdbcType="VARCHAR"/>
+		<result column="LINE_TYPE" property="lineType" jdbcType="INTEGER"/>
+		<result column="CLR_CNETER_NAME" property="clrCenterName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+
+
+	<sql id="Base_Column_List" >
+    LINE_NO, LINE_NAME, ADD_CLR_PERIOD, NOTE, CLR_CENTER_NO, LINE_TYPE
+  </sql>
+
+	<select id="getLineByLineType" resultMap="BaseResultMap" parameterType="map">
+		select l.LINE_NO,l.LINE_NAME,l.ADD_CLR_PERIOD, l.NOTE, l.CLR_CENTER_NO,l.line_type from LINE_TABLE l
+		where
+		l.LINE_TYPE like concat('%',concat(#{lineType,jdbcType = INTEGER},'%'))
+		<if test="null!=clrCenterNo and ''!=clrCenterNo">
+			and l.CLR_CENTER_NO = #{clrCenterNo,jdbcType = VARCHAR}
+		</if>
+		--权限控制
+		<if test="null!=orgNo and ''!=orgNo">
+		and l.CLR_CENTER_NO in (select o.NO from SYS_ORG o
+				where exists(select from SYS_ORG o2
+						where o2.LEFT>=o.LEFT and o2.RIGHT>=o.RIGHT and o2.NO = #{orgNo,jdbcType=VARCHAR}) )
+		</if>
+	</select>
+
+	<select id="getTodayLine" resultType="java.lang.String" parameterType="java.lang.String">
+		select distinct a.LINE_NAME from TASK_TABLE d
+		LEFT JOIN TASK_LINE c on d.TASK_NO=c.TASK_NO
+		LEFT JOIN LINE_TABLE a
+		on a.LINE_NO=c.LINE_WORK_ID
+		where d.STATUS = #{status,jdbcType=NUMERIC} and d.PLAN_FINISH_DATE = #{planFinishDate,jdbcType=VARCHAR}
+		  and d.OP_NO1 = #{opNo,jdbcType=VARCHAR}
+		  or d.OP_NO2  = #{opNo,jdbcType=VARCHAR}
+	</select>
+
+
+
+
+
+
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from line_table
+    where LINE_NO = #{lineNo,jdbcType=VARCHAR}
+  </delete>
+
+	<insert id="insertbyMap" parameterType="java.util.Map" >
+    insert into LINE_TABLE (LINE_NO, LINE_NAME, ADD_CLR_PERIOD,
+      NOTE, CLR_CENTER_NO,LINE_TYPE)
+    values (#{lineNo,jdbcType=VARCHAR}, #{lineName,jdbcType=VARCHAR}, #{addClrPeriod,jdbcType=DECIMAL},
+      #{note,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR},#{lineType,jdbcType=INTEGER})
+  </insert>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select
+		<include refid="Base_Column_List" />
+		from line_table
+		where LINE_NO = #{lineNo,jdbcType=VARCHAR}
+	</select>
+	<select id="getAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from line_table
+	</select>
+
+	<select id="qryTotalRowPlan"  parameterType="java.util.Map"  resultType="java.lang.Integer">
+		select
+		count(1)
+		from LINE_TABLE t
+		<where>
+			<if test="clrCenterNo != null and clrCenterNo != ''" >
+				AND t.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+			<if test="lineName != null and lineName != ''">
+				AND t.LINE_Name like concat(concat('%',#{lineName,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="lineType != null and lineType != -1">
+				AND t.LINE_TYPE = #{lineType,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+	<select id="rowSetList" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from line_table
+		WHERE LINE_NO LIKE concat((#{clrCenterNo,jdbcType=VARCHAR}),'%')
+		AND LINE_TYPE =  #{lineType,jdbcType=INTEGER}
+	</select>
+	<select id="rowSetList1" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from line_table
+		WHERE LINE_NO = #{lineNo,jdbcType=VARCHAR}
+	</select>
+	<select id="getLineNosWithTypeAndClrNo" resultType="string" parameterType="map">
+		select l.LINE_NO
+		from line_table l
+		where 1=1
+		<if test="null!=lineType"> and l.LINE_TYPE=#{lineType,jdbcType=INTEGER} </if>
+		<if test="null!=clrCenterNo and ''!=clrCenterNo">and l.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}</if>
+	</select>
+	<update id="updateByMap" parameterType="java.util.Map" >
+		update line_table
+		<set >
+			<if test="lineName != null and lineName!=''" >
+				LINE_NAME = #{lineName,jdbcType=VARCHAR},
+			</if>
+			<if test="addClrPeriod != null" >
+				ADD_CLR_PERIOD = #{addClrPeriod,jdbcType=DECIMAL},
+			</if>
+			<if test="note != null and note!=''" >
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo!=''" >
+				CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+			</if>
+			<if test="lineType != null" >
+				LINE_TYPE = #{lineType,jdbcType=INTEGER},
+			</if>
+		</set>
+		where LINE_NO = #{lineNo,jdbcType=VARCHAR}
+	</update>
+	<select id="qryLineListByMap" resultMap="BaseResultMap" >
+		select <include refid="Base_Column_List" />
+		from ine_table o
+		<where>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND o.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+			<if test="lineType != null and lineType != -1">
+				AND o.LINE_TYPE = #{lineType,jdbcType=INTEGER}
+			</if>
+		</where>
+		order by o.LINE_NO
+	</select>
+	<select id="getLineListByDateAndClrNo" resultMap="BaseResultMap" >
+	select t.line_no, t.LINE_NAME
+	 from line_table t
+	 where t.clr_center_no = #{clrCenterNo,jdbcType=VARCHAR}
+    	and t.line_no in (
+		select distinct r.LINE_NO from LINE_WORK_TABLE r
+		where r.the_year_month = substr(#{lineDate,jdbcType=VARCHAR}, 0, 7)
+		and r.the_day = substr(#{lineDate,jdbcType=VARCHAR}, 9)
+		)
+    	order by t.line_no
+  </select>
+	<select id="qryAddnotesLine" resultMap="BaseResultMap">
+		select tt.* from (select t.*, rownum as rn from (
+		select
+		<include refid="Base_Column_List"/>
+		from LINE_TABLE o
+		<where>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND o.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+			<if test="lineName != null and lineName != ''">
+				AND o.LINE_NAME like concat(concat('%',#{lineName,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="lineType != null and lineType != -1">
+				AND o.LINE_TYPE = #{lineType,jdbcType=INTEGER}
+			</if>
+		</where>
+		order by o.LINE_NO asc
+		) t ) tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+	<select id="qryLineNameExist" resultType="int">
+		select count(1) from line_table where line_name= #{lineName,jdbcType=VARCHAR}
+	</select>
+	<select id="getLineNoMax" resultType="string">
+    select max(LINE_NO) from ADDNOTES_LINE_TABLE where LINE_NO like concat((#{clrCenterNo,jdbcType=VARCHAR}),'%')
+ </select>
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineTableDO" >
+    insert into LINE_TABLE (LINE_NO, LINE_NAME, ADD_CLR_PERIOD,
+      NOTE, CLR_CENTER_NO,LINE_TYPE)
+    values (#{lineNo,jdbcType=VARCHAR}, #{lineName,jdbcType=VARCHAR}, #{addClrPeriod,jdbcType=DECIMAL},
+      #{note,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR},#{lineType,jdbcType=INTEGER})
+  </insert>
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

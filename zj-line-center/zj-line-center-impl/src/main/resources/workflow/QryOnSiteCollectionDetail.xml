@@ -1,0 +1,17 @@
+<zj-orchestration id="qryDetailByLineNoAndMonth" name="查询上门收款线路安排详情"
+				  requestObject="java.util.HashMap"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.ListDTO"
+				  tempObject="java.lang.String"
+				  transaction="@Transactional(rollbackFor = Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+	</zj-component>
+
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.linecenter.component.OnSiteCollectionComponent.qryOnSiteCollectionDetail" next="">
+
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

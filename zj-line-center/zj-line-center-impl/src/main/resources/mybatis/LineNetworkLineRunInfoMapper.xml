@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.linecenter.repository.LineNetworkLineRunInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunInfo" >
+    <id column="LINE_RUN_NO" property="networkLineRunNo" jdbcType="VARCHAR" />
+    <result column="LINE_NO" property="networkLineNo" jdbcType="VARCHAR" />
+    <result column="THE_YEAR_MONTH" property="theYearMonth" jdbcType="VARCHAR" />
+    <result column="THE_DAY" property="theDay" jdbcType="VARCHAR" />
+    <result column="NET_ACCOUNT" property="networkCount" jdbcType="INTEGER" />
+  </resultMap>
+
+	<resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunInfo"
+			   extends="BaseResultMap">
+		<association property="networkList" column="LINE_RUN_NO"
+					 javaType="java.util.List"
+					 select="com.zjft.microservice.treasurybrain.linecenter.repository.LineNetworkLineRunDevDetailMapper.selectDetailByPrimaryKey"></association>
+
+	</resultMap>
+
+  <sql id="Base_Column_List" >
+    d.LINE_RUN_NO, d.LINE_NO, d.NET_ACCOUNT, d.THE_YEAR_MONTH, d.THE_DAY
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from LINE_RUN_NET d
+    where LINE_RUN_NO = #{networkLineRunNo,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from LINE_RUN_NET
+    where LINE_RUN_NO = #{networkLineRunNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunInfo" >
+    insert into LINE_RUN_NET (LINE_RUN_NO, LINE_NO, NET_ACCOUNT, THE_YEAR_MONTH,
+      THE_DAY
+      )
+    values (#{networkLineRunNo,jdbcType=VARCHAR}, #{networkLineNo,jdbcType=VARCHAR}, #{networkCount,jdbcType=INTEGER}, #{theYearMonth,jdbcType=VARCHAR},
+      #{theDay,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunInfo" >
+    insert into LINE_RUN_NET
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="networkLineRunNo != null" >
+        LINE_RUN_NO,
+      </if>
+      <if test="networkLineNo != null" >
+        LINE_NO,
+      </if>
+      <if test="theYearMonth != null" >
+        THE_YEAR_MONTH,
+      </if>
+      <if test="theDay != null" >
+        THE_DAY,
+      </if>
+      <if test="networkCount != null" >
+        NET_ACCOUNT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="networkLineRunNo != null" >
+        #{networkLineRunNo,jdbcType=VARCHAR},
+      </if>
+      <if test="networkLineNo != null" >
+        #{networkLineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="theYearMonth != null" >
+        #{theYearMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="theDay != null" >
+        #{theDay,jdbcType=VARCHAR},
+      </if>
+      <if test="networkCount != null" >
+        #{networkCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunInfo" >
+    update LINE_RUN_NET
+    <set >
+      <if test="networkLineNo != null" >
+        LINE_NO = #{networkLineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="theYearMonth != null" >
+        THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="theDay != null" >
+        THE_DAY = #{theDay,jdbcType=VARCHAR},
+      </if>
+      <if test="networkCount != null" >
+        NET_ACCOUNT = #{networkCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where LINE_RUN_NO = #{networkLineRunNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.NetworkLineRunInfo" >
+    update LINE_RUN_NET
+    set LINE_NO = #{networkLineNo,jdbcType=VARCHAR},
+      THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR},
+      THE_DAY = #{theDay,jdbcType=VARCHAR},
+      NET_ACCOUNT = #{networkCount,jdbcType=INTEGER}
+    where LINE_RUN_NO = #{networkLineRunNo,jdbcType=VARCHAR}
+  </update>
+
+	<select id="qryNetworkLineRunMap" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		select tt.* from (select t.*, rownum as rn from (
+
+		SELECT
+		<include refid="Base_Column_List" />,o.LINE_NAME as networkLineName
+		FROM LINE_RUN_NET d LEFT OUTER JOIN ADDNOTES_LINE_TABLE o ON d.LINE_NO=o.LINE_NO
+
+		WHERE 1=1
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND o.CLR_CENTER_NO  = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="networkLineNo != null and networkLineNo != ''">
+			AND d.LINE_NO  = #{networkLineNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="startMonth != null and startMonth != ''">
+			AND d.THE_YEAR_MONTH &gt;= #{startMonth,jdbcType=VARCHAR}
+		</if>
+		<if test="endMonth != null and endMonth != ''">
+			AND d.THE_YEAR_MONTH &lt;= #{endMonth,jdbcType=VARCHAR}
+		</if>
+		order by d.THE_YEAR_MONTH desc)t)tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="qryNetworkLineRunMapForMonth" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		select tt.* from (select t.*, rownum as rn from (
+
+		SELECT
+		 d.THE_YEAR_MONTH, d.LINE_NO,
+		       o.LINE_NAME as networkLineName
+		FROM LINE_RUN_NET d LEFT OUTER JOIN ADDNOTES_LINE_TABLE o ON d.LINE_NO=o.LINE_NO
+
+		WHERE 1=1
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND o.CLR_CENTER_NO  = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="networkLineNo != null and networkLineNo != ''">
+			AND d.LINE_NO  = #{networkLineNo,jdbcType=VARCHAR}
+		</if>
+
+		<if test="startMonth != null and startMonth != ''">
+			AND d.THE_YEAR_MONTH &gt;= #{startMonth,jdbcType=VARCHAR}
+		</if>
+		<if test="endMonth != null and endMonth != ''">
+			AND d.THE_YEAR_MONTH &lt;= #{endMonth,jdbcType=VARCHAR}
+		</if>
+		group by  d.THE_YEAR_MONTH, d.LINE_NO ,o.LINE_NAME
+		order by d.THE_YEAR_MONTH desc)t)tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="selectNetAcountList" parameterType="java.lang.String" resultType="java.lang.String" >
+     select distinct d.NET_ACCOUNT from LINE_RUN_NET d left join
+     LINE_RUN_NET_DETAIL dd on d.LINE_RUN_NO = d.LINE_RUN_NO where d.LINE_NO=#{lineNo,jdbcType=VARCHAR}
+     order by d.NET_ACCOUNT desc
+	</select>
+
+	<select id="qryTotalRowForMonth" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(1)  from (
+			SELECT d.THE_YEAR_MONTH,
+			d.LINE_NO,
+			count(d.NET_ACCOUNT) as networkCount,
+			o.LINE_NAME as networkLineName
+			FROM LINE_RUN_NET d LEFT OUTER JOIN ADDNOTES_LINE_TABLE o ON d.LINE_NO=o.LINE_NO
+			WHERE 1=1
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				AND o.CLR_CENTER_NO  = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+
+			<if test="networkLineNo != null and networkLineNo != ''">
+				AND d.LINE_NO  = #{networkLineNo,jdbcType=VARCHAR}
+			</if>
+
+			<if test="startMonth != null and startMonth != ''">
+				AND d.THE_YEAR_MONTH &gt;= #{startMonth,jdbcType=VARCHAR}
+			</if>
+			<if test="endMonth != null and endMonth != ''">
+				AND d.THE_YEAR_MONTH &lt;= #{endMonth,jdbcType=VARCHAR}
+			</if>
+			   group by  d.THE_YEAR_MONTH, d.LINE_NO ,o.LINE_NAME ) t
+	</select>
+
+
+	<select id="qryNetworkLineRunMapDetail" resultMap="DetailMap" parameterType="java.util.Map" >
+		SELECT
+		<include refid="Base_Column_List" />,o.LINE_NAME as networkLineName
+		FROM LINE_RUN_NET d LEFT OUTER JOIN ADDNOTES_LINE_TABLE o ON d.LINE_NO=o.LINE_NO
+		WHERE 1=1
+		<if test="networkLineNo != null and networkLineNo != ''">
+			AND d.LINE_NO = #{networkLineNo,jdbcType=VARCHAR}
+		</if>
+		<if test="theYearMonth != null and theYearMonth != ''">
+			AND d.THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR}
+		</if>
+
+
+	</select>
+
+	<delete id="deleteNetworkLine" parameterType="java.util.Map" >
+   DELETE FROM LINE_RUN_NET WHERE LINE_NO = #{networkLineNo,jdbcType=VARCHAR}
+   AND THE_YEAR_MONTH =#{theYearMonth,jdbcType=VARCHAR}
+  </delete>
+
+	<select id="selectTheYearMonthByNetworkLineNo" resultType="java.lang.String" parameterType="java.lang.String">
+	  select distinct THE_YEAR_MONTH from LINE_RUN_NET where LINE_NO =#{networkLineNo,jdbcType=VARCHAR}
+      and THE_YEAR_MONTH &gt;= #{theYearMonth,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getLineNosWithTypeAndClrNo" resultType="string" parameterType="map">
+		select l.LINE_NO
+		from addnotes_line_table l
+		where 1=1
+		<if test="null!=lineType"> and l.LINE_TYPE=#{lineType,jdbcType=INTEGER} </if>
+		<if test="null!=clrCenterNo and ''!=clrCenterNo">and l.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}</if>
+	</select>
+</mapper>

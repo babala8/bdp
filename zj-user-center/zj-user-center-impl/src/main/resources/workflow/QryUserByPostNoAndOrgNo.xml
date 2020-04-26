@@ -1,0 +1,23 @@
+<zj-orchestration id="qryUserByPostNoAndOrgNo" name="根据机构、岗位查询当前人员信息"
+				  requestObject="java.util.HashMap"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.ListDTO"
+				  tempObject="java.lang.String"
+				  transaction="@Transactional(rollbackFor = Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+	</zj-component>
+
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.usercenter.component.SysPostComponent.qryUserCheck" next="">
+
+		<exit path="ok" next="2"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+	<zj-component id="2" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.usercenter.component.SysPostComponent.qryUserByPostNoAndOrgNo" next="">
+
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+</zj-orchestration>

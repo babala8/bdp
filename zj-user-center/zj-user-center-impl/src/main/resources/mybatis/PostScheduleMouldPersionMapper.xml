@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.usercenter.repository.PostScheduleMouldPersionMapper">
+	<resultMap id="BaseResultMap"
+			   type="com.zjft.microservice.treasurybrain.usercenter.po.PostScheduleMouldPersionPO">
+		<id column="MOULD_NO" property="mouldNo" jdbcType="VARCHAR"/>
+		<id column="OP_NO" property="opNo" jdbcType="VARCHAR"/>
+		<id column="CLASSES_NO" property="classesNo" jdbcType="VARCHAR"/>
+		<id column="COUNT_NO" property="countNo" jdbcType="INTEGER"/>
+	</resultMap>
+	<resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.usercenter.domain.PostScheduleMouldDetailDO"
+			   extends="BaseResultMap">
+		<id column="CLASSES_NAME" property="classesName" jdbcType="VARCHAR"/>
+		<!--<id column="CLASSES_NAME" property="classesName" jdbcType="VARCHAR" />-->
+	</resultMap>
+	<resultMap id="OpMap" type="com.zjft.microservice.treasurybrain.usercenter.domain.PostScheduleMouldOpDO">
+		<id column="OP_NAME" property="opName" jdbcType="VARCHAR" />
+		<id column="OP_NO" property="opNo" jdbcType="VARCHAR"/>
+	</resultMap>
+	<resultMap id="ClassMap" type="com.zjft.microservice.treasurybrain.usercenter.domain.PostScheduleClassDetailDO">
+		<id column="CLASSES_NO" property="classesNo" jdbcType="VARCHAR"/>
+	</resultMap>
+	<delete id="deleteByPrimaryKey"
+			parameterType="com.zjft.microservice.treasurybrain.usercenter.po.PostScheduleMouldPersionPO">
+    delete from POST_SCHEDULE_MOULD_PERSION
+    where MOULD_NO = #{mouldNo,jdbcType=VARCHAR}
+  </delete>
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.usercenter.po.PostScheduleMouldPersionPO">
+    insert into POST_SCHEDULE_MOULD_PERSION (MOULD_NO, OP_NO, CLASSES_NO, 
+      COUNT_NO)
+    values (#{mouldNo,jdbcType=VARCHAR}, #{opNo,jdbcType=VARCHAR}, #{classesNo,jdbcType=VARCHAR}, 
+      #{countNo,jdbcType=INTEGER})
+  </insert>
+	<insert id="insertSelective"
+			parameterType="com.zjft.microservice.treasurybrain.usercenter.po.PostScheduleMouldPersionPO">
+		insert into POST_SCHEDULE_MOULD_PERSION
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="mouldNo != null and mouldNo !=''">
+				MOULD_NO,
+			</if>
+			<if test="opNo != null and opNo !=''">
+				OP_NO,
+			</if>
+			<if test="classesNo != null and classesNo !=''">
+				CLASSES_NO,
+			</if>
+			<if test="countNo != null">
+				COUNT_NO,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="mouldNo != null and mouldNo!=''">
+				#{mouldNo,jdbcType=VARCHAR},
+			</if>
+			<if test="opNo != null and opNo !=''">
+				#{opNo,jdbcType=VARCHAR},
+			</if>
+			<if test="classesNo != null and classesNo !=''">
+				#{classesNo,jdbcType=VARCHAR},
+			</if>
+			<if test="countNo != null">
+				#{countNo,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="qryDetailByMouldNo" resultMap="DetailMap">
+		select p.CLASSES_NO, p.COUNT_NO, o.CLASSESS_NAME as CLASSES_NAME from POST_SCHEDULE_MOULD_PERSION P
+		left join POST_CLASSESS_TABLE o on P.CLASSES_NO=o.CLASSES_NO
+		where MOULD_NO = #{mouldNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryOpDetailByNos" resultMap="OpMap" parameterType="java.util.Map">
+		select a.OP_NO,b.NAME as OP_NAME from POST_SCHEDULE_MOULD_PERSION a left join OP_TABLE b on a.OP_NO=b.NO
+        where CLASSES_NO= #{classesNo,jdbcType=VARCHAR} and COUNT_NO= #{countNo,jdbcType=INTEGER} and mould_No=#{mouldNo,jdbcType=VARCHAR}
+	</select>
+
+<select id="qryClassesNos" resultMap="ClassMap">
+	select distinct classes_no from POST_SCHEDULE_MOULD_PERSION where count_no=#{countNo,jdbcType=INTEGER} and MOULD_NO = #{mouldNo,jdbcType=VARCHAR}
+</select>
+
+</mapper>

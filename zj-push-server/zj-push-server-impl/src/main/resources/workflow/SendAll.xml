@@ -1,0 +1,16 @@
+<zj-orchestration id="sendAll" name="推送消息给所有人"
+				  requestObject="java.lang.String"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="1z7yjaxpswqo0">
+	</zj-component>
+	<zj-component id="1z7yjaxpswqo0" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.pushserver.component.SendInfoComponent.sendInfo2All"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

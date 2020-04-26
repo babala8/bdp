@@ -1,0 +1,31 @@
+project("zj-time-job-api") {
+    dependencies {
+        compileOnly "com.zjft.microservice:zj-quartz-sdk:1.2.2-SNAPSHOT"
+    }
+}
+
+
+project("zj-time-job-impl") {
+    dependencies {
+        compile project(":zj-time-job:zj-time-job-api")
+
+        compile project(":zj-task:zj-task-api")
+
+        compile project(":zj-push-server:zj-push-server-api")
+
+        compile project(":zj-user-center:zj-user-center-api")
+
+        compile project(":zj-line-center:zj-line-center-api")
+
+        compile project(":zj-manage-center:zj-manage-center-api")
+
+        compile project(":zj-channel-center:zj-channel-center-api")
+
+        compile "com.zjft.microservice:zj-quartz-sdk:1.2.2-SNAPSHOT"
+        compile "pentaho-kettle:kettle-core:6.1.0.1-196"
+        compile "pentaho-kettle:kettle-engine:6.1.0.1-196"
+        compile fileTree(dir: 'lib', includes: ['*jar'])
+
+    }
+}
+

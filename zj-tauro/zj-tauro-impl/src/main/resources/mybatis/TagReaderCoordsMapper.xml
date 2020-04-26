@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.tauro.repository.TagReaderCoordsMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.tauro.domain.TagReaderCoordsInfoDO">
+		<result column="TAG_READER_NO" jdbcType="VARCHAR" property="tagReaderNo"/>
+		<result column="RD_DATE" jdbcType="VARCHAR" property="rdDate"/>
+		<result column="RD_TIME" jdbcType="VARCHAR" property="rdTime"/>
+		<result column="USER_NO" jdbcType="VARCHAR" property="userNo"/>
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+		<result column="X" jdbcType="DECIMAL" property="x"/>
+		<result column="Y" jdbcType="DECIMAL" property="y"/>
+		<result column="COORDS_SRC" jdbcType="INTEGER" property="coordsSrc"/>
+		<result column="TASK_TYPE" jdbcType="INTEGER" property="taskType"/>
+		<result column="TASK_NO" jdbcType="VARCHAR" property="taskNo"/>
+		<result column="DEV_NO" jdbcType="VARCHAR" property="devNo"/>
+		<result column="TRANS_CODE" jdbcType="VARCHAR" property="transCode"/>
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		TAG_READER_NO, RD_DATE, RD_TIME, USER_NO, X, Y,
+		COORDS_SRC, TASK_TYPE, TASK_NO, DEV_NO, TRANS_CODE
+	</sql>
+
+	<insert id="addTagReaderCoordsInfo" parameterType="com.zjft.microservice.treasurybrain.tauro.po.TagReaderCoordsInfoPO">
+		insert into TAG_READER_COORDS_INFO
+		(TAG_READER_NO, RD_DATE, RD_TIME, USER_NO, X, Y, TASK_TYPE
+		<if test="null != coordsSrc and '' != coordsSrc">
+			, COORDS_SRC
+		</if>
+
+		<if test="null != taskNo and '' != taskNo">
+			, TASK_NO
+		</if>
+		<if test="null != devNo and '' != devNo">
+			, DEV_NO
+		</if>
+		<if test="null != transCode and '' != transCode">
+			, TRANS_CODE
+		</if>)
+		values
+		(#{tagReaderNo,jdbcType=VARCHAR}, #{rdDate,jdbcType=VARCHAR}, #{rdTime,jdbcType=VARCHAR}
+		, #{userNo,jdbcType=VARCHAR}, #{y,jdbcType=VARCHAR}, #{x,jdbcType=VARCHAR}, #{taskType,jdbcType=INTEGER}
+		<if test="null != coordsSrc and '' != coordsSrc">
+			, #{coordsSrc,jdbcType=INTEGER}
+		</if>
+		<if test="null != taskNo and '' != taskNo">
+			, #{taskNo,jdbcType=VARCHAR}
+		</if>
+		<if test="null != devNo and '' != devNo">
+			, #{devNo,jdbcType=VARCHAR}
+		</if>
+		<if test="null != transCode and '' != transCode">
+			, #{transCode,jdbcType=VARCHAR}
+		</if>
+		)
+	</insert>
+	
+	<select id="queryCoordsByTaskNo" parameterType="String" resultMap="BaseResultMap">
+		select t.*, u1.NAME as USER_NAME
+		from(select
+		<include refid="Base_Column_List"/>
+		from TAG_READER_COORDS_INFO d
+		where TASK_NO = #{taskNo,jdbcType=VARCHAR})t
+		left join sys_user u1 on t.USER_NO = u1.USERNAME
+		order by t.RD_TIME desc
+	</select>
+</mapper>

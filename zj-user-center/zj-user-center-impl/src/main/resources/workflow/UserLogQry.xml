@@ -1,0 +1,20 @@
+<zj-orchestration id="UserLogQry" name="用户日志查询"
+				  requestObject="java.util.HashMap"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.PageDTO"
+				  tempObject="java.lang.String"
+				  transaction="@Transactional(rollbackFor &#x3D; Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+	</zj-component>
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.usercenter.component.SysLogComponent.sysLogQry" next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="F"/>
+	</zj-component>
+	<zj-component id="F" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.usercenter.component.SysLogComponent.sysLogQryFail"
+				  next="">
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

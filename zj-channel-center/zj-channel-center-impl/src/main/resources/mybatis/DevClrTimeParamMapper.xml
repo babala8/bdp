@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.channelcenter.repository.DevClrTimeParamMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.common.domain.DevClrTimeParam" >
+		<id column="DEV_NO" property="devNo" jdbcType="VARCHAR" />
+		<result column="CLR_TIME_INTERVAL" property="clrTimeInterval" jdbcType="CHAR" />
+		<result column="ARRIVAL_TIME" property="arrivalTime" jdbcType="VARCHAR" />
+		<result column="CLR_DAY" property="clrDay" jdbcType="NUMERIC" />
+		<result column="ADDNOTES_LINE" property="addnotesLine" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+    DEV_NO, CLR_TIME_INTERVAL, ARRIVAL_TIME, CLR_DAY, ADDNOTES_LINE
+    </sql>
+
+	<delete id="deleteByDevNo" parameterType="java.lang.String" >
+    delete from DEV_CLR_TIME_PARAM
+    where DEV_NO = #{devNo,jdbcType=VARCHAR}
+  </delete>
+
+	<insert id="insert" parameterType="java.util.Map" >
+		insert into DEV_CLR_TIME_PARAM(DEV_NO,ADDNOTES_LINE,CLR_DAY,CLR_TIME_INTERVAL,ARRIVAL_TIME)
+		values (#{devNo,jdbcType=VARCHAR},#{addnotesLine,jdbcType=VARCHAR},#{clrDay,jdbcType=NUMERIC},#{clrTimeInterval,jdbcType=CHAR},#{arrivalTime,jdbcType=VARCHAR})
+	</insert>
+
+	<select id="selectlineNoList" resultType="java.lang.String" parameterType="java.lang.String">
+		select distinct ADDNOTES_LINE
+		from DEV_CLR_TIME_PARAM
+		where DEV_NO=#{devNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectDctVOList" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT db.ADD_CLR_PERIOD,dct.CLR_TIME_INTERVAL,dct.DEV_NO,dct.ARRIVAL_TIME,
+		dct.CLR_DAY,db.ORG_NO,ot.name
+		FROM DEV_CLR_TIME_PARAM dct,DEV_BASE_INFO db,SYS_ORG ot,DEV_STATUS_TABLE ds
+		WHERE ot.NO =db.ORG_NO AND dct.DEV_NO = db.NO AND ds.DEV_NO = db.NO
+		AND dct.ADDNOTES_LINE = #{lineNo,jdbcType=VARCHAR} AND db.STATUS <![CDATA[ <> ]]> 2
+	</select>
+
+</mapper>

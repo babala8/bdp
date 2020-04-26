@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.storage.repository.StorageShelfTableMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.storage.po.StorageShelfTablePO">
+		<id column="SHELF_NO" property="shelfNo" jdbcType="VARCHAR"/>
+		<result column="TYPE" property="type" jdbcType="INTEGER"/>
+		<result column="STATUS" property="status" jdbcType="INTEGER"/>
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+    SHELF_NO, TYPE, STATUS, CLR_CENTER_NO
+  	</sql>
+
+	<update id="updateStatusByNo" parameterType="com.zjft.microservice.treasurybrain.storage.po.StorageShelfTablePO">
+    update SHELF_TABLE
+    set STATUS = #{status,jdbcType=INTEGER}
+    where SHELF_NO = #{shelfNo,jdbcType=VARCHAR}
+  	</update>
+	<select id="qryShelfNo" resultType="java.lang.Integer">
+		select count(1) from SHELF_TABLE where SHELF_NO = #{shelfNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryShelfUnused" resultType="java.lang.Integer"
+			parameterType="com.zjft.microservice.treasurybrain.storage.po.StorageShelfTablePO">
+		select count (1)
+		from SHELF_TABLE
+		where SHELF_NO = #{shelfNo,jdbcType=VARCHAR}
+		and status = #{status,jdbcType=INTEGER}
+	</select>
+
+	<update id="modShelfStatus" parameterType="java.util.Map">
+    update SHELF_TABLE
+    set STATUS = #{status,jdbcType=DECIMAL}
+    where SHELF_NO = #{shelfNo,jdbcType=VARCHAR}
+  </update>
+</mapper>

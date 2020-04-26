@@ -1,0 +1,21 @@
+<zj-orchestration id="addVisitOrder" name="添加预约"
+				  requestObject="com.zjft.microservice.treasurybrain.business.dto.VisitOrderDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="@Transactional(rollbackFor = Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="1kst30bhb9u68">
+	</zj-component>
+	<zj-component id="1kst30bhb9u68" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.business.component.VisitOrderComponent.addVisitOrder"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="10rqq0p3aqups"/>
+	</zj-component>
+	<zj-component id="10rqq0p3aqups" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.business.component.VisitOrderComponent.addVisitOrderFail"
+				  next="">
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

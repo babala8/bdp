@@ -1,0 +1,7 @@
+subprojects {
+
+    dependencies {
+        implementation 'com.zjft.microservice:zj-message-sdk:1.2.2-SNAPSHOT'
+
+    }
+}

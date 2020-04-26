@@ -1,0 +1,1133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.channelcenter.repository.DevBaseInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.common.domain.DevBaseInfo" >
+    <id column="NO" property="no" jdbcType="VARCHAR" />
+    <result column="IP" property="ip" jdbcType="VARCHAR" />
+    <result column="ORG_NO" property="orgNo" jdbcType="VARCHAR" />
+    <result column="AWAY_FLAG" property="awayFlag" jdbcType="VARCHAR" />
+    <result column="DEV_TYPE" property="devType" jdbcType="VARCHAR" />
+    <result column="WORK_TYPE" property="workType" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="DEV_SERVICE" property="devService" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="AREA_NO" property="areaNo" jdbcType="VARCHAR" />
+    <result column="X" property="x" jdbcType="NUMERIC" />
+    <result column="Y" property="y" jdbcType="NUMERIC" />
+    <result column="CASHBOX_LIMIT" property="cashboxLimit" jdbcType="VARCHAR" />
+    <result column="VIRTUAL_TELLER_NO" property="virtualTellerNo" jdbcType="VARCHAR" />
+    <result column="SETUP_TYPE" property="setupType" jdbcType="NUMERIC" />
+    <result column="NET_TYPE" property="netType" jdbcType="VARCHAR" />
+    <result column="CASSETTE_STANTARD_SIZE" property="cassetteStantardSize" jdbcType="NUMERIC" />
+	<result column="DEV_LEAST_SIZE" property="devLeastSize" jdbcType="NUMERIC" />
+    <result column="DEV_STANTARD_SIZE" property="devStantardSize" jdbcType="NUMERIC" />
+    <result column="ADDNOTES_LINE" property="addnotesLine" jdbcType="VARCHAR" />
+    <result column="ADD_CLR_PERIOD" property="addClrPeriod" jdbcType="NUMERIC" />
+    <result column="MAX_ADD_CLR_PERIOD" property="maxAddClrPeriod" jdbcType="NUMERIC" />
+    <result column="NOTE1" property="note1" jdbcType="VARCHAR" />
+    <result column="NOTE2" property="note2" jdbcType="VARCHAR" />
+    <result column="NOTE3" property="note3" jdbcType="VARCHAR" />
+    <result column="NOTE4" property="note4" jdbcType="VARCHAR" />
+    <result column="FEEDBACK" property="feedback" jdbcType="NUMERIC" />
+    <result column="CYCLE_FLAG" property="cycleFlag" jdbcType="NUMERIC" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="REGION" property="region" jdbcType="VARCHAR" />
+    <result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR" />
+    <result column="TAG_TID" property="tagTid" jdbcType="VARCHAR" />
+    <result column="GROUP_NO" property="groupNo" jdbcType="VARCHAR" />
+    <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+    <result column="ACCOUNT_NETPOINT" property="accountNetpoint" jdbcType="VARCHAR" />
+    <result column="DEV_TYPE_CASH" property="devTypeCash" jdbcType="VARCHAR" />
+    <result column="NOTE5" property="note5" jdbcType="VARCHAR" />
+    <result column="DISTRIBUTION_AREA" property="distributionArea" jdbcType="NUMERIC" />
+    <result column="REG_LOCATION" property="regLocation" jdbcType="NUMERIC" />
+    <result column="TOWNANDCOUNTRY_FALG" property="townandcountryFalg" jdbcType="VARCHAR" />
+    <result column="BELONG_REGION" property="belongRegion" jdbcType="VARCHAR" />
+    <result column="COOPERATIVE_ENTERPRISE" property="cooperativeEnterprise" jdbcType="VARCHAR" />
+    <result column="INDUSTRY" property="industry" jdbcType="VARCHAR" />
+    <result column="HEAD_BANK_ADDNOTES_LINE" property="headBankAddnotesLine" jdbcType="VARCHAR" />
+    <result column="ADDNOTES_LINE_NAME" property="addnotesLineName" jdbcType="VARCHAR" />
+    <result column="ACCOUNT_NETPOINT_NAME" property="accountNetpointName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.common.domain.DevBaseInfo" extends="BaseResultMap">
+	<association property="sysOrg" column="ORG_NO"
+				 javaType="com.zjft.microservice.treasurybrain.common.domain.SysOrg"
+				 select="com.zjft.microservice.treasurybrain.channelcenter.repository.SysOrgMapper.selectByPrimaryKey"></association>
+	<association property="devTypeTable" column="DEV_TYPE"
+				 javaType="com.zjft.microservice.treasurybrain.common.domain.DevTypeTable"
+				 select="com.zjft.microservice.treasurybrain.channelcenter.repository.DevTypeTableMapper.selectDetailByPrimaryKey"></association>
+	<association property="devServiceCompany" column="DEV_SERVICE"
+				 javaType="com.zjft.microservice.treasurybrain.common.domain.DevServiceCompany"
+				 select="com.zjft.microservice.treasurybrain.channelcenter.repository.DevServiceCompanyMapper.selectByPrimaryKey"></association>
+	<association property="devStatusTable" column="NO" javaType="com.zjft.microservice.treasurybrain.common.domain.DevStatusTable" select="com.zjft.microservice.treasurybrain.channelcenter.repository.DevStatusTableMapper.selectByPrimaryKey">
+	</association>
+  </resultMap>
+
+  <resultMap id="DetailMapNoStatus" type="com.zjft.microservice.treasurybrain.common.domain.DevBaseInfo" extends="BaseResultMap">
+	<association property="sysOrg" column="ORG_NO"
+				 javaType="com.zjft.microservice.treasurybrain.common.domain.SysOrg"
+				 select="com.zjft.microservice.treasurybrain.channelcenter.repository.SysOrgMapper.selectDetailByPrimaryKey"></association>
+	<association property="devTypeTable" column="DEV_TYPE"
+				 javaType="com.zjft.microservice.treasurybrain.common.domain.DevTypeTable"
+				 select="com.zjft.microservice.treasurybrain.channelcenter.repository.DevTypeTableMapper.selectDetailByPrimaryKey"></association>
+	<association property="devServiceCompany" column="DEV_SERVICE"
+				 javaType="com.zjft.microservice.treasurybrain.common.domain.DevServiceCompany"
+				 select="com.zjft.microservice.treasurybrain.channelcenter.repository.DevServiceCompanyMapper.selectByPrimaryKey"></association>
+  </resultMap>
+
+	<resultMap id="BaseResultMap2" type="com.zjft.microservice.treasurybrain.channelcenter.po.DevClrTimeParamPO">
+		<id column="DEV_NO" property="devNo" jdbcType="VARCHAR"/>
+		<result column="CLR_TIME_INTERVAL" property="clrTimeInterval" jdbcType="INTEGER"/>
+		<result column="ARRIVAL_TIME" property="arrivalTime" jdbcType="VARCHAR" />
+		<result column="CLR_DAY" property="clrDay" jdbcType="NUMERIC" />
+		<result column="ADDNOTES_LINE" property="addnotesLine" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ExtandMap" type="com.zjft.microservice.treasurybrain.channelcenter.domain.DevClrTimeParamDO" extends="BaseResultMap2">
+		<result column="LINE_NAME" property="lineName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+
+  <sql id="Base_Column_List" >
+    NO, IP, ORG_NO, AWAY_FLAG, DEV_TYPE, WORK_TYPE, STATUS, DEV_SERVICE, ADDRESS, AREA_NO, 
+    X, Y, CASHBOX_LIMIT, VIRTUAL_TELLER_NO, SETUP_TYPE, NET_TYPE, CASSETTE_STANTARD_SIZE, 
+    DEV_LEAST_SIZE, DEV_STANTARD_SIZE, ADDNOTES_LINE, ADD_CLR_PERIOD, MAX_ADD_CLR_PERIOD, NOTE1, NOTE2,
+    NOTE3, NOTE4, FEEDBACK, CYCLE_FLAG, CITY, REGION, CLR_CENTER_NO, TAG_TID, GROUP_NO, 
+    PROVINCE, ACCOUNT_NETPOINT, DEV_TYPE_CASH, NOTE5, DISTRIBUTION_AREA, REG_LOCATION, 
+    TOWNANDCOUNTRY_FALG, BELONG_REGION, COOPERATIVE_ENTERPRISE, INDUSTRY, HEAD_BANK_ADDNOTES_LINE
+  </sql>
+
+
+  <sql id="Extend_Column_List" >
+    NO, IP, ORG_NO, AWAY_FLAG, DEV_TYPE, WORK_TYPE, STATUS, DEV_SERVICE, ADDRESS, AREA_NO,
+    X, Y, CASHBOX_LIMIT, VIRTUAL_TELLER_NO, SETUP_TYPE, NET_TYPE, CASSETTE_STANTARD_SIZE,
+    DEV_LEAST_SIZE, DEV_STANTARD_SIZE, ADDNOTES_LINE, ADD_CLR_PERIOD, MAX_ADD_CLR_PERIOD, NOTE1, NOTE2,
+    NOTE3, NOTE4, FEEDBACK, CYCLE_FLAG, CITY, REGION, CLR_CENTER_NO, TAG_TID, GROUP_NO,
+    PROVINCE, ACCOUNT_NETPOINT, DEV_TYPE_CASH, NOTE5, DISTRIBUTION_AREA, REG_LOCATION,
+    TOWNANDCOUNTRY_FALG, BELONG_REGION, COOPERATIVE_ENTERPRISE, INDUSTRY, HEAD_BANK_ADDNOTES_LINE,
+    ACCOUNT_NETPOINT_NAME, ADDNOTES_LINE_NAME
+  </sql>
+
+  <select id="getAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from DEV_BASE_INFO
+  </select>
+
+
+  <select id="selectByPrimaryKey" resultMap="DetailMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from DEV_BASE_INFO
+    where NO = #{no,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="selectDetailByPrimaryKey" resultMap="DetailMapNoStatus" parameterType="java.lang.String">
+	select
+	<include refid="Base_Column_List" />
+	from DEV_BASE_INFO
+	where NO = #{no,jdbcType=VARCHAR}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from DEV_BASE_INFO
+    where NO = #{no,jdbcType=VARCHAR}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.common.domain.DevBaseInfo" >
+    insert into DEV_BASE_INFO (NO, IP, ORG_NO, 
+      AWAY_FLAG, DEV_TYPE, WORK_TYPE, 
+      STATUS, DEV_SERVICE, ADDRESS, 
+      AREA_NO, X, Y, CASHBOX_LIMIT, 
+      VIRTUAL_TELLER_NO, SETUP_TYPE, NET_TYPE, 
+      CASSETTE_STANTARD_SIZE, DEV_LEAST_SIZE, DEV_STANTARD_SIZE,
+      ADDNOTES_LINE, ADD_CLR_PERIOD, MAX_ADD_CLR_PERIOD, 
+      NOTE1, NOTE2, NOTE3, 
+      NOTE4, FEEDBACK, CYCLE_FLAG, 
+      CITY, REGION, CLR_CENTER_NO, 
+      TAG_TID, GROUP_NO, PROVINCE, 
+      ACCOUNT_NETPOINT, DEV_TYPE_CASH, NOTE5, 
+      DISTRIBUTION_AREA, REG_LOCATION, TOWNANDCOUNTRY_FALG, 
+      BELONG_REGION, COOPERATIVE_ENTERPRISE, INDUSTRY, 
+      HEAD_BANK_ADDNOTES_LINE)
+    values (#{no,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{orgNo,jdbcType=VARCHAR}, 
+      #{awayFlag,jdbcType=VARCHAR}, #{devType,jdbcType=VARCHAR}, #{workType,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{devService,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{areaNo,jdbcType=VARCHAR}, #{x,jdbcType=NUMERIC}, #{y,jdbcType=NUMERIC}, #{cashboxLimit,jdbcType=VARCHAR},
+      #{virtualTellerNo,jdbcType=VARCHAR}, #{setupType,jdbcType=NUMERIC}, #{netType,jdbcType=VARCHAR},
+      #{cassetteStantardSize,jdbcType=NUMERIC}, #{devLeastSize, jdbcType=NUMERIC}, #{devStantardSize,jdbcType=NUMERIC},
+      #{addnotesLine,jdbcType=VARCHAR}, #{addClrPeriod,jdbcType=NUMERIC}, #{maxAddClrPeriod,jdbcType=NUMERIC}, 
+      #{note1,jdbcType=VARCHAR}, #{note2,jdbcType=VARCHAR}, #{note3,jdbcType=VARCHAR}, 
+      #{note4,jdbcType=VARCHAR}, #{feedback,jdbcType=NUMERIC}, #{cycleFlag,jdbcType=NUMERIC}, 
+      #{city,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR}, 
+      #{tagTid,jdbcType=VARCHAR}, #{groupNo,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{accountNetpoint,jdbcType=VARCHAR}, #{devTypeCash,jdbcType=VARCHAR}, #{note5,jdbcType=VARCHAR}, 
+      #{distributionArea,jdbcType=NUMERIC}, #{regLocation,jdbcType=NUMERIC}, #{townandcountryFalg,jdbcType=VARCHAR}, 
+      #{belongRegion,jdbcType=VARCHAR}, #{cooperativeEnterprise,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, 
+      #{headBankAddnotesLine,jdbcType=VARCHAR})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.common.domain.DevBaseInfo" >
+    insert into DEV_BASE_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="no != null" >
+        NO,
+      </if>
+      <if test="ip != null" >
+        IP,
+      </if>
+      <if test="orgNo != null" >
+        ORG_NO,
+      </if>
+      <if test="awayFlag != null" >
+        AWAY_FLAG,
+      </if>
+      <if test="devType != null" >
+        DEV_TYPE,
+      </if>
+      <if test="workType != null" >
+        WORK_TYPE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="devService != null" >
+        DEV_SERVICE,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="areaNo != null" >
+        AREA_NO,
+      </if>
+      <if test="x != null" >
+        X,
+      </if>
+      <if test="y != null" >
+        Y,
+      </if>
+      <if test="cashboxLimit != null" >
+        CASHBOX_LIMIT,
+      </if>
+      <if test="virtualTellerNo != null" >
+        VIRTUAL_TELLER_NO,
+      </if>
+      <if test="setupType != null" >
+        SETUP_TYPE,
+      </if>
+      <if test="netType != null" >
+        NET_TYPE,
+      </if>
+      <if test="cassetteStantardSize != null" >
+        CASSETTE_STANTARD_SIZE,
+      </if>
+      <if test="devLeastSize != null">
+		  DEV_LEAST_SIZE,
+	  </if>
+      <if test="devStantardSize != null" >
+        DEV_STANTARD_SIZE,
+      </if>
+      <if test="addnotesLine != null" >
+        ADDNOTES_LINE,
+      </if>
+      <if test="addClrPeriod != null" >
+        ADD_CLR_PERIOD,
+      </if>
+      <if test="maxAddClrPeriod != null" >
+        MAX_ADD_CLR_PERIOD,
+      </if>
+      <if test="note1 != null" >
+        NOTE1,
+      </if>
+      <if test="note2 != null" >
+        NOTE2,
+      </if>
+      <if test="note3 != null" >
+        NOTE3,
+      </if>
+      <if test="note4 != null" >
+        NOTE4,
+      </if>
+      <if test="feedback != null" >
+        FEEDBACK,
+      </if>
+      <if test="cycleFlag != null" >
+        CYCLE_FLAG,
+      </if>
+      <if test="city != null" >
+        CITY,
+      </if>
+      <if test="region != null" >
+        REGION,
+      </if>
+      <if test="clrCenterNo != null" >
+        CLR_CENTER_NO,
+      </if>
+      <if test="tagTid != null" >
+        TAG_TID,
+      </if>
+      <if test="groupNo != null" >
+        GROUP_NO,
+      </if>
+      <if test="province != null" >
+        PROVINCE,
+      </if>
+      <if test="accountNetpoint != null" >
+        ACCOUNT_NETPOINT,
+      </if>
+      <if test="devTypeCash != null" >
+        DEV_TYPE_CASH,
+      </if>
+      <if test="note5 != null" >
+        NOTE5,
+      </if>
+      <if test="distributionArea != null" >
+        DISTRIBUTION_AREA,
+      </if>
+      <if test="regLocation != null" >
+        REG_LOCATION,
+      </if>
+      <if test="townandcountryFalg != null" >
+        TOWNANDCOUNTRY_FALG,
+      </if>
+      <if test="belongRegion != null" >
+        BELONG_REGION,
+      </if>
+      <if test="cooperativeEnterprise != null" >
+        COOPERATIVE_ENTERPRISE,
+      </if>
+      <if test="industry != null" >
+        INDUSTRY,
+      </if>
+      <if test="headBankAddnotesLine != null" >
+        HEAD_BANK_ADDNOTES_LINE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="no != null" >
+        #{no,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="orgNo != null" >
+        #{orgNo,jdbcType=VARCHAR},
+      </if>
+      <if test="awayFlag != null" >
+        #{awayFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="devType != null" >
+        #{devType,jdbcType=VARCHAR},
+      </if>
+      <if test="workType != null" >
+        #{workType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="devService != null" >
+        #{devService,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="areaNo != null" >
+        #{areaNo,jdbcType=VARCHAR},
+      </if>
+      <if test="x != null" >
+        #{x,jdbcType=NUMERIC},
+      </if>
+      <if test="y != null" >
+        #{y,jdbcType=NUMERIC},
+      </if>
+      <if test="cashboxLimit != null" >
+        #{cashboxLimit,jdbcType=VARCHAR},
+      </if>
+      <if test="virtualTellerNo != null" >
+        #{virtualTellerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="setupType != null" >
+        #{setupType,jdbcType=NUMERIC},
+      </if>
+      <if test="netType != null" >
+        #{netType,jdbcType=VARCHAR},
+      </if>
+      <if test="cassetteStantardSize != null" >
+        #{cassetteStantardSize,jdbcType=NUMERIC},
+      </if>
+      <if test="devLeastSize != null">
+		#{devLeastSize, jdbcType=NUMERIC},
+	  </if>
+      <if test="devStantardSize != null" >
+        #{devStantardSize,jdbcType=NUMERIC},
+      </if>
+      <if test="addnotesLine != null" >
+        #{addnotesLine,jdbcType=VARCHAR},
+      </if>
+      <if test="addClrPeriod != null" >
+        #{addClrPeriod,jdbcType=NUMERIC},
+      </if>
+      <if test="maxAddClrPeriod != null" >
+        #{maxAddClrPeriod,jdbcType=NUMERIC},
+      </if>
+      <if test="note1 != null" >
+        #{note1,jdbcType=VARCHAR},
+      </if>
+      <if test="note2 != null" >
+        #{note2,jdbcType=VARCHAR},
+      </if>
+      <if test="note3 != null" >
+        #{note3,jdbcType=VARCHAR},
+      </if>
+      <if test="note4 != null" >
+        #{note4,jdbcType=VARCHAR},
+      </if>
+      <if test="feedback != null" >
+        #{feedback,jdbcType=NUMERIC},
+      </if>
+      <if test="cycleFlag != null" >
+        #{cycleFlag,jdbcType=NUMERIC},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null" >
+        #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="clrCenterNo != null" >
+        #{clrCenterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tagTid != null" >
+        #{tagTid,jdbcType=VARCHAR},
+      </if>
+      <if test="groupNo != null" >
+        #{groupNo,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNetpoint != null" >
+        #{accountNetpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="devTypeCash != null" >
+        #{devTypeCash,jdbcType=VARCHAR},
+      </if>
+      <if test="note5 != null" >
+        #{note5,jdbcType=VARCHAR},
+      </if>
+      <if test="distributionArea != null" >
+        #{distributionArea,jdbcType=NUMERIC},
+      </if>
+      <if test="regLocation != null" >
+        #{regLocation,jdbcType=NUMERIC},
+      </if>
+      <if test="townandcountryFalg != null" >
+        #{townandcountryFalg,jdbcType=VARCHAR},
+      </if>
+      <if test="belongRegion != null" >
+        #{belongRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="cooperativeEnterprise != null" >
+        #{cooperativeEnterprise,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null" >
+        #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="headBankAddnotesLine != null" >
+        #{headBankAddnotesLine,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.common.domain.DevBaseInfo" >
+    update DEV_BASE_INFO
+    <set >
+      <if test="ip != null" >
+        IP = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="orgNo != null" >
+        ORG_NO = #{orgNo,jdbcType=VARCHAR},
+      </if>
+      <if test="awayFlag != null" >
+        AWAY_FLAG = #{awayFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="devType != null" >
+        DEV_TYPE = #{devType,jdbcType=VARCHAR},
+      </if>
+      <if test="workType != null" >
+        WORK_TYPE = #{workType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="devService != null" >
+        DEV_SERVICE = #{devService,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="areaNo != null" >
+        AREA_NO = #{areaNo,jdbcType=VARCHAR},
+      </if>
+      <if test="x != null" >
+        X = #{x,jdbcType=NUMERIC},
+      </if>
+      <if test="y != null" >
+        Y = #{y,jdbcType=NUMERIC},
+      </if>
+      <if test="cashboxLimit != null" >
+        CASHBOX_LIMIT = #{cashboxLimit,jdbcType=VARCHAR},
+      </if>
+      <if test="virtualTellerNo != null" >
+        VIRTUAL_TELLER_NO = #{virtualTellerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="setupType != null" >
+        SETUP_TYPE = #{setupType,jdbcType=NUMERIC},
+      </if>
+      <if test="netType != null" >
+        NET_TYPE = #{netType,jdbcType=VARCHAR},
+      </if>
+      <if test="cassetteStantardSize != null" >
+        CASSETTE_STANTARD_SIZE = #{cassetteStantardSize,jdbcType=NUMERIC},
+      </if>
+      <if test="devLeastSize != null">
+		DEV_LEAST_SIZE = #{devLeastSize, jdbcType=NUMERIC},
+	  </if>
+      <if test="devStantardSize != null" >
+        DEV_STANTARD_SIZE = #{devStantardSize,jdbcType=NUMERIC},
+      </if>
+      <if test="addnotesLine != null" >
+        ADDNOTES_LINE = #{addnotesLine,jdbcType=VARCHAR},
+      </if>
+      <if test="addClrPeriod != null" >
+        ADD_CLR_PERIOD = #{addClrPeriod,jdbcType=NUMERIC},
+      </if>
+      <if test="maxAddClrPeriod != null" >
+        MAX_ADD_CLR_PERIOD = #{maxAddClrPeriod,jdbcType=NUMERIC},
+      </if>
+      <if test="note1 != null" >
+        NOTE1 = #{note1,jdbcType=VARCHAR},
+      </if>
+      <if test="note2 != null" >
+        NOTE2 = #{note2,jdbcType=VARCHAR},
+      </if>
+      <if test="note3 != null" >
+        NOTE3 = #{note3,jdbcType=VARCHAR},
+      </if>
+      <if test="note4 != null" >
+        NOTE4 = #{note4,jdbcType=VARCHAR},
+      </if>
+      <if test="feedback != null" >
+        FEEDBACK = #{feedback,jdbcType=NUMERIC},
+      </if>
+      <if test="cycleFlag != null" >
+        CYCLE_FLAG = #{cycleFlag,jdbcType=NUMERIC},
+      </if>
+      <if test="city != null" >
+        CITY = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null" >
+        REGION = #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="clrCenterNo != null" >
+        CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tagTid != null" >
+        TAG_TID = #{tagTid,jdbcType=VARCHAR},
+      </if>
+      <if test="groupNo != null" >
+        GROUP_NO = #{groupNo,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        PROVINCE = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNetpoint != null" >
+        ACCOUNT_NETPOINT = #{accountNetpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="devTypeCash != null" >
+        DEV_TYPE_CASH = #{devTypeCash,jdbcType=VARCHAR},
+      </if>
+      <if test="note5 != null" >
+        NOTE5 = #{note5,jdbcType=VARCHAR},
+      </if>
+      <if test="distributionArea != null" >
+        DISTRIBUTION_AREA = #{distributionArea,jdbcType=NUMERIC},
+      </if>
+      <if test="regLocation != null" >
+        REG_LOCATION = #{regLocation,jdbcType=NUMERIC},
+      </if>
+      <if test="townandcountryFalg != null" >
+        TOWNANDCOUNTRY_FALG = #{townandcountryFalg,jdbcType=VARCHAR},
+      </if>
+      <if test="belongRegion != null" >
+        BELONG_REGION = #{belongRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="cooperativeEnterprise != null" >
+        COOPERATIVE_ENTERPRISE = #{cooperativeEnterprise,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null" >
+        INDUSTRY = #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="headBankAddnotesLine != null" >
+        HEAD_BANK_ADDNOTES_LINE = #{headBankAddnotesLine,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where NO = #{no,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.common.domain.DevBaseInfo" >
+    update DEV_BASE_INFO
+    set IP = #{ip,jdbcType=VARCHAR},
+      ORG_NO = #{orgNo,jdbcType=VARCHAR},
+      AWAY_FLAG = #{awayFlag,jdbcType=VARCHAR},
+      DEV_TYPE = #{devType,jdbcType=VARCHAR},
+      WORK_TYPE = #{workType,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      DEV_SERVICE = #{devService,jdbcType=VARCHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      AREA_NO = #{areaNo,jdbcType=VARCHAR},
+      X = #{x,jdbcType=NUMERIC},
+      Y = #{y,jdbcType=NUMERIC},
+      CASHBOX_LIMIT = #{cashboxLimit,jdbcType=VARCHAR},
+      VIRTUAL_TELLER_NO = #{virtualTellerNo,jdbcType=VARCHAR},
+      SETUP_TYPE = #{setupType,jdbcType=NUMERIC},
+      NET_TYPE = #{netType,jdbcType=VARCHAR},
+      CASSETTE_STANTARD_SIZE = #{cassetteStantardSize,jdbcType=NUMERIC},
+      DEV_LEAST_SIZE = #{devLeastSize, jdbcType=NUMERIC},
+      DEV_STANTARD_SIZE = #{devStantardSize,jdbcType=NUMERIC},
+      ADDNOTES_LINE = #{addnotesLine,jdbcType=VARCHAR},
+      ADD_CLR_PERIOD = #{addClrPeriod,jdbcType=NUMERIC},
+      MAX_ADD_CLR_PERIOD = #{maxAddClrPeriod,jdbcType=NUMERIC},
+      NOTE1 = #{note1,jdbcType=VARCHAR},
+      NOTE2 = #{note2,jdbcType=VARCHAR},
+      NOTE3 = #{note3,jdbcType=VARCHAR},
+      NOTE4 = #{note4,jdbcType=VARCHAR},
+      FEEDBACK = #{feedback,jdbcType=NUMERIC},
+      CYCLE_FLAG = #{cycleFlag,jdbcType=NUMERIC},
+      CITY = #{city,jdbcType=VARCHAR},
+      REGION = #{region,jdbcType=VARCHAR},
+      CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+      TAG_TID = #{tagTid,jdbcType=VARCHAR},
+      GROUP_NO = #{groupNo,jdbcType=VARCHAR},
+      PROVINCE = #{province,jdbcType=VARCHAR},
+      ACCOUNT_NETPOINT = #{accountNetpoint,jdbcType=VARCHAR},
+      DEV_TYPE_CASH = #{devTypeCash,jdbcType=VARCHAR},
+      NOTE5 = #{note5,jdbcType=VARCHAR},
+      DISTRIBUTION_AREA = #{distributionArea,jdbcType=NUMERIC},
+      REG_LOCATION = #{regLocation,jdbcType=NUMERIC},
+      TOWNANDCOUNTRY_FALG = #{townandcountryFalg,jdbcType=VARCHAR},
+      BELONG_REGION = #{belongRegion,jdbcType=VARCHAR},
+      COOPERATIVE_ENTERPRISE = #{cooperativeEnterprise,jdbcType=VARCHAR},
+      INDUSTRY = #{industry,jdbcType=VARCHAR},
+      HEAD_BANK_ADDNOTES_LINE = #{headBankAddnotesLine,jdbcType=VARCHAR}
+    where NO = #{no,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="qryMessageForRegion" resultType="java.util.Map">
+  	select t.region as "region", count(1) as "count"
+  	from DEV_BASE_INFO t
+  	where t.region is not null group by t.region
+  </select>
+
+
+  <select id="qryMessageForCity" resultType="java.util.Map">
+  	select t.city as "city", count(1) as "count"
+  	from DEV_BASE_INFO t
+  	where t.city is not null group by t.city
+  </select>
+
+
+  <select id="selectDevsByOrgNo" resultMap="DetailMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from DEV_BASE_INFO
+		where ORG_NO = #{orgNo,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="qryDevTypesForView" resultType="java.util.Map" parameterType="java.lang.String">
+		<![CDATA[
+		select count(1) as "count" ,i.devType as "devType", devCatalog as "devCatalog"  from
+(select b.no as devNo, b.org_no as orgNo, tc.typeName as devType, tc.catalogName as devCatalog, b.address as address, b.X as lng, b.Y as lat from dev_base_info b left join
+(select t.no as typeNo, t.name as typeName, c.name as catalogName from dev_type_table t left join dev_catalog_table c on t.dev_catalog = c.no) tc on b.dev_type = tc.typeNo and b.away_flag =1) i
+where i.orgNo = #{orgNo,jdbcType=VARCHAR} group by i.devType ,i.devCatalog order by i.devCatalog]]>
+  </select>
+
+
+  <select id="qryDevCatalogsForView" resultType="java.util.Map" parameterType="java.lang.String">
+		<![CDATA[
+		select count(1) as "count" , i.devCatalog as "devCatalog" from
+(select b.no as devNo, b.org_no as orgNo, tc.typeName as devType, tc.catalogName as devCatalog, b.address as address, b.X as lng, b.Y as lat from dev_base_info b left join
+(select t.no as typeNo, t.name as typeName, c.name as catalogName from dev_type_table t left join dev_catalog_table c on t.dev_catalog = c.no) tc on b.dev_type = tc.typeNo and b.away_flag =1 ) i
+where i.orgNo = #{orgNo,jdbcType=VARCHAR} group by i.devCatalog order by i.devCatalog]]>
+  </select>
+
+
+  <select id="qryDevNumForOrg" resultType="java.util.Map" >
+    select COUNT(*) AS "DEV_NUM"
+    from dev_base_info d, Sys_Org o
+    where d.org_no = o.no and d.status = 1
+    	and (o.no = #{orgNo,jdbcType=VARCHAR} or o.upper1 = #{orgNo,jdbcType=VARCHAR}
+    	or o.upper2 = #{orgNo,jdbcType=VARCHAR} or o.upper3 = #{orgNo,jdbcType=VARCHAR}
+    	or o.upper4 = #{orgNo,jdbcType=VARCHAR} or o.upper5 = #{orgNo,jdbcType=VARCHAR})
+  </select>
+
+
+  <select id="qryDevNumGroupByOrg" resultType="java.util.Map" parameterType="java.lang.Integer">
+    select ORG_NO as "orgNo", COUNT(*) AS "DEV_NUM"
+    from dev_base_info
+    where status = #{status,jdbcType=VARCHAR}
+    group by org_no
+  </select>
+
+
+  <select id="getPostponeDevice" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    B.*
+    from DEV_BASE_INFO B, DEV_CLR_TIME_PARAM D, Sys_Org O
+    where D.DEV_NO = B.NO AND B.ORG_NO = O.NO
+    AND D.CLR_DAY = mod(floor(curdate() - str_to_date(#{lastClrDate,jdbcType=VARCHAR} ,'%Y-%m-%d')), B.ADD_CLR_PERIOD)
+	<if test="clrCenterNo != null and clrCenterNo != ''">
+	AND O.CLR_CENTER_NO =  #{clrCenterNo,jdbcType=VARCHAR}
+	</if>
+	<if test="orgNo != null and orgNo != ''">
+		and exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{orgNo,jdbcType=VARCHAR} and o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+	</if>
+    <if test="lineMode == 1 and awayFlag != -1 and awayFlag != 0" >
+        AND B.AWAY_FLAG = #{awayFlag,jdbcType=NUMERIC},
+    </if>
+    <if test="lineMode == 2" >
+		<if test="lineNo == null or lineNo == '' or lineNo == '-1'" >
+			AND B.ADDNOTES_LINE IS NOT NULL
+		</if>
+		<if test="lineNo != null and lineNo != '' and lineNo != '-1'">
+			AND B.ADDNOTES_LINE in (${lineNo})
+		</if>
+    </if>
+  </select>
+
+
+  <select id="getKeyEventDevice"  resultType="java.util.Map" parameterType="java.util.Map">
+    select
+    	t.DEV_NO as "devNo" ,(select dc.name from DEV_TYPE_TABLE dt, DEV_CATALOG_TABLE dc where d.DEV_TYPE=dt.no and dt.DEV_CATALOG=dc.no) as "devCatalogName" ,
+    	d.ADDRESS as "address" ,o.NO as "orgNo" ,o.name as "orgName", d.ADDNOTES_LINE as "addnotesLine", line.LINE_NAME as "addnotesLineName"
+    FROM DEV_STATUS_TABLE t,DEV_BASE_INFO d,SYS_ORG o, LINE_TABLE line
+    where t.DEV_NO =d.NO AND d.ORG_NO=o.NO AND d.STATUS=1 and d.ADDNOTES_LINE = line.LINE_NO
+    	<if test="clrCenterNo != null and clrCenterNo != ''">
+    	AND O.CLR_CENTER_NO =  #{clrCenterNo,jdbcType=VARCHAR}
+    	</if>
+    	<if test="orgNo != null and orgNo != ''">
+			and exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{orgNo,jdbcType=VARCHAR} and o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+		</if>
+    	<if test ="lineMode == 1 and awayFlag != -1  and awayFlag !=0 ">
+    		AND d.AWAY_FLAG = #{awayFlag,jdbcType=NUMERIC}
+    	</if>
+    	<if test="lineMode == 2" >
+			<if test="lineNo == null or lineNo == '' or lineNo == '-1'" >
+				AND d.ADDNOTES_LINE IS NOT NULL
+			</if>
+			<if test="lineNo != null and lineNo != '' and lineNo != '-1'">
+				AND d.ADDNOTES_LINE in (${lineNo})
+			</if>
+  		</if>
+
+    	<if test ="eventNo == '001'">
+    		AND (t.DEV_CASHBOX_STATUS='EMPTY' OR t.DEV_CASHBOX_STATUS='EMPTYANDOVERFLOW')
+			<if test="devNos != null and devNos != ''">
+    		AND t.DEV_NO NOT IN ( ${devNos})
+			</if>
+    	</if>
+    	<if test ="eventNo == '002'">
+    		AND t.DEV_CASHBOX_STATUS='OVERFLOW'
+    		<if test="devNos != null and devNos != ''">
+    		AND t.DEV_NO NOT IN ( ${devNos})
+			</if>
+    	</if>
+    	<if test ="eventNo == '003'">
+    		AND floor(SYSDATE - TO_DATE(LAST_ADDNOTE_DATE,'yyyy-mm-dd hh24:mi:ss')) > d.ADD_CLR_PERIOD
+    		<if test="devNos != null and devNos != ''">
+    		AND t.DEV_NO NOT IN ( ${devNos})
+			</if>
+    	</if>
+   		<if test ="eventNo == '004'">
+    		AND (t.RPR_PAPER_STATUS='Out' OR t.JPR_PAPER_STATUS='Out')
+    		<if test="devNos != null and devNos != ''">
+    		AND t.DEV_NO NOT IN ( ${devNos})
+			</if>
+    	</if>
+   		<if test ="eventNo == '006'">
+    		AND t.DEV_CASHBOX_STATUS='MORE'
+    		<if test="devNos != null and devNos != ''">
+    		AND t.DEV_NO NOT IN ( ${devNos})
+			</if>
+    	</if>
+    	<if test ="eventNo == '008'">
+    		AND t.IDC_CAPTURE_BIN_COUNT IS NOT NULL AND t.IDC_CAPTURE_BIN_COUNT*1 != 0
+    		<if test="devNos != null and devNos != ''">
+    		AND t.DEV_NO NOT IN ( ${devNos})
+			</if>
+    	</if>
+  </select>
+
+
+  <select id="getKeyEventDeviceForfault" resultType="java.util.Map" parameterType="java.util.Map">
+	 SELECT t.DEV_NO as "devNo" ,t.Idc_Device_Status as "idcDeviceStatus" ,t.Chk_Device_Status as "chkDeviceStatus" ,
+	 		t.Pbk_Device_Status as "pbkDeviceStatus" ,t.Pin_Device_Status as "pinDeviceStatus", t.Siu_Device_Status as "siuDeviceStatus",
+	 		t.Dep_Device_Status as "depDeviceStatus" ,t.Cam_Device_Status as "camDeviceStatus", t.Cim_Device_Status as "cimDeviceStatus",
+	 		t.Cdm_Device_Status as "cdmDeviceStatus" ,t.Spr_Device_Status as "sprDeviceStatus", t.Rpr_Device_Status as "rprDeviceStatus",
+	 		t.Jpr_Device_Status as "jprDeviceStatus" ,t.Ttu_Device_Status as "ttuDeviceStatus",
+	 		(select dc.name from DEV_TYPE_TABLE dt, DEV_CATALOG_TABLE dc where d.DEV_TYPE=dt.no and dt.DEV_CATALOG=dc.no) as "devCatalogName" ,
+	 		d.ADDRESS as "address" ,o.NO as "orgNo" ,o.name as "orgName", d.ADDNOTES_LINE as "addnotesLine", line.LINE_NAME as "addnotesLineName"
+     FROM DEV_STATUS_TABLE t,DEV_BASE_INFO d,SYS_ORG o, LINE_TABLE line
+     WHERE t.Dev_Mod_Status='FATAL'
+		AND t.DEV_NO=d.NO AND d.ORG_NO=o.NO AND d.STATUS=1 and d.ADDNOTES_LINE = line.LINE_NO
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+    	AND O.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+    	</if>
+    	<if test="orgNo != null and orgNo != ''">
+			and exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{orgNo,jdbcType=VARCHAR} and o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+	    </if>
+    	<if test ="lineMode == 1 and awayFlag != -1 and awayFlag !=0 ">
+    		AND d.AWAY_FLAG = #{awayFlag,jdbcType=NUMERIC}
+    	</if>
+    	<if test="lineMode == 2" >
+  			<if test="lineNo == null or lineNo == '' or lineNo == '-1'" >
+  				AND d.ADDNOTES_LINE IS NOT NULL
+  			</if>
+  			<if test="lineNo != null and lineNo != '' and lineNo != '-1'">
+  		 	   AND d.ADDNOTES_LINE in (${lineNo})
+  			</if>
+  		</if>
+  		<if test="devNos != null and devNos != ''">
+    		AND t.DEV_NO NOT IN (${devNos})
+		</if>
+  </select>
+
+	<select id="getKeyEventDeviceForLineRun" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT t.DEV_NO as "devNo" ,
+		(select dc.name from DEV_TYPE_TABLE dt, DEV_CATALOG_TABLE dc where d.DEV_TYPE=dt.no and dt.DEV_CATALOG=dc.no) as "devCatalogName" ,
+		d.ADDRESS as "address" ,o.NO as "orgNo" ,o.name as "orgName", d.ADDNOTES_LINE as "addnotesLine", line.LINE_NAME as "addnotesLineName"
+		FROM DEV_STATUS_TABLE t,DEV_BASE_INFO d,SYS_ORG o, LINE_TABLE line ,LINE_RUN_DEV_DETAIL run
+		WHERE 1=1
+		AND t.DEV_NO=d.NO AND d.ORG_NO=o.NO AND d.STATUS=1 and d.ADDNOTES_LINE = line.LINE_NO and t.DEV_NO = run.DEV_NO
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND O.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+		<if test="orgNo != null and orgNo != ''">
+			and exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{orgNo,jdbcType=VARCHAR} and o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+		</if>
+		<if test ="lineMode == 1 and awayFlag != -1 and awayFlag !=0 ">
+			AND d.AWAY_FLAG = #{awayFlag,jdbcType=NUMERIC}
+		</if>
+		<if test="lineMode == 2" >
+			<if test="lineNo == null or lineNo == '' or lineNo == '-1'" >
+				AND d.ADDNOTES_LINE IS NOT NULL
+			</if>
+			<if test="lineNo != null and lineNo != '' and lineNo != '-1'">
+				AND d.ADDNOTES_LINE in (${lineNo})
+			</if>
+		</if>
+		<if test="devNos != null and devNos != ''">
+			AND t.DEV_NO NOT IN (${devNos})
+		</if>
+		<if test="planAddnotesDate != null and planAddnotesDate != ''">
+			AND substr(run.LINE_RUN_NO,-8,8) =  #{planAddnotesDate,jdbcType=VARCHAR}
+		</if>
+
+	</select>
+
+  <select id="getAvaileAmtAndTimeInterval" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT r.devNo as "devNo", r.orgNo as "orgNo", s.orgName as "orgName", r.address as "address", r.devCatalog as "devCatalog", v.devCatalogName as "devCatalogName",
+    	 r.cycleFlag as "cycleFlag", r.devStantardSize as "devStantardSize", r.cashboxLimit as "cashboxLimit",
+		 p.availableAmt as "availableAmt", p.timeInterVal as "timeInterVal", q.avgWdrAmt as "avgWdrAmt", q.avgDepAmt as "avgDepAmt",
+	     r.ADDNOTES_LINE as "addnotesLine", r.LINE_NAME as "addnotesLineName"
+  FROM
+  (SELECT d.NO as devNo, d.ORG_NO as orgNo, d.ADDRESS as address, (SELECT dt.DEV_CATALOG from DEV_TYPE_TABLE dt,DEV_CATALOG_TABLE dc WHERE d.DEV_TYPE=dt.no and dt.DEV_CATALOG=dc.no) as devCatalog, d.CYCLE_FLAG as cycleFlag,
+          d.DEV_STANTARD_SIZE as devStantardSize, d.CASHBOX_LIMIT as cashboxLimit, d.ADDNOTES_LINE, line.LINE_NAME
+    	  FROM DEV_BASE_INFO d, LINE_TABLE line
+    	  WHERE d.STATUS = 1 and d.ADDNOTES_LINE = line.LINE_NO
+       	  <if test ="lineMode == 1 and awayFlag != -1 and awayFlag != 0 ">
+    		  AND d.AWAY_FLAG = #{awayFlag,jdbcType=NUMERIC}
+    	  </if>
+    	  <if test="lineMode == 2" >
+			  <if test="lineNo == null or lineNo == '' or lineNo == '-1'" >
+				  AND d.ADDNOTES_LINE IS NOT NULL
+			  </if>
+			  <if test="lineNo != null and lineNo != '' and lineNo != '-1'">
+				  AND d.ADDNOTES_LINE in (${lineNo})
+			  </if>
+  		   </if>
+    	   <if test="devNos != null and devNos != ''">
+    			AND d.NO NOT IN (${devNos})
+		   </if>
+   ) r
+   INNER JOIN
+   (SELECT o.no as orgNo, o.name as orgName FROM SYS_ORG o
+        WHERE 1=1
+        <if test="clrCenterNo != null and clrCenterNo != ''">
+        and o.CLR_CENTER_NO = ${clrCenterNo}
+        </if>
+        <if test="orgNo != null and orgNo != ''">
+			and exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{orgNo,jdbcType=VARCHAR} and o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+	    </if>) s
+   ON r.orgNo = s.orgNo
+   INNER JOIN
+   (SELECT u.NO as devCatalog, u.NAME as devCatalogName FROM dev_catalog_table u) v
+   ON r.devCatalog = v.devCatalog
+
+   INNER JOIN
+   (SELECT t.DEV_NO as devNo, t.AVAILABLE_AMT as availableAmt,
+	  CEIL((SYSDATE - TO_DATE(CONCAT(CONCAT(t.LAST_ADDNOTE_DATE,' '),t.LAST_ADDNOTE_TIME) , 'YYYY-MM-DD HH24-MI-SS')
+	  ) * 24  ) as timeInterVal
+          FROM DEV_STATUS_TABLE t) p
+   ON r.devNo = p.devNo
+   INNER JOIN
+   (select TERMID as devNo, sum(AMOUNT_PROCESS_CWD)/count(1) as avgWdrAmt, sum(AMOUNT_PROCESS_CDM)/count(1) as avgDepAmt
+	  from BIZTXLOG_INIT where TRANDATE > to_char(sysdate-30,'yyyy-mm-dd')
+	  group by TERMID
+	  ) q
+    ON p.devNo = q.devNo
+  </select>
+
+
+  <select id="qryDevByNoOrgNo" resultMap="DetailMap">
+		select b.*,a.LINE_NAME as ADDNOTES_LINE_NAME from DEV_BASE_INFO b, SYS_ORG o,LINE_TABLE a
+			WHERE b.ORG_NO = o.NO and b.addnotes_line = a.line_no
+			and b.NO = #{devNo,jdbcType=VARCHAR}
+			and exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{orgNo,jdbcType=VARCHAR} and o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+  </select>
+
+
+<!--  <select id="selectDevByNoOrgNo" resultMap="DetailMap">
+		select b.*, o.name as "orgName"
+		from DEV_BASE_INFO b, SYS_ORG o
+		<where>
+			<if test="devNo != null and devNo != ''">
+			and b.NO = #{devNo,jdbcType=VARCHAR}
+		 	</if>
+		 	<if test="addnotesLine != null and addnotesLine != ''">
+			and b.ADDNOTES_LINE = #{addnotesLine,jdbcType=VARCHAR}
+		 	</if>
+			<if test="orgNo != null and orgNo != ''">
+			and b.ORG_NO = o.NO
+				and exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{orgNo,jdbcType=VARCHAR} and o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+			</if>
+		</where>
+		order by b.NO
+		limit #{startRow,jdbcType=NUMERIC},#{pageSize,jdbcType=NUMERIC}
+  </select>-->
+
+
+  <select id="selectDevListByParams" resultMap="DetailMapNoStatus">
+	select <include refid="Extend_Column_List" />
+	from
+	  (
+	  select b.*,line.line_name as ADDNOTES_LINE_NAME,o.name as ACCOUNT_NETPOINT_NAME,rownum rn
+	  from DEV_BASE_INFO b
+	  left join dev_type_table t on b.DEV_TYPE = t.no
+	  LEFT JOIN sys_org o on b.ACCOUNT_NETPOINT = o.no
+	  left join line_table line on b.addnotes_line = line.line_no
+		<where>
+			<if test="no != null and no != ''">
+				and b.NO like concat(concat('%',#{no,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="address != null and address != ''">
+				and b.address like concat(concat('%',#{address,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="ip != null and ip != ''">
+				and b.ip like concat(concat('%',#{ip,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="orgNo != null and orgNo != ''">
+				and b.ORG_NO in
+					(select o.no from SYS_ORG o left join SYS_ORG tOrg on tOrg.no= #{orgNo,jdbcType=VARCHAR}
+					where o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+			</if>
+			<if test="authOrgNo != null and authOrgNo != ''">
+				and b.ORG_NO in
+					(select o.no from SYS_ORG o left join SYS_ORG tOrg on tOrg.no= #{authOrgNo,jdbcType=VARCHAR}
+					where o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				and b.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			</if>
+			<if test="addnotesLine != null and addnotesLine != ''">
+				and b.ADDNOTES_LINE = #{addnotesLine,jdbcType=VARCHAR}
+			</if>
+			<if test="devType != null and devType != ''">
+				and b.DEV_TYPE = #{devType,jdbcType=VARCHAR}
+			</if>
+			<if test="devVendor != null and devVendor != ''">
+				and t.DEV_VENDOR = #{devVendor,jdbcType=VARCHAR}
+			</if>
+			<if test="devCatalog != null and devCatalog != ''">
+				and t.DEV_CATALOG = #{devCatalog,jdbcType=VARCHAR}
+			</if>
+			<if test="devTypeCash != null and devTypeCash != ''">
+				and b.DEV_TYPE_CASH = #{devTypeCash,jdbcType=VARCHAR}
+			</if>
+		</where>
+	order by b.NO
+	)
+	where rn &gt; #{startRow} and rn &lt;= #{endRow}
+  </select>
+
+
+  <select id="qryTotalRow" parameterType="java.util.Map" resultType="_int">
+	select count(1) from DEV_BASE_INFO b
+	left join dev_type_table t on b.DEV_TYPE = t.no
+	<where>
+	  <if test="no != null and no != ''">
+		  and b.NO like concat(concat('%',#{no,jdbcType=VARCHAR}),'%')
+	  </if>
+	  <if test="address != null and address != ''">
+		  and b.address like concat(concat('%',#{address,jdbcType=VARCHAR}),'%')
+	  </if>
+	  <if test="ip != null and ip != ''">
+		  and b.ip like concat(concat('%',#{ip,jdbcType=VARCHAR}),'%')
+	  </if>
+	  <if test="orgNo != null and orgNo != ''">
+		  and b.ORG_NO in
+		  (select o.no from SYS_ORG o left join SYS_ORG tOrg on tOrg.no= #{orgNo,jdbcType=VARCHAR}
+		  where o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+	  </if>
+	  <if test="authOrgNo != null and authOrgNo != ''">
+		  and b.ORG_NO in
+		  (select o.no from SYS_ORG o left join SYS_ORG tOrg on tOrg.no= #{authOrgNo,jdbcType=VARCHAR}
+		  where o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+	  </if>
+	  <if test="clrCenterNo != null and clrCenterNo != ''">
+		  and b.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+	  </if>
+	  <if test="addnotesLine != null and addnotesLine != ''">
+		  and b.ADDNOTES_LINE = #{addnotesLine,jdbcType=VARCHAR}
+	  </if>
+	  <if test="devType != null and devType != ''">
+		  and b.DEV_TYPE = #{devType,jdbcType=VARCHAR}
+	  </if>
+	  <if test="devVendor != null and devVendor != ''">
+		  and t.DEV_VENDOR = #{devVendor,jdbcType=VARCHAR}
+	  </if>
+	  <if test="devCatalog != null and devCatalog != ''">
+		  and t.DEV_CATALOG = #{devCatalog,jdbcType=VARCHAR}
+	  </if>
+	  <if test="devTypeCash != null and devTypeCash != ''">
+		  and b.DEV_TYPE_CASH = #{devTypeCash,jdbcType=VARCHAR}
+	  </if>
+	</where>
+  </select>
+
+
+  <select id="qryNearlyDevsByNo" resultType="java.lang.String">
+		select
+		b.No
+		from DEV_BASE_INFO b ,  SYS_ORG o
+		where b.ORG_NO = o.NO
+		and b.NO like concat(concat('%',#{devNo,jdbcType=VARCHAR}),'%')
+		and o.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+		and exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{orgNo,jdbcType=VARCHAR} and o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+ 	 	limit 10
+  </select>
+
+
+  <select id="qryFhOrgByDevNo" resultType="java.lang.String"  parameterType="java.lang.String" >
+		select
+		o.No
+		from DEV_BASE_INFO b ,  SYS_ORG o
+		where b.ORG_NO = o.NO
+		and b.NO = #{devNo,jdbcType=VARCHAR}
+		and exists (select tOrg.no from SYS_ORG tOrg where tOrg.ORG_GRADE_NO =2 and o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)
+	  	and ROWNUM &lt; 2
+  </select>
+
+
+  <select id="qryDevBaseInfoByNo" resultType="java.util.Map" parameterType="java.lang.String">
+    select
+      v.no as "devVenderNo",
+      v.name as "devVenderName",
+      0 AS "devServiceQuality",
+      ifnull(T.cdmCount, 0) as "cdmCount",
+      ifnull(T.cdmAmt, 0) as "cdmAmt",
+      ifnull(T.cwdCount, 0) as "cwdCount",
+      ifnull(T.cwdAmt, 0) as "cwdAmt",
+      ifnull(CL.usingDays,0) AS "usingDays"
+    from
+      dev_base_info D
+    left join
+      dev_catalog_table C
+    on (SELECT dt.DEV_CATALOG from DEV_TYPE_TABLE dt,DEV_CATALOG_TABLE dc WHERE D.DEV_TYPE=dt.no and dt.DEV_CATALOG=dc.no) = C.no
+    left join
+    dev_vendor_table V
+    on D.dev_vendor = V.no
+    left join
+      (
+        select
+          dev_no,
+          SUM(H_CDM_COUNT)+SUM(C_CDM_COUNT) as cdmCount,
+          SUM(H_CDM_AMT)+SUM(C_CDM_AMT) as cdmAmt,
+          SUM(H_CWD_COUNT)+SUM(C_CWD_COUNT) as cwdCount,
+          SUM(H_CWD_AMT)+SUM(C_CWD_AMT) as cwdAmt
+        from rpt_dev_trans_date T1 where T1.dev_no = #{devNo, jdbcType = VARCHAR}
+        and T1.trans_date > date_format(date_sub(now(), interval 1 month), '%Y-%m-%d')
+      ) T
+    on D.no = T.dev_no
+    left join
+      (
+        select
+          dev_no,datediff(now(),CL1.stat_date) as usingDays
+        from rpt_addcash_clear_date CL1
+        where dev_no = #{devNo, jdbcType = VARCHAR} order by stat_date limit 1
+      ) CL
+    on D.no = CL.dev_no
+    where D.no = #{devNo, jdbcType = VARCHAR};
+  </select>
+
+
+  <select id="qryNoByStatus" resultType="java.lang.String" parameterType="java.lang.Integer">
+    select
+    NO
+    from DEV_BASE_INF O
+    where STATUS = #{devStatus,jdbcType=NUMERIC}
+  </select>
+
+
+	<select id="qryDevInfoByClrNo" resultType="java.util.Map" parameterType="java.lang.String">
+		select
+		d.no as "no", d.org_no as "orgNo", d.dev_type as "devType", d.addnotes_line as "addnotesLine", d.status as "status",
+		d.address as "address", d.away_flag as "awayFlag", d.x as "x", d.y as "y",
+		dt.name as "devTypeName", org.name as "orgName", line.LINE_NAME as "addnotesLineName"
+		from DEV_BASE_INFO d
+		left join dev_type_table dt on d.dev_type = dt.no
+		left join sys_Org org on d.org_no= org.no
+  		left join LINE_TABLE line on d.addnotes_line = line.line_no
+		where d.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getDevDayAvgAmt" resultType="java.lang.Integer" >
+		select ceil(AVG(a.WITHDRAW_AMOUNT))as avgAmount
+		from dev_cash_clear a
+		where 1=1
+		and a.DEV_NO = #{devNo,jdbcType=VARCHAR}
+		and a.WITHDRAW_AMOUNT != 0
+		<if test="startDate != null and startDate != ''">
+			and a.ADDCASH_DATETIME &gt;= #{startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			and a.ADDCASH_DATETIME &lt;= #{endDate,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="qryByDevNo" resultMap="ExtandMap" parameterType="String">
+		select dc.DEV_NO, dc.CLR_TIME_INTERVAL, dc.ARRIVAL_TIME, dc.CLR_DAY, dc.ADDNOTES_LINE,l.LINE_NAME
+		from DEV_CLR_TIME_PARAM dc
+		left join LINE_TABLE l on dc.ADDNOTES_LINE = l.LINE_NO
+		where dc.DEV_NO = #{devNo,jdbcType = VARCHAR}
+	</select>
+</mapper>

@@ -1,0 +1,156 @@
+server:
+  port: 8080
+  tomcat:
+    uri-encoding: UTF-8
+    ## 等待队列长度，默认100。
+    #accept-count: 1000
+    ## 最大工作线程数，默认200。（4核8g内存，线程数经验值800，操作系统做线程之间的切换调度是有系统开销的，所以不是越多越好。）
+    max-threads: 800
+    ## 最小工作空闲线程数，默认10。（适当增大一些，以便应对突然增长的访问量）
+    min-spare-threads: 100
+    ## 超时最多5秒后断开连接
+    connection-timeout: 5000
+
+management:
+  metrics:
+    tags:
+      application: treasury-brain
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+    logfile:
+      # https://github.com/codecentric/spring-boot-admin/issues/999
+      external-file: D:/IDEA/treasury-brain/logs/2019-10/zjapp-2019-10-29.log
+spring:
+  boot.admin:
+    client:
+      name: 智慧金库
+      url: http://10.34.12.164:8090
+      username: zhangsan
+      password: 123456
+      instance:
+        prefer-ip: true
+        metadata:
+          user.name: zhangsan
+          user.password: 123456
+  main:
+    allow-bean-definition-overriding: true
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  application:
+    name: treasury-brain
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:oracle:thin:@//10.2.72.201:1521/OCEAN
+    #url: jdbc:oracle:thin:@//10.7.2.60:1521/helowin
+    username: brain2erp
+    password: brain2erp
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+  redis:
+    database: 0
+    host: 10.34.12.130
+    port: 6379
+    password: root
+    timeout: 60000 #连接超时时间（毫秒）
+    lettuce:
+      shutdown-timeout: 300ms #关闭超时
+      pool:
+        max-active: 600 # 连接池最大连接数（使用负值表示没有限制）
+        max-wait: -1  # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 10  # 连接池中的最大空闲连接
+        min-idle: 1   # 连接池中的最小空闲连接
+  mail:
+    host: mail.zjft.com
+    username: tonghan@zjft.com
+    password: 6c5mY08c
+    default-encoding: utf-8
+
+
+swagger:
+  ## md文档位置
+  markdowns: classpath:markdown/*
+  ## 开启生产环境,屏蔽Swagger所有资源接口，默认为false
+  production: false
+  ## 开启Swagger的Basic认证功能,默认是false
+  basic:
+    enable: true
+    username: zhangsan
+    password: 123456
+
+
+logging:
+  config: classpath:logback.xml
+
+rocketmq:
+  name-server: 10.34.12.130:9876
+  producer:
+    group: boot2ucp_producer_group
+    sendMessageTimeout: 80000
+
+zj:
+  accessTokenValiditySeconds: 18000
+  refreshTokenValiditySeconds: 604800
+  quartz:
+    enable: false
+    scheduler:
+      instance-name: clusteredScheduler
+      instance-id: AUTO
+      skip-update-check: true
+    job-store:
+      class-name: org.quartz.impl.jdbcjobstore.JobStoreTX
+      driver-delegate-class: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+      datasource: quartzDataSource
+      table-prefix: QRTZ_
+      is-clustered: true
+    thread-pool:
+      class-name: org.quartz.simpl.SimpleThreadPool
+      thread-count: 5
+    datasource:
+      driver: oracle.jdbc.driver.OracleDriver
+      url: jdbc:oracle:thin:@//10.2.72.201:1521/OCEAN
+      user: brainToPOC
+      password: brainToPOC
+      maxConnections: 5
+  rocketmq:
+    data:
+      boot2ucp:
+        channelID: ZjCloudInput
+        serialNoHead: 0
+        timeout: 80000
+    topic:
+      boot2ucp:
+        request: BOOT2UCP_REQ
+        response: UCP2BOOT_RESP
+      ucp2boot:
+        request: UCP2BOOT_REQ
+        response: BOOT2UCP_RESP
+
+addnotes-plan: /addnote
+channel-center: /channel-center
+data-insight: /insight
+user-center: /user-center
+tauro: /tauro
+#mobile: /mobile
+auth-admin: /auth
+lock: /lock
+time-job: /time-job
+clear-center: /clear-center
+task: /task
+storage: /storage
+business: /business
+product-center: /product-center
+security-center: /security-center
+manage-center: /manage-center
+param-center: /param-center
+line-center: /line-center
+
+
+
+# management.endpoints.web.exposure.include: '*'

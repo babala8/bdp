@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.channelcenter.repository.ClrCenterTableMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.common.domain.ClrCenterTable">
+		<id column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR"/>
+		<result column="CENTER_NAME" property="centerName" jdbcType="VARCHAR"/>
+		<result column="BANK_ORG_NO" property="bankOrgNo" jdbcType="VARCHAR"/>
+		<result column="NETPOINT_MATRIX_STATUS" property="netpointMatrixStatus" jdbcType="INTEGER"/>
+		<result column="CASHTRUCK_NUM" property="cashtruckNum" jdbcType="INTEGER"/>
+		<result column="NOTE" property="note" jdbcType="VARCHAR"/>
+		<result column="NETPOINT_MATRIX_STATUS_ORG" property="netpointMatrixStatusOrg" jdbcType="INTEGER"/>
+		<result column="COST_MATRIX_POINT_TYPE" property="costMatrixPointType" jdbcType="INTEGER"/>
+		<result column="AUTO_FLAG" property="autoFlag" jdbcType="INTEGER"/>
+		<result column="CENTER_TYPE" property="centerType" jdbcType="INTEGER"/>
+		<result column="LINE_MODE" property="lineMode" jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.common.domain.ClrCenterTable" extends="BaseResultMap">
+		<association property="sysOrg" column="BANK_ORG_NO"
+					 javaType="com.zjft.microservice.treasurybrain.common.domain.SysOrg"
+					 select="com.zjft.microservice.treasurybrain.channelcenter.repository.SysOrgMapper.selectByPrimaryKey"></association>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+    CLR_CENTER_NO, CENTER_NAME, BANK_ORG_NO, NETPOINT_MATRIX_STATUS, CASHTRUCK_NUM, NOTE, 
+    NETPOINT_MATRIX_STATUS_ORG, COST_MATRIX_POINT_TYPE, AUTO_FLAG, CENTER_TYPE, LINE_MODE
+  </sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List"/>
+		from clr_center_table
+		where CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from clr_center_table
+    where CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </delete>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.common.domain.ClrCenterTable">
+    insert into CLR_CENTER_TABLE (CLR_CENTER_NO, CENTER_NAME, BANK_ORG_NO, 
+      NETPOINT_MATRIX_STATUS, CASHTRUCK_NUM, NOTE, 
+      NETPOINT_MATRIX_STATUS_ORG, COST_MATRIX_POINT_TYPE,
+      LINE_MODE
+      )
+    values (#{clrCenterNo,jdbcType=VARCHAR}, #{centerName,jdbcType=VARCHAR}, #{bankOrgNo,jdbcType=VARCHAR}, 
+      #{netpointMatrixStatus,jdbcType=INTEGER}, #{cashtruckNum,jdbcType=INTEGER}, #{note,jdbcType=VARCHAR}, 
+      #{netpointMatrixStatusOrg,jdbcType=INTEGER}, #{costMatrixPointType,jdbcType=INTEGER},
+      #{lineMode, jdbcType=INTEGER}
+      )
+  </insert>
+
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.common.domain.ClrCenterTable">
+		insert into clr_center_table
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="clrCenterNo != null">
+				CLR_CENTER_NO,
+			</if>
+			<if test="centerName != null">
+				CENTER_NAME,
+			</if>
+			<if test="bankOrgNo != null">
+				BANK_ORG_NO,
+			</if>
+			<if test="netpointMatrixStatus != null">
+				NETPOINT_MATRIX_STATUS,
+			</if>
+			<if test="cashtruckNum != null">
+				CASHTRUCK_NUM,
+			</if>
+			<if test="note != null">
+				NOTE,
+			</if>
+			<if test="netpointMatrixStatusOrg != null">
+				NETPOINT_MATRIX_STATUS_ORG,
+			</if>
+			<if test="costMatrixPointType != null">
+				COST_MATRIX_POINT_TYPE,
+			</if>
+			<if test="lineMode != null">
+				LINE_MODE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="clrCenterNo != null">
+				#{clrCenterNo,jdbcType=VARCHAR},
+			</if>
+			<if test="centerName != null">
+				#{centerName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankOrgNo != null">
+				#{bankOrgNo,jdbcType=VARCHAR},
+			</if>
+			<if test="netpointMatrixStatus != null">
+				#{netpointMatrixStatus,jdbcType=INTEGER},
+			</if>
+			<if test="cashtruckNum != null">
+				#{cashtruckNum,jdbcType=INTEGER},
+			</if>
+			<if test="note != null">
+				#{note,jdbcType=VARCHAR},
+			</if>
+			<if test="netpointMatrixStatusOrg != null">
+				#{netpointMatrixStatusOrg,jdbcType=INTEGER},
+			</if>
+			<if test="costMatrixPointType != null">
+				#{costMatrixPointType,jdbcType=INTEGER},
+			</if>
+			<if test="lineMode != null">
+				#{lineMode,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.common.domain.ClrCenterTable">
+		update clr_center_table
+		<set>
+			<if test="centerName != null">
+				CENTER_NAME = #{centerName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankOrgNo != null">
+				BANK_ORG_NO = #{bankOrgNo,jdbcType=VARCHAR},
+			</if>
+			<if test="netpointMatrixStatus != null">
+				NETPOINT_MATRIX_STATUS = #{netpointMatrixStatus,jdbcType=INTEGER},
+			</if>
+			<if test="cashtruckNum != null">
+				CASHTRUCK_NUM = #{cashtruckNum,jdbcType=INTEGER},
+			</if>
+			<if test="note != null">
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+			<if test="netpointMatrixStatusOrg != null">
+				NETPOINT_MATRIX_STATUS_ORG = #{netpointMatrixStatusOrg,jdbcType=INTEGER},
+			</if>
+			<if test="costMatrixPointType != null">
+				COST_MATRIX_POINT_TYPE = #{costMatrixPointType,jdbcType=INTEGER},
+			</if>
+			<if test="autoFlag != null">
+				AUTO_FLAG = #{autoFlag,jdbcType=INTEGER},
+			</if>
+			<if test="centerType != null">
+				CENTER_TYPE = #{centerType,jdbcType=INTEGER},
+			</if>
+			<if test="lineMode != null">
+				LINE_MODE = #{lineMode, jdbcType=INTEGER},
+			</if>
+		</set>
+		where CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.common.domain.ClrCenterTable">
+    update clr_center_table
+    set CENTER_NAME = #{centerName,jdbcType=VARCHAR},
+      BANK_ORG_NO = #{bankOrgNo,jdbcType=VARCHAR},
+      NETPOINT_MATRIX_STATUS = #{netpointMatrixStatus,jdbcType=INTEGER},
+      CASHTRUCK_NUM = #{cashtruckNum,jdbcType=INTEGER},
+      NOTE = #{note,jdbcType=VARCHAR},
+      NETPOINT_MATRIX_STATUS_ORG = #{netpointMatrixStatusOrg,jdbcType=INTEGER},
+      COST_MATRIX_POINT_TYPE = #{costMatrixPointType,jdbcType=INTEGER},
+      LINE_MODE = #{lineMode, jdbcType=INTEGER}
+    where CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </update>
+
+	<select id="getClrCenterListByOrgNo" resultMap="DetailMap" parameterType="java.lang.String">
+  SELECT DISTINCT c.* FROM Clr_Center_Table c
+	   WHERE
+		c.BANK_ORG_NO IN (SELECT O2.NO FROM SYS_ORG O2,(SELECT O1.LEFT O1LEFT,O1.RIGHT O1RIGHT FROM SYS_ORG O1 WHERE O1.NO
+			=#{orgNo,jdbcType=VARCHAR}) T WHERE O2.left &gt;= T.O1LEFT and O2.RIGHT &lt;= T.O1RIGHT)
+		<!--exists (select tOrg.no from SYS_ORG tOrg where tOrg.no= #{orgNo,jdbcType=VARCHAR} and o.left &gt;= tOrg.LEFT and o.right &lt;= tOrg.RIGHT)-->
+  </select>
+
+	<select id="getClrCenterByClrNo" parameterType="java.lang.String" resultType="java.util.Map">
+  	select c.center_Name as "centerName", c.bank_Org_No as "bankOrgNo" , o.name as "bankOrgName" ,
+  	o.region as "bankRegion" , o.city as "bankCity" , o.x as "x" , o.y as "y" , c.NETPOINT_MATRIX_STATUS as "netPointMatrixStatus"
+  	from SYS_ORG o,Clr_Center_Table c
+  	where o.no = c.BANK_ORG_NO and o.CLR_CENTER_NO = c.CLR_CENTER_NO 
+  	and c.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </select>
+
+	<select id="getClrCenterOrgNo" parameterType="java.lang.String" resultType="java.lang.String">
+  	select BANK_ORG_NO from clr_center_table
+  	where CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+  </select>
+
+	<select id="getAllClrCenterList" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List"/>
+		from clr_center_table
+	</select>
+
+	<select id="qryClrCenterListByAuth" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from CLR_CENTER_TABLE c
+		<where>
+			<if test="clrCenterNo!= null and clrCenterNo!=''">
+					and CLR_CENTER_NO like concat(concat('%',#{clrCenterNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="clrCenterName!= null and clrCenterName!=''">
+				and CENTER_NAME like concat(concat('%',#{clrCenterName,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="clrCenterType!= null and clrCenterType!=''">
+				and CENTER_TYPE = #{clrCenterType,jdbcType=INTEGER}
+			</if>
+			AND BANK_ORG_NO IN (SELECT O.NO FROM SYS_ORG O,(SELECT O1.LEFT O1LEFT,O1.RIGHT O1RIGHT FROM SYS_ORG O1 WHERE O1.NO
+			=#{userOrgNo,jdbcType=VARCHAR}) T WHERE O.left &gt;= T.O1LEFT and O.RIGHT &lt;= T.O1RIGHT)
+			<!--and exists(select distinct o.PARENT_ORG from SYS_ORG o left join SYS_ORG tOrg on
+			tOrg.no=#{authOrgNo,jdbcType=VARCHAR}
+			where o.left &gt; tOrg.LEFT and o.right &lt; tOrg.RIGHT and c.BANK_ORG_NO=o.PARENT_ORG)-->
+		</where>
+	</select>
+
+	<select id="clrCenterNoList" resultType="String">
+	    SELECT CLR_CENTER_NO FROM CLR_CENTER_TABLE
+	</select>
+
+	<select id="getOrgNameByClrNo" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT NAME FROM SYS_ORG WHERE NO = (SELECT BANK_ORG_NO FROM CLR_CENTER_TABLE WHERE CLR_CENTER_NO =#{clrCenterNo,jdbcType=VARCHAR})
+	</select>
+
+	<select id="qryClrCenterIsAuto" parameterType="java.lang.String" resultType="Integer">
+		select count(1) from CLR_CENTER_TABLE
+		where
+		AUTO_FLAG = 1
+		and CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectClrCenterByPrimaryKey" parameterType="java.lang.String" resultType="Integer">
+		SELECT count(1)
+		FROM CLR_CENTER_TABLE
+		WHERE BANK_ORG_NO = #{orgNo,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteClrCenterByPrimaryKey"  parameterType="java.lang.String">
+		delete from CLR_CENTER_TABLE
+		where BANK_ORG_NO = #{orgNo,jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

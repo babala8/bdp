@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.param.repository.SysParamMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.common.domain.SysParam">
+		<id column="LOGIC_ID" property="logicId" jdbcType="VARCHAR"/>
+		<result column="CATALOG" property="catalog" jdbcType="NUMERIC"/>
+		<result column="PARAM_NAME" property="paramName" jdbcType="VARCHAR"/>
+		<result column="PARAM_VALUE" property="paramValue" jdbcType="VARCHAR"/>
+		<result column="STATEMENT" property="statement" jdbcType="VARCHAR"/>
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		LOGIC_ID, CATALOG, PARAM_NAME, PARAM_VALUE, STATEMENT,
+		DESCRIPTION
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_PARAM
+		where LOGIC_ID = #{logicId,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		SYS_PARAM
+		where LOGIC_ID = #{logicId,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.common.domain.SysParam">
+		insert into SYS_PARAM
+		(LOGIC_ID, CATALOG, PARAM_NAME,
+		PARAM_VALUE, STATEMENT, DESCRIPTION
+		)
+		values (#{logicId,jdbcType=VARCHAR}, #{catalog,jdbcType=NUMERIC},
+		#{paramName,jdbcType=VARCHAR},
+		#{paramValue,jdbcType=VARCHAR},
+		#{statement,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.common.domain.SysParam">
+		insert into SYS_PARAM
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="logicId != null">
+				LOGIC_ID,
+			</if>
+			<if test="catalog != null">
+				CATALOG,
+			</if>
+			<if test="paramName != null">
+				PARAM_NAME,
+			</if>
+			<if test="paramValue != null">
+				PARAM_VALUE,
+			</if>
+			<if test="statement != null">
+				STATEMENT,
+			</if>
+			<if test="description != null">
+				DESCRIPTION,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="logicId != null">
+				#{logicId,jdbcType=VARCHAR},
+			</if>
+			<if test="catalog != null">
+				#{catalog,jdbcType=NUMERIC},
+			</if>
+			<if test="paramName != null">
+				#{paramName,jdbcType=VARCHAR},
+			</if>
+			<if test="paramValue != null">
+				#{paramValue,jdbcType=VARCHAR},
+			</if>
+			<if test="statement != null">
+				#{statement,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.common.domain.SysParam">
+		update SYS_PARAM
+		<set>
+			<if test="catalog != null">
+				CATALOG = #{catalog,jdbcType=NUMERIC},
+			</if>
+			<if test="paramName != null">
+				PARAM_NAME = #{paramName,jdbcType=VARCHAR},
+			</if>
+			<if test="paramValue != null">
+				PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+			</if>
+			<if test="statement != null">
+				STATEMENT = #{statement,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where LOGIC_ID = #{logicId,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.common.domain.SysParam">
+		update SYS_PARAM
+		set CATALOG = #{catalog,jdbcType=NUMERIC},
+		PARAM_VALUE =
+		#{paramValue,jdbcType=VARCHAR},
+		STATEMENT =
+		#{statement,jdbcType=VARCHAR},
+		DESCRIPTION =
+		#{description,jdbcType=VARCHAR}
+		where LOGIC_ID =
+		#{logicId,jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllList" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_PARAM
+	</select>
+
+	<select id="selectByParamName" resultMap="BaseResultMap" parameterType="String">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_PARAM
+		where PARAM_NAME = #{paramName,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qrySysRunParam" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_PARAM a
+		where a.PARAM_NAME != 'auditFlag'
+		AND a.CATALOG = 1
+	</select>
+
+	<select id="qryValueByName" resultType="String" parameterType="String">
+		select PARAM_VALUE from SYS_PARAM
+		where PARAM_NAME = #{paramName,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryTotalRow" resultType="INTEGER" parameterType="java.util.Map" >
+		select count(1) from SYS_PARAM o
+		<where>
+			<if test="catalog!= null and catalog!=''">
+				AND o.catalog in (select t.catalog from sys_param_catalog t where t.catalog =
+				#{catalog,jdbcType=NUMERIC})
+			</if>
+			<if test="paramName!= null and paramName!=''">
+				AND o.param_name like CONCAT('%',CONCAT(#{paramName,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="statement!= null and statement!=''">
+				AND o.statement like CONCAT('%',CONCAT(#{statement,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="description!= null and description!=''">
+				AND o.description like CONCAT('%',CONCAT(#{description,jdbcType=VARCHAR},'%'))
+			</if>
+		</where>
+	</select>
+
+	<!--分页查询-->
+	<select id="queryParamByPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select *
+		from (
+		select rownum rn,
+		<include refid="Base_Column_List"/>
+		from sys_param o
+		<where>
+			<if test="catalog!= null and catalog!=''">
+				AND o.catalog in (select t.catalog from sys_param_catalog t where t.catalog =
+				#{catalog,jdbcType=NUMERIC})
+			</if>
+			<if test="paramName!= null and paramName!=''">
+				AND o.param_name like CONCAT('%',CONCAT(#{paramName,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="statement!= null and statement!=''">
+				AND o.statement like CONCAT('%',CONCAT(#{statement,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="description!= null and description!=''">
+				AND o.description like CONCAT('%',CONCAT(#{description,jdbcType=VARCHAR},'%'))
+			</if>
+		</where>
+		order by o.LOGIC_ID )
+		where rn &gt; #{startRow,jdbcType=NUMERIC} and rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+</mapper>

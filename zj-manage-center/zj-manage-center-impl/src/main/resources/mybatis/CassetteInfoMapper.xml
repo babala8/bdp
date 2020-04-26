@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.managecenter.repository.CassetteInfoMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.managecenter.po.CassetteInfoPO">
+		<id column="CASSETTE_NO" property="cassetteNo" jdbcType="VARCHAR"/>
+		<result column="CASSETTE_NO_BANK" property="cassetteNoBank" jdbcType="VARCHAR"/>
+		<result column="CASSETTE_SERIAL" property="cassetteSerial" jdbcType="VARCHAR"/>
+		<result column="TAG_TID" property="tagTid" jdbcType="VARCHAR"/>
+		<result column="CASSETTE_TYPE" property="cassetteType" jdbcType="INTEGER"/>
+		<result column="CASSETTE_NOTE_VALUE" property="cassetteNoteValue" jdbcType="INTEGER"/>
+		<result column="CASSETTE_CURRENCY" property="cassetteCurrency" jdbcType="VARCHAR"/>
+		<result column="CASSETTE_MAX_NOTESNUM" property="cassetteMaxNotesnum" jdbcType="INTEGER"/>
+		<result column="STATUS" property="status" jdbcType="INTEGER"/>
+		<result column="CASSETTE_VENDOR" property="cassetteVendor" jdbcType="INTEGER"/>
+
+	</resultMap>
+
+	<resultMap id="DetailMap" type="com.zjft.microservice.treasurybrain.managecenter.domain.CassetteInfoDO"
+			   extends="BaseResultMap">
+		<result column="CASSETTE_VENDOR_NAME" property="cassetteVendorName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+    	cassette_no,
+       	cassette_no_bank,
+       	cassette_serial,
+       	tag_tid,
+       	cassette_type,
+       	cassette_note_value,
+       	cassette_currency,
+       	cassette_max_notesnum,
+       	cassette_vendor,
+       	status
+  	</sql>
+
+
+	<select id="qryCassetteInfoByPage" parameterType="java.util.Map" resultMap="DetailMap">
+		Select r.*,v.name as CASSETTE_VENDOR_NAME
+		from
+		(select tt.* from (select t.*, rownum as rn from (
+		select
+		<include refid="Base_Column_List"/>
+		from cassette_info c
+		<where>1=1
+			<if test="null != cassetteNo and '' != cassetteNo">
+				and c.cassette_no LIKE concat('%',concat((#{cassetteNo,jdbcType=VARCHAR}),'%'))
+			</if>
+			<if test="null != cassetteNoBank and '' != cassetteNoBank">
+				and c.cassette_no_bank LIKE concat('%',concat((#{cassetteNoBank,jdbcType=VARCHAR}),'%'))
+			</if>
+			<if test="null != cassetteType and '' != cassetteType">
+				and c.cassette_type=#{cassetteType,jdbcType=INTEGER}
+			</if>
+			<if test="null != cassetteVendor and '' != cassetteVendor">
+				and c.cassette_vendor=#{cassetteVendor,jdbcType=INTEGER}
+			</if>
+			<if test="null != status and '' != status">
+				and c.status=#{status,jdbcType=INTEGER}
+			</if>
+			order by c.cassette_no ) t
+		</where>
+		) tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}) r
+		left join DEV_VENDOR_TABLE v on r.cassette_vendor = v.no
+	</select>
+
+	<select id="qryTotalRowOfCassetteInfo" parameterType="java.util.Map" resultType="Integer">
+		select
+		count(0) as totalRow
+		from cassette_info c
+		<where>1=1
+			<if test="null != cassetteNo and '' != cassetteNo">
+				and c.cassette_no LIKE concat('%',concat((#{cassetteNo,jdbcType=VARCHAR}),'%'))
+			</if>
+			<if test="null != cassetteNoBank and '' != cassetteNoBank">
+				and c.cassette_no_bank LIKE concat('%',concat((#{cassetteNoBank,jdbcType=VARCHAR}),'%'))
+			</if>
+			<if test="null != cassetteType and '' != cassetteType">
+				and c.cassette_type=#{cassetteType,jdbcType=INTEGER}
+			</if>
+			<if test="null != cassetteVendor and '' != cassetteVendor">
+				and c.cassette_vendor=#{cassetteVendor,jdbcType=INTEGER}
+			</if>
+			<if test="null != status and '' != status">
+				and c.status=#{status,jdbcType=INTEGER}
+			</if>
+		</where>
+		order by c.cassette_no
+	</select>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.managecenter.domain.CassetteInfoDO">
+		insert into cassette_info(cassette_no
+		<if test="null!=cassetteNoBank">,cassette_no_bank</if>
+		<if test="null!=cassetteSerial">,cassette_serial</if>
+		,tag_tid,cassette_type,cassette_note_value,cassette_currency,
+		cassette_max_notesnum,cassette_vendor,status)
+		values
+		(#{cassetteNo,jdbcType = VARCHAR}
+		<if test="null!=cassetteNoBank">, #{cassetteNoBank,jdbcType = VARCHAR}</if>
+		<if test="null!=cassetteSerial">,#{cassetteSerial,jdbcType = VARCHAR}</if>
+		,#{tagTid,jdbcType = VARCHAR},#{cassetteType,jdbcType = INTEGER},
+		#{cassetteNoteValue,jdbcType = INTEGER},#{cassetteCurrency,jdbcType = VARCHAR},
+		#{cassetteMaxNotesnum,jdbcType = INTEGER},
+		#{cassetteVendor,jdbcType = INTEGER}, #{status,jdbcType = INTEGER})
+	</insert>
+
+	<delete id="delByNo" parameterType="java.lang.String">
+		delete from cassette_info c where c.cassette_no = #{cassetteNo,jdbcType = VARCHAR}
+	</delete>
+
+	<update id="modByNo" parameterType="com.zjft.microservice.treasurybrain.managecenter.domain.CassetteInfoDO">
+		update cassette_info c
+		<set>
+			<if test="null!=cassetteNoBank">c.cassette_no_bank = #{cassetteNoBank,jdbcType = VARCHAR},</if>
+			<if test="null!=cassetteSerial">c.cassette_serial = #{cassetteSerial,jdbcType = VARCHAR},</if>
+			c.tag_tid = #{tagTid,jdbcType = VARCHAR},
+			c.cassette_type = #{cassetteType,jdbcType = INTEGER},
+			c.cassette_note_value = #{cassetteNoteValue,jdbcType = INTEGER},
+			c.cassette_currency = #{cassetteCurrency,jdbcType = VARCHAR},
+			c.cassette_max_notesnum = #{cassetteMaxNotesnum,jdbcType = INTEGER},
+			c.cassette_vendor = #{cassetteVendor,jdbcType = INTEGER},
+			c.status = #{status,jdbcType = INTEGER}
+		</set>
+		where c.cassette_no = #{cassetteNo,jdbcType = VARCHAR}
+	</update>
+
+	<select id="qryByCassetteNo" parameterType="java.lang.String"
+			resultMap="DetailMap">
+		select
+		<include refid="Base_Column_List"/>
+		from cassette_info c where c.cassette_no = #{cassetteNo,jdbcType = VARCHAR}
+	</select>
+
+	<update id="updateStatusByNo" parameterType="java.util.Map">
+   update cassette_info c set c.status = #{status,jdbcType = INTEGER}
+	where c.cassette_no=#{cassetteNo,jdbcType = VARCHAR}
+  </update>
+
+</mapper>

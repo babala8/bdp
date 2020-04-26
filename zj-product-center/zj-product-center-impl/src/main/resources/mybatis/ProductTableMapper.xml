@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjft.microservice.treasurybrain.productcenter.repository.ProductTableMapper">
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.productcenter.po.ProductBaseTablePO">
+    <id column="PRODUCT_NO" jdbcType="VARCHAR" property="productNo" />
+    <result column="PRODUCT_TYPE" jdbcType="VARCHAR" property="productType" />
+    <result column="PRODUCT_NAME" jdbcType="VARCHAR" property="productName" />
+    <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    PRODUCT_NO, PRODUCT_TYPE, PRODUCT_NAME, CREATE_TIME, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from PRODUCT_TABLE
+    where PRODUCT_NO = #{productNo,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from PRODUCT_TABLE
+    where PRODUCT_NO = #{productNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.productcenter.po.ProductBaseTablePO">
+    insert into PRODUCT_TABLE (PRODUCT_NO, PRODUCT_TYPE, PRODUCT_NAME,
+      CREATE_TIME, UPDATE_TIME)
+    values (#{productNo,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR},
+      #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.productcenter.po.ProductBaseTablePO">
+    insert into PRODUCT_TABLE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="productNo != null and productNo != ''">
+		  PRODUCT_NO,
+      </if>
+      <if test="productType != null and productType !=''">
+		  PRODUCT_TYPE,
+      </if>
+      <if test="productName != null and productName !=''">
+		  PRODUCT_NAME,
+      </if>
+      <if test="createTime != null and createTime !=''">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null and updateTime!=''">
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="productNo != null and productNo != ''">
+        #{productNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null and productType != ''">
+        #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null and productName != ''">
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null and createTime != ''">
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null and updateTime != ''">
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.productcenter.po.ProductBaseTablePO">
+    update PRODUCT_TABLE
+    <set>
+      <if test="productType != null and productType != ''">
+		  PRODUCT_TYPE = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null and productName != ''">
+		  PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null and createTime != ''">
+        CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null and updateTime != ''">
+        UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where PRODUCT_NO = #{productNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.productcenter.po.ProductBaseTablePO">
+    update PRODUCT_TABLE
+    set PRODUCT_TYPE = #{productType,jdbcType=VARCHAR},
+      PRODUCT_NAME = #{productName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=VARCHAR}
+    where PRODUCT_NO = #{productNo,jdbcType=VARCHAR}
+  </update>
+
+	<select id="qryExist" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1)
+		from PRODUCT_TABLE
+		where PRODUCT_NO = #{productNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectUpperNoByName" parameterType="java.lang.String" resultType="java.lang.String">
+		select PRODUCT_NO
+		from PRODUCT_TABLE
+		where PRODUCT_NAME = #{productName,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectUpperName" parameterType="java.lang.String" resultType="java.lang.String">
+		select PRODUCT_NAME
+		from PRODUCT_TABLE
+		where PRODUCT_NO =(select PRODUCT_TYPE from PRODUCT_TABLE
+		where PRODUCT_NO=#{productNo,jdbcType=VARCHAR})
+	</select>
+
+	<select id="selectGoodsNameByGoodsNo" parameterType="java.lang.String" resultType="java.lang.String">
+		select PRODUCT_NAME
+		from PRODUCT_TABLE
+		where PRODUCT_NO =#{productNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryGoodsInfo"  resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from PRODUCT_TABLE
+	</select>
+	<select id="qryTotalRow" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from PRODUCT_TABLE o
+		<where>
+			<if test="productNo != null and productNo!=''">
+				and o.PRODUCT_NO LIKE concat(concat('%',#{productNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="productType != null and productType !=''">
+				and o.PRODUCT_TYPE LIKE concat(concat('%',#{productType,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="productName != null and productName!=''">
+				and o.PRODUCT_NAME LIKE concat(concat('%',#{productName,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="qryGoodsBase" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from PRODUCT_TABLE o
+		<where>
+			<if test="productNo != null and productNo!=''">
+				and o.PRODUCT_NO LIKE concat(concat('%',#{productNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="productType != null and productType !=''">
+				and o.PRODUCT_TYPE LIKE concat(concat('%',#{productType,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="productName != null and productName!=''">
+				and o.PRODUCT_NAME LIKE concat(concat('%',#{productName,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+		order by o.PRODUCT_NO
+	</select>
+
+	<select id="qryNameExist" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(1)
+		from PRODUCT_TABLE
+		where PRODUCT_NAME = #{productName,jdbcType=VARCHAR}
+	</select>
+</mapper>

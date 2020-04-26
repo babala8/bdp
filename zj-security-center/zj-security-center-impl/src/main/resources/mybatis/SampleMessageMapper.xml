@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.securitycenter.repository.SampleMessageMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.securitycenter.domain.SampleMessageInfo">
+		<id column="WARNMESSAGE_ID" property="warnMessageId" jdbcType="VARCHAR"/>
+		<result column="WARNMESSAGE_TYPE" property="warnMessageType" jdbcType="VARCHAR"/>
+		<result column="WARNMESSAGE_INFO" property="warnMessageInfo" jdbcType="VARCHAR"/>
+		<result column="WARNMESSAGE_DATE" property="warnMessageDate" jdbcType="VARCHAR"/>
+		<result column="WARNMESSAGE_TIME" property="warnMessageTime" jdbcType="VARCHAR"/>
+		<result column="WARNMESSAGE_DETAILINFO" property="warnMessageDetailInfo" jdbcType="VARCHAR"/>
+		<result column="WARNMESSAGE_TO_USERNO" property="warnMessageToUserNo" jdbcType="VARCHAR"/>
+		<result column="WARNMESSAGE_TO_ROLENO" property="warnMessageToRoleNo" jdbcType="VARCHAR"/>
+		<result column="WARNMESSAGE_HANDLE_STATUS" property="warnMessageHandleStatus" jdbcType="VARCHAR"/>
+		<result column="WARNMESSAGE_HANDLE_USERNO" property="warnMessageHandleUserNo" jdbcType="VARCHAR"/>
+		<result column="WARNMESSAGE_HANDLE_USERNAME" property="warnMessageHandleUserName" jdbcType="VARCHAR"/>
+		<result column="WARNMESSAGE_HANDLE_DATE" property="warnMessageHandleDate" jdbcType="VARCHAR"/>
+		<result column="WARNMESSAGE_HANDLE_RESULT" property="warnMessageHandleResult" jdbcType="VARCHAR"/>
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR"/>
+		<result column="CENTER_NAME" property="centerName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.securitycenter.domain.SampleMessageInfo">
+    insert into WARN_MESSAGE_TABLE (WARNMESSAGE_ID,
+	  WARNMESSAGE_TYPE, WARNMESSAGE_INFO, WARNMESSAGE_DATE, WARNMESSAGE_TIME, WARNMESSAGE_DETAILINFO, WARNMESSAGE_TO_USERNO,
+	  WARNMESSAGE_TO_ROLENO ,WARNMESSAGE_HANDLE_STATUS, WARNMESSAGE_HANDLE_USERNO, WARNMESSAGE_HANDLE_USERNAME, WARNMESSAGE_HANDLE_DATE, WARNMESSAGE_HANDLE_RESULT,
+	  CLR_CENTER_NO
+      )
+    values (#{warnMessageId,jdbcType=VARCHAR}, #{warnMessageType,jdbcType=VARCHAR}, #{warnMessageInfo,jdbcType=VARCHAR}, #{warnMessageDate,jdbcType=VARCHAR},
+      #{warnMessageTime,jdbcType=VARCHAR}, #{warnMessageDetailInfo,jdbcType=VARCHAR}, #{warnMessageToUserNo,jdbcType=VARCHAR}, #{warnMessageToRoleNo,jdbcType=VARCHAR},
+	  #{warnMessageHandleStatus,jdbcType=VARCHAR}, #{warnMessageHandleUserNo,jdbcType=VARCHAR}, #{warnMessageHandleUserName,jdbcType=VARCHAR}, #{warnMessageHandleDate,jdbcType=VARCHAR},
+	  #{warnMessageHandleResult,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR}
+      )
+  </insert>
+
+	<select id="qryTotalRowForMonth" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(1) from (
+		SELECT d.warnmessage_id,
+		d.warnmessage_type,
+		d.warnmessage_info,
+		d.warnmessage_date,
+		d.clr_center_no
+		FROM WARN_MESSAGE_TABLE d
+		WHERE 1=1
+
+		<if test="warnType != null and warnType != ''">
+			AND d.warnmessage_type = #{warnType,jdbcType=VARCHAR}
+		</if>
+
+		<if test="startDate != null and startDate != ''">
+			AND d.warnmessage_date &gt;= #{startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND d.warnmessage_date &lt;= #{endDate,jdbcType=VARCHAR}
+		</if>
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND d.clr_center_no = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+		group by d.warnmessage_id, d.warnmessage_type ,d.warnmessage_info, d.warnmessage_date,d.clr_center_no ) t
+	</select>
+
+	<select id="qrySecurityWarnInfoForMonth" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select tt.* from (select t.*, rownum as rn from (
+
+		SELECT
+		d.warnmessage_id,
+		d.warnmessage_type,
+		d.warnmessage_info,
+		d.warnmessage_date,
+		d.warnmessage_time,
+		d.warnmessage_detailinfo,
+		d.warnmessage_to_userno,
+		d.warnmessage_to_roleno,
+		d.warnmessage_handle_status,
+		d.warnmessage_handle_userno,
+		d.warnmessage_handle_username,
+		d.warnmessage_handle_date,
+		d.warnmessage_handle_result,
+		d.clr_center_no,
+		CCT.center_name
+		FROM WARN_MESSAGE_TABLE d
+		left join CLR_CENTER_TABLE CCT on d.CLR_CENTER_NO = CCT.CLR_CENTER_NO
+		WHERE 1=1
+
+		<if test="warnType != null and warnType != ''">
+			AND d.warnmessage_type = #{warnType,jdbcType=VARCHAR}
+		</if>
+
+		<if test="startDate != null and startDate != ''">
+			AND d.warnmessage_date &gt;= #{startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND d.warnmessage_date &lt;= #{endDate,jdbcType=VARCHAR}
+		</if>
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND d.clr_center_no = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+		group by d.warnmessage_id,
+		d.warnmessage_type,
+		d.warnmessage_info,
+		d.warnmessage_date,
+		d.warnmessage_time,
+		d.warnmessage_detailinfo,
+		d.warnmessage_to_userno,
+		d.warnmessage_to_roleno,
+		d.warnmessage_handle_status,
+		d.warnmessage_handle_userno,
+		d.warnmessage_handle_username,
+		d.warnmessage_handle_date,
+		d.warnmessage_handle_result,
+		d.clr_center_no,
+		CCT.center_name
+		order by d.warnmessage_date desc, d.warnmessage_time desc)t)tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+</mapper>

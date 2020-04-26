@@ -1,0 +1,15 @@
+<zj-orchestration id="sign" name="虚拟签收"
+				  requestObject="com.zjft.microservice.treasurybrain.common.dto.TaskTransferDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.ObjectDTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="1a59a215nzwu8">
+	</zj-component>
+	<zj-component id="1a59a215nzwu8" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.tauro.component.SignComponent.sign" next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

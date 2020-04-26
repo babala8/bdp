@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.channelcenter.repository.SysOrgGradeMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.common.domain.SysOrgGrade">
+		<id column="NO" property="no" jdbcType="NUMERIC"/>
+		<result column="NAME" property="name" jdbcType="VARCHAR"/>
+		<result column="ORG_TYPE" property="orgType" jdbcType="VARCHAR"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+    NO, NAME,ORG_TYPE
+  </sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="Integer">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_ORG_GRADE
+		where NO = #{no,jdbcType=NUMERIC}
+	</select>
+
+	<!--<delete id="deleteByPrimaryKey" parameterType="Integer">
+    delete from SYS_ORG_GRADE
+    where NO = #{no,jdbcType=NUMERIC}
+  </delete>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.common.domain.SysOrgGrade">
+    insert into SYS_ORG_GRADE (NO, NAME)
+    values (#{no,jdbcType=NUMERIC}, #{name,jdbcType=VARCHAR})
+  </insert>
+
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.common.domain.SysOrgGrade">
+		insert into SYS_ORG_GRADE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="no != null">
+				NO,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="no != null">
+				#{no,jdbcType=NUMERIC},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective"
+			parameterType="com.zjft.microservice.treasurybrain.common.domain.SysOrgGrade">
+		update SYS_ORG_GRADE
+		<set>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where NO = #{no,jdbcType=NUMERIC}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.common.domain.SysOrgGrade">
+    update SYS_ORG_GRADE
+    set NAME = #{name,jdbcType=VARCHAR}
+    where NO = #{no,jdbcType=NUMERIC}
+  </update>-->
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_ORG_GRADE
+	</select>
+
+	<!--<select id="qryOrgGradeByAuthor" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		<![CDATA[
+   from SYS_ORG_GRADE 
+    where NO > #{orgGradeNo,jdbcType=NUMERIC}-1 and NO != 100 
+   ]]>
+	</select>-->
+
+</mapper>

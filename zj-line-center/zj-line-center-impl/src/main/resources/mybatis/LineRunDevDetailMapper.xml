@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.linecenter.repository.LineRunDevDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunDevDetailExpandDO" >
+    <id column="DEV_NO" property="devNo" jdbcType="VARCHAR" />
+    <id column="LINE_RUN_NO" property="lineRunNo" jdbcType="VARCHAR" />
+    <result column="ORG_NO" property="orgNo" jdbcType="VARCHAR" />
+    <result column="ORG_NAME" property="orgName" jdbcType="VARCHAR" />
+    <result column="CLR_TIME_INTERVAL" property="clrTimeInterval" jdbcType="CHAR" />
+    <result column="ARRIVAL_TIME" property="arrivalTime" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    DEV_NO, LINE_RUN_NO, ORG_NO, ORG_NAME, CLR_TIME_INTERVAL, ARRIVAL_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunDevDetailDO" >
+    select
+    <include refid="Base_Column_List" />
+    from LINE_RUN_DEV_DETAIL
+    where DEV_NO = #{devNo,jdbcType=VARCHAR}
+      and LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+  </select>
+
+	<select id="selectDetailByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunDevDetailDO" >
+	select
+	<include refid="Base_Column_List" />
+	from LINE_RUN_DEV_DETAIL
+	where LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+</select>
+
+  <delete id="deleteByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunDevDetailDO" >
+    delete from LINE_RUN_DEV_DETAIL
+    where DEV_NO = #{devNo,jdbcType=VARCHAR}
+      and LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunDevDetailExpandDO" >
+    insert into LINE_RUN_DEV_DETAIL (DEV_NO, LINE_RUN_NO, ORG_NO, 
+      ORG_NAME, CLR_TIME_INTERVAL, ARRIVAL_TIME
+      )
+    values (#{devNo,jdbcType=VARCHAR}, #{lineRunNo,jdbcType=VARCHAR}, #{orgNo,jdbcType=VARCHAR}, 
+      #{orgName,jdbcType=VARCHAR}, #{clrTimeInterval,jdbcType=CHAR}, #{arrivalTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunDevDetailExpandDO" >
+    insert into LINE_RUN_DEV_DETAIL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="devNo != null" >
+        DEV_NO,
+      </if>
+      <if test="lineRunNo != null" >
+        LINE_RUN_NO,
+      </if>
+      <if test="orgNo != null" >
+        ORG_NO,
+      </if>
+      <if test="orgName != null" >
+        ORG_NAME,
+      </if>
+      <if test="clrTimeInterval != null" >
+        CLR_TIME_INTERVAL,
+      </if>
+      <if test="arrivalTime != null" >
+        ARRIVAL_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="devNo != null" >
+        #{devNo,jdbcType=VARCHAR},
+      </if>
+      <if test="lineRunNo != null" >
+        #{lineRunNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orgNo != null" >
+        #{orgNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null" >
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="clrTimeInterval != null" >
+        #{clrTimeInterval,jdbcType=CHAR},
+      </if>
+      <if test="arrivalTime != null" >
+        #{arrivalTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+	<insert id="insertSelectiveByMap" parameterType="java.util.Map" >
+		insert into LINE_RUN_DEV_DETAIL
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="devNo != null" >
+				DEV_NO,
+			</if>
+			<if test="lineRunNo != null" >
+				LINE_RUN_NO,
+			</if>
+			<if test="orgNo != null" >
+				ORG_NO,
+			</if>
+			<if test="orgName != null" >
+				ORG_NAME,
+			</if>
+			<if test="clrTimeInterval != null" >
+				CLR_TIME_INTERVAL,
+			</if>
+			<if test="arrivalTime != null" >
+				ARRIVAL_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="devNo != null" >
+				#{devNo,jdbcType=VARCHAR},
+			</if>
+			<if test="lineRunNo != null" >
+				#{lineRunNo,jdbcType=VARCHAR},
+			</if>
+			<if test="orgNo != null" >
+				#{orgNo,jdbcType=VARCHAR},
+			</if>
+			<if test="orgName != null" >
+				#{orgName,jdbcType=VARCHAR},
+			</if>
+			<if test="clrTimeInterval != null" >
+				#{clrTimeInterval,jdbcType=CHAR},
+			</if>
+			<if test="arrivalTime != null" >
+				#{arrivalTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunDevDetailExpandDO" >
+    update LINE_RUN_DEV_DETAIL
+    <set >
+      <if test="orgNo != null" >
+        ORG_NO = #{orgNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null" >
+        ORG_NAME = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="clrTimeInterval != null" >
+        CLR_TIME_INTERVAL = #{clrTimeInterval,jdbcType=CHAR},
+      </if>
+      <if test="arrivalTime != null" >
+        ARRIVAL_TIME = #{arrivalTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DEV_NO = #{devNo,jdbcType=VARCHAR}
+      and LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.linecenter.domain.LineRunDevDetailExpandDO" >
+    update LINE_RUN_DEV_DETAIL
+    set ORG_NO = #{orgNo,jdbcType=VARCHAR},
+      ORG_NAME = #{orgName,jdbcType=VARCHAR},
+      CLR_TIME_INTERVAL = #{clrTimeInterval,jdbcType=CHAR},
+      ARRIVAL_TIME = #{arrivalTime,jdbcType=VARCHAR}
+    where DEV_NO = #{devNo,jdbcType=VARCHAR}
+      and LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+  </update>
+
+	<delete id="deleteLineDetail" parameterType="java.util.Map" >
+   DELETE FROM LINE_RUN_DEV_DETAIL WHERE LINE_RUN_NO in
+  (SELECT LINE_RUN_NO FROM Line_RUN_INFO
+  WHERE LINE_NO = #{lineNo,jdbcType=VARCHAR}
+  AND THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR})
+  </delete>
+
+	<delete id="deleteByLineRunNo" parameterType="java.lang.String">
+   DELETE FROM LINE_RUN_DEV_DETAIL
+WHERE LINE_RUN_NO =#{lineRunNo,jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

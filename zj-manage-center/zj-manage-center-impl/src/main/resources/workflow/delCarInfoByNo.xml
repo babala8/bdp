@@ -1,0 +1,16 @@
+<zj-orchestration id="delCarInfoByNo" name="删除车辆信息"
+				  requestObject="java.lang.String"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="15mdju1slkak0">
+	</zj-component>
+	<zj-component id="15mdju1slkak0" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.managecenter.component.CarComponent.delCarInfoByNo"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

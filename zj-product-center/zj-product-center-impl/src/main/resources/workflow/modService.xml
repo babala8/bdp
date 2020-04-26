@@ -1,0 +1,21 @@
+<zj-orchestration id="modService" name="修改产品状态"
+				  requestObject="com.zjft.microservice.treasurybrain.productcenter.dto.ServiceDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.ObjectDTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="@Transactional(rollbackFor &#x3D; Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="yjdum0j17u9s">
+	</zj-component>
+	<zj-component id="yjdum0j17u9s" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.productcenter.component.ServiceComponent.modProductInfo"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="23nic2qc8cwlc"/>
+	</zj-component>
+	<zj-component id="23nic2qc8cwlc" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.productcenter.component.ServiceComponent.applyForSelfProductFail"
+				  next="">
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

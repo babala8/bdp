@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.productcenter.repository.ServiceProductMapper">
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.productcenter.po.ServiceProductPO">
+		insert into SERVICE_PRODUCT (SERVICE_NO,PRODUCT_NO,DIRECTION)
+		values (#{serviceNo,jdbcType=DECIMAL}, #{productNo,jdbcType=VARCHAR}, #{direction,jdbcType=DECIMAL})
+    </insert>
+	<delete id="deleteByProductNo" parameterType="java.lang.Integer">
+		delete from SERVICE_PRODUCT
+		where SERVICE_NO = #{serviceNo,jdbcType=DECIMAL}
+    </delete>
+
+</mapper>

@@ -1,0 +1,46 @@
+<zj-orchestration id="delTask" name="删除任务单"
+				  requestObject="java.lang.String"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.DTO"
+				  tempObject="java.lang.String"
+				  transaction="">
+	<zj-component id="start" type="start"
+				  handler="" next="1">
+	</zj-component>
+	<zj-component id="1" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.task.component.TaskFlowResourceComponent.delTaskCheck"
+				  next="">
+		<exit path="ok" next="2"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+	<zj-component id="2" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.task.component.TaskFlowResourceComponent.delTaskDetail"
+				  next="">
+		<exit path="ok" next="3"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+	<zj-component id="3" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.task.component.TaskFlowResourceComponent.delTaskEntityDetail"
+				  next="">
+		<exit path="ok" next="4"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+	<zj-component id="4" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.task.component.TaskFlowResourceComponent.delTaskEntity"
+				  next="">
+		<exit path="ok" next="5"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+	<zj-component id="5" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.task.component.TaskFlowResourceComponent.delTaskInOut"
+				  next="">
+		<exit path="ok" next="6"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+	<zj-component id="6" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.task.component.TaskFlowResourceComponent.delTask"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

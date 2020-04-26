@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjft.microservice.treasurybrain.timejob.repository.CityInfoMapper">
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.timejob.po.CityInfoPO">
+    <id column="CITY_NO" jdbcType="VARCHAR" property="cityNo" />
+    <result column="CITY_NAME" jdbcType="VARCHAR" property="cityName" />
+    <result column="PROVINCE" jdbcType="VARCHAR" property="province" />
+    <result column="WEATHER_ID" jdbcType="VARCHAR" property="weatherId" />
+    <result column="CLR_CENTER_NUM" jdbcType="DECIMAL" property="clrCenterNum" />
+    <result column="NOTE" jdbcType="VARCHAR" property="note" />
+  </resultMap>
+
+	<sql id="Base_Column_List">
+    CITY_NO, CITY_NAME, PROVINCE, WEATHER_ID, CLR_CENTER_NUM,
+    NOTE
+  </sql>
+
+	<select id="getCityInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from CITY_INFO where CITY_NO=#{cityNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getCityInfoList" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from CITY_INFO
+	</select>
+</mapper>

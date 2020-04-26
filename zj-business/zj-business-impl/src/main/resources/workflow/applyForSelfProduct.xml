@@ -1,0 +1,27 @@
+<zj-orchestration id="applyForSelfProduct" name="产品业务申请"
+				  requestObject="com.zjft.microservice.treasurybrain.business.dto.TransferTaskInfoDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.ObjectDTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="@Transactional(rollbackFor = Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="1jnh6zfyzao74">
+	</zj-component>
+	<zj-component id="1jnh6zfyzao74" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.business.component.SelfProductCompoent.insertTask"
+				  next="">
+		<exit path="ok" next="blk4d38w7f28"/>
+		<exit path="fail" next="ny36hts4cgsg"/>
+	</zj-component>
+	<zj-component id="blk4d38w7f28" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.business.component.SelfProductCompoent.insertTaskEntity"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="ny36hts4cgsg"/>
+	</zj-component>
+	<zj-component id="ny36hts4cgsg" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.business.component.SelfProductCompoent.applyForSelfProductFail"
+				  next="">
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

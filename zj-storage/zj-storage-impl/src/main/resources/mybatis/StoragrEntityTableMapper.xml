@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.storage.repository.StorageEntityTableMapper">
+	<resultMap id="BaseResultMapper" type="com.zjft.microservice.treasurybrain.storage.po.StorageEntityTablePO">
+		<id column="ID" property="id" jdbcType="VARCHAR"/>
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR"/>
+		<result column="ENTITY_NO" property="entityNo" jdbcType="VARCHAR"/>
+		<result column="PRODUCT_NO" property="productNo" jdbcType="VARCHAR"/>
+		<result column="ENTITY_TYPE" property="entityType" jdbcType="INTEGER"/>
+		<result column="AMOUNT" property="amount" jdbcType="DOUBLE"/>
+		<result column="PARENT_ENTITY" property="parentEntity" jdbcType="VARCHAR"/>
+		<result column="SHELF_NO" property="shelfNo" jdbcType="VARCHAR"/>
+		<result column="TIME" property="time" jdbcType="VARCHAR"/>
+		<result column="IS_LEAF" property="isLeaf" jdbcType="INTEGER"/>
+		<result column="IN_OUT_FLAG" property="inOutFlag" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<resultMap id="ExpandMap" extends="BaseResultMapper" type="com.zjft.microservice.treasurybrain.storage.domain.StorageEntityTableDO">
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.storage.po.StorageEntityTablePO">
+	insert into STORAGE_ENTITY_TABLE (ID, CLR_CENTER_NO, ENTITY_NO, PRODUCT_NO, ENTITY_TYPE, CURRENCY_TYPE,
+                                  CURRENCY_CODE, DENOMINATION, AMOUNT,IN_OUT_FLAG)
+    values (#{id,jdbcType=VARCHAR},#{clrCenterNo,jdbcType=VARCHAR},#{entityNo,jdbcType=VARCHAR},
+            #{productNo,jdbcType=INTEGER},#{entityType,jdbcType=INTEGER},#{currencyType,jdbcType=INTEGER},
+            #{currencyCode,jdbcType=VARCHAR},#{denomination,jdbcType=INTEGER},#{amount,jdbcType=DOUBLE},
+        	#{inOutFlag,jdbcType = INTEGER})
+
+	</insert>
+
+	<delete id="delete" parameterType="com.zjft.microservice.treasurybrain.storage.po.StorageEntityTablePO">
+		delete from STORAGE_ENTITY_TABLE
+		where CLR_CENTER_NO=#{clrCenterNo,jdbcType=VARCHAR}
+		and ENTITY_NO=#{entityNo,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="qryTotalRowForPage" parameterType="java.util.Map" resultType="INTEGER">
+		select count(0) from (
+		select *
+		from STORAGE_ENTITY_TABLE se
+		where AMOUNT &gt; 0 and se.IN_OUT_FLAG = #{inOutFlag,jdbcType = INTEGER}
+		<if test=" null != clrCenterNo and ''!=clrCenterNo">
+			and se.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+		<if test=" null != productNo and ''!=productNo">
+			and se.PRODUCT_NO = #{productNo,jdbcType=VARCHAR}
+		</if>
+		group by ENTITY_NO)
+	</select>
+
+	<select id="qryByPage" parameterType="java.util.Map" resultMap="ExpandMap">
+		select t1.id,t1.CLR_CENTER_NO,t1.ENTITY_NO,t1.PRODUCT_NO,t1.ENTITY_TYPE,t1.PRODUCT_NAME,t1.amount
+		from (
+			select t.id,t.CLR_CENTER_NO,t.ENTITY_NO,t.PRODUCT_NO,t.ENTITY_TYPE,ct.PRODUCT_NAME,t.amount,rownum rn
+			from(select se.id,se.CLR_CENTER_NO,se.ENTITY_NO,se.PRODUCT_NO,se.ENTITY_TYPE,se.amount
+				from STORAGE_ENTITY_TABLE se
+				where AMOUNT &gt; 0 and se.IN_OUT_FLAG = #{inOutFlag,jdbcType = INTEGER}
+				<if test=" null != clrCenterNo and ''!=clrCenterNo ">
+				and se.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+				</if>
+				<if test=" null != productNo and ''!=productNo">
+					and se.PRODUCT_NO = #{productNo,jdbcType=VARCHAR}
+				</if>
+				group by se.CLR_CENTER_NO,se.ENTITY_NO,se.PRODUCT_NO,se.ENTITY_TYPE,se.id,se.amount
+				order by se.CLR_CENTER_NO asc,se.ENTITY_NO asc) t
+				left join PRODUCT_TABLE ct on ct.PRODUCT_NO = t.PRODUCT_NO ) t1
+		 where t1.rn &gt; #{startRow,jdbcType = INTEGER} and t1.rn &lt;= #{endRow,jdbcType = INTEGER}
+	</select>
+
+	<update id="inClear" parameterType="com.zjft.microservice.treasurybrain.storage.po.StorageEntityTablePO" >
+		update STORAGE_ENTITY_TABLE se
+			set se.AMOUNT = 0 , se.time=#{time,jdbcType=VARCHAR} , se.in_out_flag = #{inOutFlag,jdbcType=VARCHAR}
+			where se.ENTITY_NO=#{entityNo,jdbcType = VARCHAR}
+			and se.entity_type = #{entityType,jdbcType = INTEGER}
+			and se.CURRENCY_TYPE = #{currencyType,jdbcType = INTEGER}
+			and se.CURRENCY_CODE = #{currencyCode,jdbcType = VARCHAR}
+			and se.DENOMINATION = #{denomination,jdbcType = INTEGER}
+	</update>
+
+	<update id="outClear" parameterType="com.zjft.microservice.treasurybrain.storage.po.StorageEntityTablePO" >
+		update STORAGE_ENTITY_TABLE se
+			set se.time=#{time,jdbcType=VARCHAR} , se.in_out_flag = #{inOutFlag,jdbcType=VARCHAR}
+			where se.ENTITY_NO=#{entityNo,jdbcType = VARCHAR}
+			and se.entity_type = #{entityType,jdbcType = INTEGER}
+			and se.CURRENCY_TYPE = #{currencyType,jdbcType = INTEGER}
+			and se.CURRENCY_CODE = #{currencyCode,jdbcType = VARCHAR}
+			and se.DENOMINATION = #{denomination,jdbcType = INTEGER}
+	</update>
+
+	<insert id="insertOrUpdate" parameterType="com.zjft.microservice.treasurybrain.storage.po.StorageEntityTablePO">
+	merge into STORAGE_ENTITY_TABLE se
+	using (select #{entityNo,jdbcType = VARCHAR} entityNo , #{entityType,jdbcType = INTEGER} entityType
+			from DUAL) t
+    on ( se.ENTITY_NO = t.entityNo
+    	and se.entity_type = t.entityType
+	when matched then
+	 update set  se.AMOUNT=#{amount,jdbcType=DOUBLE} , se.time=#{time,jdbcType=VARCHAR}
+	when not matched then
+		insert  (ID, CLR_CENTER_NO, ENTITY_NO, PRODUCT_NO, ENTITY_TYPE, AMOUNT, in_out_flag)
+    values (#{id,jdbcType=VARCHAR},#{clrCenterNo,jdbcType=VARCHAR},#{entityNo,jdbcType=VARCHAR},
+            #{productNo,jdbcType=INTEGER},#{entityType,jdbcType=INTEGER},#{amount,jdbcType=DOUBLE},
+        	#{inOutFlag,jdbcType = INTEGER})
+	</insert>
+
+	<select id="qryByEntityNo" parameterType="java.lang.String" resultMap="ExpandMap">
+		select ID, CLR_CENTER_NO, ENTITY_NO, PRODUCT_NO, ENTITY_TYPE, AMOUNT, PARENT_ENTITY, SHELF_NO ,IS_LEAF, IN_OUT_FLAG ,TIME 
+		from STORAGE_ENTITY_TABLE where ENTITY_NO = #{entityNo,jdbcType=VARCHAR} or PARENT_ENTITY = #{parentEntity,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteById" parameterType="string">
+		delete from STORAGE_ENTITY_TABLE where id = #{id,jdbcType=VARCHAR}
+	</delete>
+
+
+</mapper>

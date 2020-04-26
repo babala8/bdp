@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjft.microservice.treasurybrain.clearcenter.repository.CountTaskInfoMapper">
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.clearcenter.domain.TaskCountInfoDO">
+    <id column="TASK_NO" jdbcType="VARCHAR" property="taskNo" />
+    <result column="TASK_TYPE" jdbcType="INTEGER" property="taskType" />
+    <result column="TASK_STATUS" jdbcType="INTEGER" property="taskStatus" />
+    <result column="DEV_NO" jdbcType="VARCHAR" property="devNo" />
+    <result column="BATCH" jdbcType="INTEGER" property="batch" />
+    <result column="COUNT_STATUS" jdbcType="INTEGER" property="countStatus" />
+    <result column="COUNT_START_DATE" jdbcType="VARCHAR" property="countStartDate" />
+    <result column="COUNT_END_DATE" jdbcType="VARCHAR" property="countEndDate" />
+    <result column="COUNT_AMOUNT" jdbcType="DOUBLE" property="countAmount" />
+	<result column="CLR_CNETER_NO" jdbcType="VARCHAR" property="clrCenterNo" />
+    <result column="ADDNOTES_PLAN_NO" jdbcType="VARCHAR" property="addnotesPlanNo" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    TASK_NO, DEV_NO, BATCH, COUNT_STATUS, COUNT_START_DATE, COUNT_END_DATE
+  </sql>
+
+  <select id="selectByDevNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from COUNT_TASK_INFO
+    where DEV_NO = #{devNo,jdbcType=VARCHAR}
+	  AND COUNT_STATUS = 1
+	order by BATCH
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from COUNT_TASK_INFO
+    where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByBatch" parameterType="com.zjft.microservice.treasurybrain.clearcenter.domain.TaskCountInfoDO" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from COUNT_TASK_INFO
+    where DEV_NO = #{devNo,jdbcType=VARCHAR} AND BATCH >= #{batch,jdbcType=VARCHAR} order by BATCH
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from COUNT_TASK_INFO
+    where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.clearcenter.domain.TaskCountInfoDO">
+    insert into COUNT_TASK_INFO (TASK_NO, DEV_NO, BATCH, COUNT_STATUS, COUNT_START_DATE, COUNT_END_DATE
+      )
+    values (#{taskNo,jdbcType=VARCHAR}, #{devNo,jdbcType=VARCHAR},
+      #{batch,jdbcType=INTEGER}, #{countStatus,jdbcType=INTEGER}, #{countStartDate,jdbcType=VARCHAR},
+      #{countEndDate,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.clearcenter.domain.TaskCountInfoDO">
+    insert into COUNT_TASK_INFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskNo != null">
+        TASK_NO,
+      </if>
+      <if test="devNo != null">
+        DEV_NO,
+      </if>
+      <if test="batch != null">
+        BATCH,
+      </if>
+      <if test="countStatus != null">
+        COUNT_STATUS,
+      </if>
+      <if test="countStartDate != null">
+        COUNT_START_DATE,
+      </if>
+      <if test="countEndDate != null">
+        COUNT_END_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskNo != null">
+        #{taskNo,jdbcType=VARCHAR},
+      </if>
+      <if test="devNo != null">
+        #{devNo,jdbcType=VARCHAR},
+      </if>
+      <if test="batch != null">
+        #{batch,jdbcType=INTEGER},
+      </if>
+      <if test="countStatus != null">
+        #{countStatus,jdbcType=INTEGER},
+      </if>
+      <if test="countStartDate != null">
+        #{countStartDate,jdbcType=VARCHAR},
+      </if>
+      <if test="countEndDate != null">
+        #{countEndDate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.clearcenter.domain.TaskCountInfoDO">
+    update COUNT_TASK_INFO
+    <set>
+      <if test="devNo != null">
+        DEV_NO = #{devNo,jdbcType=VARCHAR},
+      </if>
+      <if test="batch != null">
+        BATCH = #{batch,jdbcType=INTEGER},
+      </if>
+      <if test="countStatus != null">
+        COUNT_STATUS = #{countStatus,jdbcType=INTEGER},
+      </if>
+      <if test="countStartDate != null">
+        COUNT_START_DATE = #{countStartDate,jdbcType=VARCHAR},
+      </if>
+      <if test="countEndDate != null">
+        COUNT_END_DATE = #{countEndDate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.clearcenter.domain.TaskCountInfoDO">
+    update COUNT_TASK_INFO
+    set
+      DEV_NO = #{devNo,jdbcType=VARCHAR},
+      BATCH = #{batch,jdbcType=INTEGER},
+      COUNT_STATUS = #{countStatus,jdbcType=INTEGER},
+      COUNT_START_DATE = #{countStartDate,jdbcType=VARCHAR},
+      COUNT_END_DATE = #{countEndDate,jdbcType=VARCHAR}
+    where TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateNextAdd" parameterType="com.zjft.microservice.treasurybrain.clearcenter.domain.TaskCountInfoDO">
+    update COUNT_TASK_INFO
+    set
+      BATCH = BATCH + 1
+    where DEV_NO = #{devNo,jdbcType=VARCHAR}
+	  AND TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateNextDel" parameterType="com.zjft.microservice.treasurybrain.clearcenter.domain.TaskCountInfoDO">
+    update COUNT_TASK_INFO
+    set
+      BATCH = BATCH - 1
+    where DEV_NO = #{devNo,jdbcType=VARCHAR}
+	  AND TASK_NO = #{taskNo,jdbcType=VARCHAR}
+  </update>
+
+  <select id="qryCountTaskListByPage"  parameterType="java.util.Map"  resultMap="BaseResultMap">
+	select * from(
+	select rlt.*,rownum rn from (
+	select tat.TASK_NO as TASK_NO, tt.DEV_NO, tt.BATCH, tt.COUNT_STATUS, tt.COUNT_START_DATE, tt.COUNT_END_DATE,
+	  tat.TASK_TYPE,tat.STATUS as TASK_STATUS,tat.CLR_CENTER_NO as CLR_CENTER_NO,tat.ADDNOTES_PLAN_NO
+	FROM TASK_TABLE tat
+	 LEFT JOIN COUNT_TASK_INFO tt
+	 ON tt.TASK_NO=tat.TASK_NO
+	<where>
+		<if test="taskType != null and taskType != ''" >
+			AND tat.TASK_TYPE = #{taskType,jdbcType=INTEGER}
+		</if>
+		<if test="taskNo != null and taskNo != ''" >
+			AND tat.TASK_NO like concat(concat('%',#{taskNo,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="countStatus != null and countStatus != ''">
+			AND tt.COUNT_STATUS = #{countStatus,jdbcType=INTEGER}
+		</if>
+		<if test="taskStatus1 != null and taskStatus1 != ''">
+			AND (tat.STATUS = #{taskStatus1,jdbcType=INTEGER} OR tat.STATUS = #{taskStatus,jdbcType=INTEGER})
+		</if>
+        <if test="taskStatus != null and taskStatus != '' and (taskStatus1 == null or taskStatus1 == '')">
+			AND tat.STATUS = #{taskStatus,jdbcType=INTEGER}
+		</if>
+		<if test="clrCenterNo != null and clrCenterNo != ''">
+			AND tat.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+		</if>
+	</where>
+	  order by tt.COUNT_STATUS,tat.TASK_NO desc) rlt)
+	  where rn &gt; #{startRow,jdbcType=NUMERIC} and rn &lt;= #{endRow,jdbcType=NUMERIC}
+  </select>
+
+  <select id="qryTotalRow"  parameterType="java.util.Map"  resultType="java.lang.Integer">
+	select count(1) from TASK_TABLE tat
+	  LEFT JOIN COUNT_TASK_INFO tt
+	  ON tt.TASK_NO=tat.TASK_NO
+	<where>
+	  <if test="taskNo != null and taskNo != ''" >
+		AND tat.TASK_NO like concat(concat('%',#{taskNo,jdbcType=VARCHAR}),'%')
+	  </if>
+	  <if test="countStatus != null and countStatus != ''">
+		AND tt.COUNT_STATUS = #{countStatus,jdbcType=INTEGER}
+	  </if>
+	  <if test="taskType != null and taskType != ''">
+          AND tat.TASK_TYPE = #{taskType,jdbcType=INTEGER}
+      </if>
+      <if test="taskStatus1 != null and taskStatus1 != ''">
+		AND (tat.STATUS = #{taskStatus1,jdbcType=INTEGER} OR tat.STATUS = #{taskStatus,jdbcType=INTEGER})
+	  </if>
+	  <if test="taskStatus != null and taskStatus != '' and (taskStatus1 == null or taskStatus1 == '')">
+		AND tat.STATUS = #{taskStatus,jdbcType=INTEGER}
+	  </if>
+      <if test="clrCenterNo != null and clrCenterNo != ''">
+		  AND tat.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+	  </if>
+    </where>
+  </select>
+
+</mapper>

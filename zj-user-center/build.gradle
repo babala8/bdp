@@ -1,0 +1,19 @@
+project('zj-user-center-impl'){
+    dependencies {
+        compile project(":zj-user-center:zj-user-center-api")
+
+        compile project(":zj-channel-center:zj-channel-center-api")
+
+        compile project(":zj-manage-center:zj-manage-center-api")
+
+        compile project(":zj-line-center:zj-line-center-api")
+
+        compile group: 'com.zjft.microservice', name: 'zj-auth-admin-api', version: '1.2.2-SNAPSHOT'
+
+        compile group: 'org.apache.poi', name: 'poi', version: '3.12'
+        compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.12'
+
+
+    }
+
+}

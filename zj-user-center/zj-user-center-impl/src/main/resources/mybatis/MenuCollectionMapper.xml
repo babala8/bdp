@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.usercenter.repository.MenuCollectionMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.common.domain.SysMenuDO">
+		<id column="NO" property="no" jdbcType="VARCHAR"/>
+		<result column="NAME" property="name" jdbcType="VARCHAR"/>
+		<result column="MENU_FATHER" property="menuFather" jdbcType="VARCHAR"/>
+		<result column="URL" property="url" jdbcType="VARCHAR"/>
+		<result column="MENU_LEVEL" property="menuLevel" jdbcType="NUMERIC"/>
+		<result column="MENU_ORDER" property="menuOrder" jdbcType="NUMERIC"/>
+		<result column="NOTE" property="note" jdbcType="NUMERIC"/>
+		<result column="MENU_ICON" property="menuIcon" jdbcType="VARCHAR"/>
+		<result column="MENU_SIZE" property="menuSize" jdbcType="NUMERIC"/>
+		<result column="MENU_BG" property="menuBg" jdbcType="VARCHAR"/>
+		<result column="BUTTON_TAG" property="buttonTag" jdbcType="NUMERIC"/>
+		<result column="BUTTON" property="button" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<select id="qryCollectedMenus" resultMap="BaseResultMap" parameterType="String">
+	select m.NO, m.NAME, m.MENU_FATHER,m.URL, m.MENU_LEVEL, m.MENU_ORDER, m.NOTE,
+    		m.MENU_ICON,m.MENU_SIZE, m.MENU_BG, m.BUTTON_TAG, m.BUTTON
+	from SYS_USER_MENU_COLLECTION um,SYS_MENU m
+	where m.NO = um.MENU_NO and um.USER_NO = #{userName,jdbcType = VARCHAR}
+<!--  		and um.MENU_NO in (select rm.MENU_NO from SYS_USER_ROLE ur,SYS_ROLE_MENU rm-->
+<!--                        where ur.ROLE_NO = rm.ROLE_NO and ur.USERNAME=#{menu,jdbcType = VARCHAR})-->
+	order by no
+	</select>
+
+
+	<delete id="deleteByUserNo" parameterType="String" >
+		delete from SYS_USER_MENU_COLLECTION um where um.user_no = #{userName,jdbcType = VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="Map" >
+		insert into SYS_USER_MENU_COLLECTION(user_no, menu_no)
+		values (#{userName,jdbcType = VARCHAR}, #{menuNo,jdbcType=VARCHAR})
+	</insert>
+</mapper>

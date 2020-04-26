@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.linecenter.repository.LineCallCustomerLineRunMapper">
+
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.linecenter.po.LineWorkPO">
+		<id column="LINE_RUN_NO" property="lineRunNo" jdbcType="VARCHAR"/>
+		<result column="LINE_NO" property="lineNo" jdbcType="VARCHAR"/>
+		<result column="THE_YEAR_MONTH" property="theYearMonth" jdbcType="VARCHAR"/>
+		<result column="THE_DAY" property="theDay" jdbcType="VARCHAR"/>
+		<result column="CALL_CUSTOMER_COUNT" property="customerCount" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<resultMap id="ExtandMap" type="com.zjft.microservice.treasurybrain.linecenter.domain.LineWorkDO"
+			   extends="BaseResultMap">
+		<result column="LINE_NAME" property="lineName" jdbcType="VARCHAR"/>
+		<collection property="detailList"
+					ofType="com.zjft.microservice.treasurybrain.linecenter.domain.LineScheduleDO" >
+			<!-- 加入lineRunNo，mybatis处理collection时即使实际上的detail为空，也会因为查询到一条数据，使得detail含一条空的结果	-->
+			<id column="CUSTOMER_NO" property="customerNo" jdbcType="VARCHAR"/>
+			<result column="CUSTOMER_SHORT_NAME" property="customerShortName" jdbcType="VARCHAR"/>
+			<result column="ARRIVAL_TIME" property="arrivalTime" jdbcType="VARCHAR"/>
+		</collection>
+	</resultMap>
+
+	<resultMap id="MapOfLineRunForMonth"
+			   type="com.zjft.microservice.treasurybrain.linecenter.domain.CallCustomerLineRunMonthDO">
+		<id column="LINE_NO" property="lineNo" jdbcType="VARCHAR"/>
+		<id column="THE_YEAR_MONTH" property="theYearMonth" jdbcType="VARCHAR"/>
+		<result column="LINE_NAME" property="lineName" jdbcType="VARCHAR"/>
+		<result column="CALL_CUSTOMER_COUNT" property="callCustomerNum" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<select id="qryMonthTotalRow" resultType="int" parameterType="java.util.Map">
+		select count(0) from(
+		select *
+		from CALL_CUSTOMER_LINE_RUM c
+		where 1 = 1
+		<if test="null!=startMonth and ''!=startMonth ">
+			and c.THE_YEAR_MONTH &gt;= #{startMonth,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=endMonth and ''!=endMonth ">
+			and c.THE_YEAR_MONTH &lt;= #{endMonth,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=lineNo and ''!=lineNo">
+			and c.LINE_NO = #{lineNo,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=clrCenterNo and ''!=clrCenterNo">
+			and c.LINE_NO in (select l.LINE_NO from LINE_TABLE l
+			where l.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			and l.line_type = #{lineType,jdbcType=INTEGER})
+		</if>
+		group by c.LINE_NO,c.THE_YEAR_MONTH)
+	</select>
+
+	<select id="qryMonthByPage" resultMap="MapOfLineRunForMonth" parameterType="map">
+		select t.* from (
+		select r.*,l1.LINE_NAME,ROWNUM rn from (
+		select c.LINE_NO,c.THE_YEAR_MONTH,sum(c.CALL_CUSTOMER_COUNT) CALL_CUSTOMER_COUNT
+		from CALL_CUSTOMER_LINE_RUM c
+		where 1=1
+		<if test="null!=startMonth and ''!=startMonth ">
+			and c.THE_YEAR_MONTH &gt;= #{startMonth,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=endMonth and ''!=endMonth ">
+			and c.THE_YEAR_MONTH &lt;= #{endMonth,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=lineNo and ''!=lineNo">
+			and c.LINE_NO = #{lineNo,jdbcType = VARCHAR}
+		</if>
+		<if test="null!=clrCenterNo and ''!=clrCenterNo">
+			and c.LINE_NO in (select l.LINE_NO from LINE_TABLE l
+			where l.CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+			and l.line_type = #{lineType,jdbcType=INTEGER})
+		</if>
+		group by c.LINE_NO,c.THE_YEAR_MONTH
+		order by c.THE_YEAR_MONTH,c.LINE_NO) r
+		left join LINE_TABLE l1 on l1.LINE_NO = r.LINE_NO and l1.LINE_TYPE = #{lineType,jdbcType = INTEGER}) t
+		where t.rn &gt;=#{startRow,jdbcType = INTEGER } and t.rn &lt; =#{endRow,jdbcType = INTEGER }
+	</select>
+
+	<select id="qryDayCordAndDetails" resultMap="ExtandMap" parameterType="map">
+		select
+		c.LINE_RUN_NO,c.LINE_NO,l.LINE_NAME,c.THE_YEAR_MONTH,c.CALL_CUSTOMER_COUNT,c.THE_DAY,
+		d.CUSTOMER_NO,cc.CUSTOMER_SHORT_NAME,d.ARRIVAL_TIME
+		from CALL_CUSTOMER_LINE_RUM c
+		left join LINE_TABLE l on c.LINE_NO = l.LINE_NO and l.LINE_TYPE = #{ lineType,jdbcType = VARCHAR}
+		left join CALL_CUSTOMER_LINE_RUN_DETAIL d on d.LINE_RUN_NO = c.LINE_RUN_NO
+		left join CALL_CUSTOMER_TABLE cc on cc.CUSTOMER_NO = d.CUSTOMER_NO
+		where c.LINE_NO = #{lineNo,jdbcType=VARCHAR} and c.THE_YEAR_MONTH = #{theYearMonth,jdbcType = VARCHAR}
+		order by c.THE_DAY asc,c.LINE_NO asc,d.ARRIVAL_TIME asc
+	</select>
+
+	<update id="updateCustomerNumByNo" parameterType="string">
+		update CALL_CUSTOMER_LINE_RUM c
+		set c.CALL_CUSTOMER_COUNT = (select count(0) from CALL_CUSTOMER_LINE_RUN_DETAIL cd
+									 where cd.LINE_RUN_NO=#{lineRunNo,jdbcType = VARCHAR})
+		where c.LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+	</update>
+
+	<select id="getNosWithYearMonthAndLineNos" parameterType="map" resultType="string">
+		select cl.LINE_RUN_NO
+		from CALL_CUSTOMER_LINE_RUM cl
+		where cl.THE_YEAR_MONTH = #{theYearMonth,jdbcType = VARCHAR}
+		and cl.LINE_NO in
+		<foreach collection="lineNos" index="i" open="(" close=")" separator="," item="item">
+			#{item,jdbcType = VARCHAR}
+		</foreach>
+	</select>
+
+	<delete id="deleteByNo" parameterType="string">
+		delete from CALL_CUSTOMER_LINE_RUM cl where cl.LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.linecenter.po.LineWorkPO">
+		insert into CALL_CUSTOMER_LINE_RUM(line_run_no, line_no, the_year_month, the_day, call_customer_count)
+		VALUES (#{lineRunNo,jdbcType=VARCHAR},#{lineNo,jdbcType=VARCHAR},
+				#{theYearMonth,jdbcType=VARCHAR},#{theDay,jdbcType=VARCHAR},#{callCustomerCount,jdbcType=INTEGER})
+	</insert>
+
+	<select id="selectLineRunNo" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT c.LINE_RUN_NO FROM CALL_CUSTOMER_LINE_RUM c
+        where c.THE_YEAR_MONTH = #{theYearMonth,jdbcType=VARCHAR} and c.THE_DAY=#{theDay,jdbcType=VARCHAR} and c.LINE_NO=#{lineNo,jdbcType=VARCHAR}
+	</select>
+</mapper>

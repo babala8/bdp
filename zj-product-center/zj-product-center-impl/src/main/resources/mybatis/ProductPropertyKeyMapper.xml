@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjft.microservice.treasurybrain.productcenter.repository.ProductPropertyKeyMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.productcenter.po.ProductPropertyKeyPO">
+		<id column="PROPERTY_NO" jdbcType="VARCHAR" property="propertyNo"/>
+		<result column="PRODUCT_NO" jdbcType="VARCHAR" property="productNo"/>
+		<result column="PROPERTY_NAME" jdbcType="VARCHAR" property="propertyName"/>
+		<result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>
+		<result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime"/>
+		<result column="PROPERTY_TYPE" jdbcType="INTEGER" property="propertyType"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+    PROPERTY_NO, PRODUCT_NO, PROPERTY_NAME, CREATE_TIME, UPDATE_TIME, PROPERTY_TYPE
+  </sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from PRODUCT_PROPERTY_KEY
+		where PROPERTY_NO = #{propertyNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectPropertyNo" parameterType="java.lang.String" resultType="java.lang.String">
+		select
+		PROPERTY_NO
+		from PRODUCT_PROPERTY_KEY
+		where PRODUCT_NO = #{productNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectPropertyNameByPropertyNo" parameterType="java.lang.String" resultType="java.lang.String">
+		select
+		PROPERTY_NAME
+		from PRODUCT_PROPERTY_KEY
+		where PROPERTY_NO = #{propertyNo,jdbcType=VARCHAR}
+	</select>
+	<select id="qryExist" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select
+		count(1)
+		from PRODUCT_PROPERTY_KEY
+		where PROPERTY_NO = #{propertyNo,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from PRODUCT_PROPERTY_KEY
+		where PROPERTY_NO in
+		<foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</delete>
+
+	<delete id="deleteInfoByProductNo" parameterType="java.lang.String">
+		delete from PRODUCT_PROPERTY_KEY
+		where PRODUCT_NO = #{productNo,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="java.util.Map">
+    insert into PRODUCT_PROPERTY_KEY (PROPERTY_NO, PRODUCT_NO, PROPERTY_NAME,
+      CREATE_TIME, UPDATE_TIME, PROPERTY_TYPE)
+    values (#{propertyNo,jdbcType=VARCHAR}, #{productNo,jdbcType=VARCHAR}, #{propertyName,jdbcType=VARCHAR},
+      #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, #{propertyType,jdbcType=INTEGER})
+  </insert>
+	<insert id="insertSelective"
+			parameterType="com.zjft.microservice.treasurybrain.productcenter.po.ProductPropertyKeyPO">
+		insert into PRODUCT_PROPERTY_KEY
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="propertyNo != null and propertyNo !=''">
+				PROPERTY_NO,
+			</if>
+			<if test="productNo != null and productNo !=''">
+				PRODUCT_NO,
+			</if>
+			<if test="propertyName != null and propertyName !=''">
+				PROPERTY_NAME,
+			</if>
+			<if test="createTime != null and createTime !=''">
+				CREATE_TIME,
+			</if>
+			<if test="updateTime != null and updateTime !=''">
+				UPDATE_TIME,
+			</if>
+			<if test="propertyType != null and propertyType !=''">
+				PROPERTY_TYPE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="propertyNo != null and propertyNo !=''">
+				#{propertyNo,jdbcType=VARCHAR},
+			</if>
+			<if test="productNo != null and productNo !=''">
+				#{productNo,jdbcType=VARCHAR},
+			</if>
+			<if test="propertyName != null and propertyName !=''">
+				#{propertyName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null and createTime !=''">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null and updateTime !=''">
+				#{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="propertyType != null and propertyType !=''">
+				#{propertyType,jdbcType=INTEGER}
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+			parameterType="com.zjft.microservice.treasurybrain.productcenter.po.ProductPropertyKeyPO">
+		update PRODUCT_PROPERTY_KEY
+		<set>
+			<if test="productNo != null and productNo !=''">
+				PRODUCT_NO = #{productNo,jdbcType=VARCHAR},
+			</if>
+			<if test="propertyName != null and propertyName !=''">
+				PROPERTY_NAME = #{propertyName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null and createTime !=''">
+				CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null and updateTime !=''">
+				UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="propertyType != null and propertyType !=''">
+				PROPERTY_TYPE = #{propertyType,jdbcType=INTEGER}
+			</if>
+		</set>
+		where PROPERTY_NO = #{propertyNo,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+			parameterType="com.zjft.microservice.treasurybrain.productcenter.po.ProductPropertyKeyPO">
+    update PRODUCT_PROPERTY_KEY
+    set PRODUCT_NO = #{productNo,jdbcType=VARCHAR},
+      PROPERTY_NAME = #{propertyName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=VARCHAR},
+      PROPERTY_TYPE = #{propertyType,jdbcType=INTEGER}
+    where PROPERTY_NO = #{propertyNo,jdbcType=VARCHAR}
+  </update>
+	<select id="selectCountByGoodsNo" parameterType="java.lang.String" resultType="Integer">
+		select count(1)
+		from PRODUCT_PROPERTY_KEY
+		where PRODUCT_NO = #{productNo,jdbcType=VARCHAR} and PROPERTY_NAME = #{propertyName,jdbcType=VARCHAR}
+	</select>
+	<select id="selectPropertyNoByGoodsNo" parameterType="java.lang.String" resultType="String">
+		select PROPERTY_NO
+		from PRODUCT_PROPERTY_KEY
+		where PRODUCT_NO = #{productNo,jdbcType=VARCHAR} and PROPERTY_NAME = #{propertyName,jdbcType=VARCHAR}
+	</select>
+</mapper>

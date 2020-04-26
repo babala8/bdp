@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.datainsight.repository.SysConfRoleViewMapper" >
+  <resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.datainsight.domain.SysConfRoleView" >
+    <id column="ROLE_NO" property="roleNo" jdbcType="INTEGER" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithBLOBs" type="com.zjft.microservice.treasurybrain.datainsight.domain.SysConfRoleView" extends="BaseResultMap" >
+    <result column="ROLE_DEF_VIEW" property="roleDefView" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    ROLE_NO
+  </sql>
+
+  <sql id="Blob_Column_List" >
+    ROLE_DEF_VIEW
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sys_conf_role_view
+    where ROLE_NO = #{roleNo,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_conf_role_view
+    where ROLE_NO = #{roleNo,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.zjft.microservice.treasurybrain.datainsight.domain.SysConfRoleView" >
+    insert into sys_conf_role_view (ROLE_NO, ROLE_DEF_VIEW)
+    values (#{roleNo,jdbcType=INTEGER}, #{roleDefView,jdbcType=LONGVARCHAR})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.datainsight.domain.SysConfRoleView" >
+    insert into sys_conf_role_view
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleNo != null" >
+        ROLE_NO,
+      </if>
+      <if test="roleDefView != null" >
+        ROLE_DEF_VIEW,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleNo != null" >
+        #{roleNo,jdbcType=INTEGER},
+      </if>
+      <if test="roleDefView != null" >
+        #{roleDefView,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjft.microservice.treasurybrain.datainsight.domain.SysConfRoleView" >
+    update sys_conf_role_view
+    <set >
+      <if test="roleDefView != null" >
+        ROLE_DEF_VIEW = #{roleDefView,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ROLE_NO = #{roleNo,jdbcType=INTEGER}
+  </update>
+
+
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zjft.microservice.treasurybrain.datainsight.domain.SysConfRoleView" >
+    update sys_conf_role_view
+    set ROLE_DEF_VIEW = #{roleDefView,jdbcType=LONGVARCHAR}
+    where ROLE_NO = #{roleNo,jdbcType=INTEGER}
+  </update>
+</mapper>

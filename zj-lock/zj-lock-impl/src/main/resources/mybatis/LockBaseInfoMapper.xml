@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.lock.repository.LockBaseInfoMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.lock.domain.LockBaseInfoDO">
+		<id column="LOCKCODE" property="lockCode" jdbcType="VARCHAR"/>
+		<result column="DEVNO" property="devNo" jdbcType="VARCHAR"/>
+		<result column="VERSION" property="version" jdbcType="VARCHAR"/>
+		<result column="CVERSION" property="cversion" jdbcType="VARCHAR"/>
+		<result column="STATE" property="state" jdbcType="NUMERIC"/>
+		<result column="MADEDATE" property="madeDate" jdbcType="VARCHAR"/>
+		<result column="INSTALLDATE" property="installDate" jdbcType="VARCHAR"/>
+		<result column="NOTE" property="note" jdbcType="VARCHAR"/>
+		<result column="BLOCKNUM" property="blockNum" jdbcType="VARCHAR"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+    LOCKCODE, DEVNO, VERSION, CVERSION, STATE, MADEDATE, INSTALLDATE, NOTE, BLOCKNUM
+  </sql>
+
+	<select id="qryLockBaseInfoDetail" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List"/>
+		from LOCK_BASE_INFO
+		where LOCKCODE = #{lockCode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryCheckTaskByPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select t.*
+		from (
+		select rownum rn,
+		<include refid="Base_Column_List"/>
+		from LOCK_BASE_INFO o
+		<where>
+			<if test="lockCode != null and lockCode!=''">
+				and o.LOCKCODE LIKE concat(concat('%',#{lockCode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="devNo != null and devNo!=''">
+				and o.DEVNO LIKE concat(concat('%',#{devNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="version != null and version!=''">
+				and o.VERSION LIKE concat(concat('%',#{version,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="cversion != null and cversion!=''">
+				and o.CVERSION LIKE concat(concat('%',#{cversion,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="state != null and state!=''">
+				and o.STATE= #{state,jdbcType=NUMERIC}
+			</if>
+			<if test="madeDate != null and madeDate!=''">
+				and o.MADEDATE= #{madeDate,jdbcType=VARCHAR}
+			</if>
+			<if test="installDate != null and installDate!=''">
+				and o.INSTALLDATE= #{installDate,jdbcType=VARCHAR}
+			</if>
+			<if test="note != null and note!=''">
+				and o.NOTE= #{note,jdbcType=VARCHAR}
+			</if>
+			<if test="blockNum != null and blockNum!=''">
+				and o.BLOCKNUM LIKE concat(concat('%',#{blockNum,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+		order by o.LOCKCODE ) t
+		where t.rn &gt; #{startRow,jdbcType=NUMERIC} and t.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="qryTotalRow" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from LOCK_BASE_INFO o
+		<where>
+			<if test="lockCode != null and lockCode!=''">
+				and o.LOCKCODE LIKE concat(concat('%',#{lockCode,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="devNo != null and devNo!=''">
+				and o.DEVNO LIKE concat(concat('%',#{devNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="version != null and version!=''">
+				and o.VERSION LIKE concat(concat('%',#{version,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="cversion != null and cversion!=''">
+				and o.CVERSION LIKE concat(concat('%',#{cversion,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="state != null and state!=''">
+				and o.STATE= #{state,jdbcType=NUMERIC}
+			</if>
+			<if test="madeDate != null and madeDate!=''">
+				and o.MADEDATE= #{madeDate,jdbcType=VARCHAR}
+			</if>
+			<if test="installDate != null and installDate!=''">
+				and o.INSTALLDATE= #{installDate,jdbcType=VARCHAR}
+			</if>
+			<if test="note != null and note!=''">
+				and o.NOTE= #{note,jdbcType=VARCHAR}
+			</if>
+			<if test="blockNum != null and blockNum!=''">
+				and o.BLOCKNUM LIKE concat(concat('%',#{blockNum,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="qryExistByLockCode" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select count(1) from LOCK_BASE_INFO
+		<where>
+			<if test="lockCode!= null and lockCode!=''">
+				LOCKCODE = #{lockCode,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<delete id="deleteByLockCode" parameterType="java.lang.String">
+    delete from LOCK_BASE_INFO
+    where LOCKCODE = #{lockCode,jdbcType=VARCHAR}
+  </delete>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.lock.domain.LockBaseInfoDO">
+    insert into LOCK_BASE_INFO (LOCKCODE, DEVNO, VERSION, 
+      CVERSION, STATE, MADEDATE, 
+      INSTALLDATE, NOTE, BLOCKNUM
+      )
+    values (#{lockCode,jdbcType=VARCHAR}, #{devNo,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, 
+      #{cversion,jdbcType=VARCHAR}, #{state,jdbcType=DECIMAL}, #{madeDate,jdbcType=VARCHAR},
+      #{installDate,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{blockNum,jdbcType=VARCHAR}
+      )
+  </insert>
+
+	<update id="update" parameterType="com.zjft.microservice.treasurybrain.lock.domain.LockBaseInfoDO">
+		update LOCK_BASE_INFO
+		<set>
+			<if test="devNo != null and devNo!=''">
+				DEVNO = #{devNo,jdbcType=VARCHAR},
+			</if>
+			<if test="version != null and version!=''">
+				VERSION = #{version,jdbcType=VARCHAR},
+			</if>
+			<if test="cversion != null and cversion!=''">
+				CVERSION = #{cversion,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				STATE = #{state,jdbcType=DECIMAL},
+			</if>
+			<if test="madeDate != null and madeDate!=''">
+				MADEDATE = #{madeDate,jdbcType=VARCHAR},
+			</if>
+			<if test="installDate != null and installDate!=''">
+				INSTALLDATE = #{installDate,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null and note!=''">
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+			<if test="blockNum != null and blockNum!=''">
+				BLOCKNUM = #{blockNum,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where LOCKCODE = #{lockCode,jdbcType=VARCHAR}
+	</update>
+
+</mapper>

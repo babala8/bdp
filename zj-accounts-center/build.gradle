@@ -1,0 +1,5 @@
+project("zj-accounts-center-impl") {
+    dependencies {
+        compile project(":zj-accounts-center:zj-accounts-center-api")
+    }
+}

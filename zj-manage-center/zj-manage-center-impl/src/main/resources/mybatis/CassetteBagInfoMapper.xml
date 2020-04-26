@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.managecenter.repository.CassetteBagInfoMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.managecenter.po.CassetteBagInfoPO">
+		<id column="BAG_NO" property="bagNo" jdbcType="VARCHAR"/>
+		<result column="BAG_NO_BANK" property="bagNoBank" jdbcType="VARCHAR"/>
+		<result column="BAG_SERIAL" property="bagSerial" jdbcType="VARCHAR"/>
+		<result column="TAG_TID" property="tagTid" jdbcType="VARCHAR"/>
+		<result column="BAG_VENDOR" property="bagVendor" jdbcType="INTEGER"/>
+		<result column="BAG_SIZE" property="bagSize" jdbcType="INTEGER"/>
+		<result column="STATUS" property="status" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		bag_no,bag_no_bank,bag_serial,tag_tid,bag_vendor,bag_size,status
+	</sql>
+
+	<select id="qryRowNumForPage" parameterType="java.util.Map" resultType="int">
+		select count(1)
+		from cassette_bag_info b
+		<where>
+			1=1
+			<if test="null!=bagNo and ''!=bagNo">
+				and b.bag_no like concat('%',concat(#{bagNo,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="null!=bagNoBank and ''!=bagNoBank">
+				and b.bag_no_bank like concat('%',concat(#{bagNoBank,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="null!=bagVendor and ''!=bagVendor">and b.bag_vendor = #{bagVendor,jdbcType=INTEGER}</if>
+			<if test="null!=status and ''!=status">and b.status = #{status,jdbcType=INTEGER}</if>
+		</where>
+	</select>
+
+	<select id="qryByPage" parameterType="java.util.Map"
+			resultMap="BaseResultMap">
+		select tt.* from
+		(select t.*,rownum as rn from
+		(select
+		<include refid="Base_Column_List"/>
+		from cassette_bag_info b
+		<where>
+			1=1
+			<if test="null!=bagNo and ''!=bagNo">
+				and b.bag_no like concat('%',concat(#{bagNo,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="null!=bagNoBank and ''!=bagNoBank">
+				and b.bag_no_bank like concat('%',concat(#{bagNoBank,jdbcType=VARCHAR},'%'))
+			</if>
+			<if test="null!=bagVendor and ''!=bagVendor">and b.bag_vendor = #{bagVendor,jdbcType=INTEGER}</if>
+			<if test="null!=status and ''!=status">and b.status = #{status,jdbcType=INTEGER}</if>
+		</where>
+		order by b.bag_no) t) tt
+		where tt.rn &gt; #{startRow,jdbcType=NUMERIC} and tt.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.managecenter.po.CassetteBagInfoPO">
+		insert into cassette_bag_info
+		(bag_no
+		<if test="null!=bagNoBank ">, bag_no_bank</if>
+		<if test="null!=bagSerial ">, bag_serial</if>
+		, tag_tid, bag_vendor, bag_size, status)
+		values(#{bagNo,jdbcType=VARCHAR}
+		<if test="null!=bagNoBank ">, #{bagNoBank,jdbcType=VARCHAR}</if>
+		<if test="null!=bagSerial ">, #{bagSerial,jdbcType=VARCHAR}</if>
+		, #{tagTid,jdbcType=VARCHAR}, #{bagVendor,jdbcType=INTEGER},
+		#{bagSize,jdbcType=INTEGER}, #{status,jdbcType=INTEGER})
+	</insert>
+
+	<update id="updateByNo" parameterType="com.zjft.microservice.treasurybrain.managecenter.po.CassetteBagInfoPO">
+		update cassette_bag_info b
+   		set b.bag_no_bank=#{bagNoBank,jdbcType=VARCHAR},b.bag_serial=#{bagSerial,jdbcType=VARCHAR},
+   		b.tag_tid=#{tagTid,jdbcType=VARCHAR},b.bag_vendor=#{bagVendor,jdbcType=INTEGER},
+   		b.bag_size=#{bagSize,jdbcType=INTEGER},b.status=#{status,jdbcType=INTEGER}
+ 		where b.bag_no = #{bagNo,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delByNo" parameterType="java.lang.String">
+		delete from cassette_bag_info b where b.bag_no=#{bagNo,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="qryByBagNo" parameterType="java.lang.String"
+			resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from cassette_bag_info b where b.bag_no = #{bagNo,jdbcType=VARCHAR}
+	</select>
+</mapper>

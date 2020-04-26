@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.managecenter.repository.CarMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.managecenter.domain.CarInfoDO">
+		<id column="CAR_NO" property="carNo" jdbcType="NUMERIC"/>
+		<result column="TYPE" property="type" jdbcType="NUMERIC"/>
+		<result column="CAR_NUMBER" property="carNumber" jdbcType="VARCHAR"/>
+		<result column="STATUS" property="status" jdbcType="NUMERIC"/>
+		<result column="COMPANY" property="company" jdbcType="VARCHAR"/>
+		<result column="SIGNING_TYPE" property="signingType" jdbcType="NUMERIC"/>
+		<result column="MAX_DURATION" property="maxDuration" jdbcType="VARCHAR"/>
+		<result column="MAX_MILEAGE" property="maxMileage" jdbcType="VARCHAR"/>
+		<result column="NAME" property="companyName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+    CAR_NO, TYPE, CAR_NUMBER, STATUS, COMPANY, SIGNING_TYPE, MAX_DURATION, MAX_MILEAGE
+  	</sql>
+
+	<select id="queryCarList" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List"/>, NAME
+		from (
+			select c.*,d.Name,rownum rn from CAR_INFO c left join DEV_SERVICE_COMPANY d
+			on c.COMPANY=d.NO
+			<where>
+				<if test="type !=null and type !=-1">
+					and c.TYPE = #{type,jdbcType=NUMERIC}
+				</if>
+				<if test="carNumber!=null and carNumber!=''">
+					and CAR_NUMBER like concat(concat('%',#{carNumber,jdbcType=VARCHAR}),'%')
+				</if>
+				<if test="status!=null and status!=-1">
+					and STATUS = #{status,jdbcType=NUMERIC}
+				</if>
+			</where>
+		)
+		where rn &gt; #{startRow} and rn &lt;= #{endRow}
+	</select>
+
+	<select id="qryTotalRowCar" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from CAR_INFO
+		<where>
+			<if test="type !=null and type !=-1">
+				and TYPE = #{type,jdbcType=NUMERIC}
+			</if>
+			<if test="carNumber!=null and carNumber!=''">
+				and CAR_NUMBER like concat(concat('%',#{CAR_NUMBER,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="status!=null and status!=-1">
+				and STATUS = #{type,jdbcType=NUMERIC}
+			</if>
+		</where>
+	</select>
+
+	<select id="queryByCarNumber" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select count (1) from CAR_INFO
+		<where>
+			<if test="carNumber!=null and carNumber!=''">
+				and CAR_NUMBER = #{carNumber,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.managecenter.po.CarInfoPO">
+		insert into CAR_INFO (
+		TYPE,CAR_NUMBER,STATUS,COMPANY,SIGNING_TYPE,MAX_DURATION,MAX_MILEAGE
+		)
+		values (
+		#{type,jdbcType=NUMERIC},#{carNumber,jdbcType=VARCHAR},#{status,jdbcType=NUMERIC},
+		#{company,jdbcType=VARCHAR},#{signingType,jdbcType=NUMERIC},#{maxDuration,jdbcType=VARCHAR},#{maxMileage,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="com.zjft.microservice.treasurybrain.managecenter.po.CarInfoPO">
+		update CAR_INFO
+		<set>
+			<if test="type != null">
+				TYPE = #{type,jdbcType=NUMERIC},
+			</if>
+			<if test="carNumber != null">
+				CAR_NUMBER = #{carNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=NUMERIC},
+			</if>
+			<if test="company != null">
+				COMPANY = #{company,jdbcType=VARCHAR},
+			</if>
+			<if test="signingType != null">
+				SIGNING_TYPE = #{signingType,jdbcType=NUMERIC},
+			</if>
+			<if test="maxDuration != null">
+				MAX_DURATION = #{maxDuration,jdbcType=VARCHAR},
+			</if>
+			<if test="maxMileage != null">
+				MAX_MILEAGE = #{maxMileage,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where CAR_NO = #{carNo,jdbcType=NUMERIC}
+	</update>
+
+	<delete id="delCarInfoByNo" parameterType="java.lang.String">
+		delete from CAR_INFO
+		where CAR_NO = #{carNo,jdbcType=NUMERIC}
+   	</delete>
+
+	<insert id="insertOrUpdate"
+			parameterType="com.zjft.microservice.treasurybrain.managecenter.po.CarInfoPO">
+		<selectKey keyProperty="count" resultType="int" order="BEFORE">
+			select count(1) count from CAR_INFO t
+			where CAR_NUMBER = #{carNumber,jdbcType=VARCHAR}
+		</selectKey>
+		<if test="count==0">
+			insert into CAR_INFO (
+			TYPE,CAR_NUMBER,STATUS,COMPANY,SIGNING_TYPE,MAX_DURATION,MAX_MILEAGE
+			)
+			values (
+			#{type,jdbcType=NUMERIC},#{carNumber,jdbcType=VARCHAR},#{status,jdbcType=NUMERIC},
+			#{company,jdbcType=VARCHAR},#{signingType,jdbcType=NUMERIC},#{maxDuration,jdbcType=VARCHAR},#{maxMileage,jdbcType=VARCHAR})
+		</if>
+		<if test="count>0">
+			update CAR_INFO
+			<set>
+				<if test="type != null">
+					TYPE = #{type,jdbcType=NUMERIC},
+				</if>
+				<if test="carNumber != null">
+					CAR_NUMBER = #{carNumber,jdbcType=VARCHAR},
+				</if>
+				<if test="status != null">
+					STATUS = #{status,jdbcType=NUMERIC},
+				</if>
+				<if test="company != null">
+					COMPANY = #{company,jdbcType=VARCHAR},
+				</if>
+				<if test="signingType != null">
+					SIGNING_TYPE = #{signingType,jdbcType=NUMERIC},
+				</if>
+				<if test="maxDuration != null">
+					MAX_DURATION = #{maxDuration,jdbcType=VARCHAR},
+				</if>
+				<if test="maxMileage != null">
+					MAX_MILEAGE = #{maxMileage,jdbcType=VARCHAR},
+				</if>
+			</set>
+			where CAR_NUMBER = #{carNumber,jdbcType=VARCHAR}
+		</if>
+	</insert>
+
+	<select id="qryAllCar" resultMap="BaseResultMap">
+		select CAR_NO, TYPE, CAR_NUMBER, STATUS, COMPANY, SIGNING_TYPE, MAX_DURATION, MAX_MILEAGE from CAR_INFO c
+	</select>
+
+	<select id="qryCarNumberByNo" parameterType="string" resultType="string">
+		select CAR_NUMBER from CAR_INFO where CAR_NO = #{carNo,jdbcType=NUMERIC}
+	</select>
+
+</mapper>

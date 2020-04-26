@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.usercenter.repository.SysPostMapper">
+	<resultMap id="BaseResultMapper" type="com.zjft.microservice.treasurybrain.usercenter.po.SysPostPO">
+		<id column="POST_NO" property="postNo" jdbcType="VARCHAR"/>
+		<result column="POST_NAME" property="postName" jdbcType="VARCHAR"/>
+		<result column="POST_TYPE" property="postType" jdbcType="INTEGER"/>
+		<result column="NOTE" property="note" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+    POST_NO, POST_NAME, POST_TYPE, NOTE
+  </sql>
+
+
+	<select id="qryTotalRow" resultType="int" parameterType="java.util.Map">
+		select count(1) from SYS_POST p
+		where 1=1
+		<if test="null!=postName and ''!=postName">
+			and p.POST_NAME like concat('%',concat(#{postName,jdbcType = VARCHAR},'%'))
+		</if>
+		<if test="0!=postType and postType!=null">
+			and p.POST_TYPE = #{postType,jdbcType = INTEGER}
+		</if>
+	</select>
+
+	<select id="qryByPage" resultMap="BaseResultMapper" parameterType="java.util.Map">
+		select t.* from
+		(select ROWNUM rn ,
+		<include refid="Base_Column_List"/>
+		from SYS_POST p
+		<where>
+			<if test="null!=postName and ''!=postName">
+				and p.POST_NAME like concat('%',concat(#{postName,jdbcType = VARCHAR},'%'))
+			</if>
+			<if test="0!=postType and postType!=null">
+				and p.POST_TYPE = #{postType,jdbcType = INTEGER}
+			</if>
+		</where>
+		order by p.POST_NO)t
+		where t.rn &gt; #{startRow,jdbcType=NUMERIC} and t.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="maxNo" resultType="java.lang.String">
+		select max(POST_NO) from SYS_POST
+	</select>
+
+	<insert id="add" parameterType="com.zjft.microservice.treasurybrain.usercenter.po.SysPostPO">
+		insert into SYS_POST (POST_NO, POST_NAME, POST_TYPE,
+      NOTE)
+    values (#{postNo,jdbcType=VARCHAR}, #{postName,jdbcType=VARCHAR}, #{postType,jdbcType=INTEGER},
+      #{note,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="mod" parameterType="com.zjft.microservice.treasurybrain.usercenter.po.SysPostPO">
+		update SYS_POST
+		<set>
+			<if test="postName != null and postName!=''">
+				POST_NAME = #{postName,jdbcType=VARCHAR},
+			</if>
+			<if test="postType != null and postType!=''">
+				POST_TYPE = #{postType,jdbcType=INTEGER},
+			</if>
+			NOTE = #{note,jdbcType=VARCHAR},
+		</set>
+		where POST_NO = #{postNo,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="del" parameterType="java.lang.String">
+		delete from SYS_POST where POST_NO = #{postNo,jdbcType = VARCHAR}
+	</delete>
+
+	<select id="qryAll" resultMap="BaseResultMapper">
+		select
+		<include refid="Base_Column_List"/>
+		from SYS_POST p
+	</select>
+
+	<select id="select" resultMap="BaseResultMapper" parameterType="java.lang.String" >
+		select
+		<include refid="Base_Column_List" />
+		from SYS_POST
+		where POST_NO = #{postNo,jdbcType=VARCHAR}
+	</select>
+</mapper>

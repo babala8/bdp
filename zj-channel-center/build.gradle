@@ -1,0 +1,24 @@
+project("zj-channel-center-impl") {
+    dependencies {
+        compile project(":zj-channel-center:zj-channel-center-api")
+
+        compile project(":zj-user-center:zj-user-center-api")
+
+        compile project(":zj-param-center:zj-param-center-api")
+
+        compile project("::zj-product-center:zj-product-center-api")
+
+        compile project(":zj-push-server:zj-push-server-api")
+
+        compile project(":zj-manage-center:zj-manage-center-api")
+
+        compile project(":zj-line-center:zj-line-center-api")
+
+        compile project(":zj-business:zj-business-api")
+
+
+        // https://mvnrepository.com/artifact/org.apache.poi/poi
+        compile group: 'org.apache.poi', name: 'poi', version: '3.12'
+        compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.12'
+    }
+}

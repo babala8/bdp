@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.linecenter.repository.LineCallCustomerLineRunDetailMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.linecenter.po.LineSchedulePO">
+		<id column="LINE_RUN_NO" property="lineWorkId" jdbcType="VARCHAR"/>
+		<id column="CUSTOMER_NO" property="customerNo" jdbcType="VARCHAR"/>
+		<result column="CLR_TIME_INTERVAL" property="clrTimeInterval" jdbcType="VARCHAR"/>
+		<result column="ARRIVAL_TIME" property="arrivalTime" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="ExtandMap"
+			   type="com.zjft.microservice.treasurybrain.linecenter.domain.LineScheduleDO"
+				extends="BaseResultMap">
+		<result column="CUSTOMER_SHORT_NAME" property="customerShortName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<delete id="deleteByLineRunNo" parameterType="string">
+		delete from CALL_CUSTOMER_LINE_RUN_DETAIL d
+		where d.LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert"
+			parameterType="com.zjft.microservice.treasurybrain.linecenter.po.LineSchedulePO">
+		insert into CALL_CUSTOMER_LINE_RUN_DETAIL(CUSTOMER_NO,LINE_RUN_NO,ARRIVAL_TIME,CLR_TIME_INTERVAL)
+		values (#{customerNo,jdbcType = VARCHAR},#{lineRunNo,jdbcType=VARCHAR},
+		#{arrivalTime,jdbcType = VARCHAR},#{clrTimeInterval,jdbcType=VARCHAR})
+	</insert>
+
+	<insert id="insertByMap"
+			parameterType="java.util.Map">
+		insert into CALL_CUSTOMER_LINE_RUN_DETAIL(CUSTOMER_NO,LINE_RUN_NO,ARRIVAL_TIME,CLR_TIME_INTERVAL)
+		values (#{customerNo,jdbcType = VARCHAR},#{lineRunNo,jdbcType=VARCHAR},
+		#{arrivalTime,jdbcType = VARCHAR},#{clrTimeInterval,jdbcType=VARCHAR})
+	</insert>
+
+	<select id="qryCallCustomerLineRunDetail" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select LINE_RUN_NO,CUSTOMER_NO,ARRIVAL_TIME,CLR_TIME_INTERVAL from CALL_CUSTOMER_LINE_RUN_DETAIL
+		where LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR} and CUSTOMER_NO = #{customerNo,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateByMap" parameterType="java.util.Map">
+		update CALL_CUSTOMER_LINE_RUN_DETAIL
+		<set>
+			<if test="customerNo != null">
+				CUSTOMER_NO = #{customerNo,jdbcType=NUMERIC},
+			</if>
+			<if test="lineRunNo != null">
+				LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR},
+			</if>
+			<if test="arrivalTime != null">
+				ARRIVAL_TIME = #{arrivalTime,jdbcType=VARCHAR},
+			</if>
+			<if test="clrTimeInterval != null">
+				CLR_TIME_INTERVAL = #{clrTimeInterval,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where LINE_RUN_NO = #{lineRunNo,jdbcType=VARCHAR}
+	</update>
+</mapper>

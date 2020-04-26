@@ -1,0 +1,21 @@
+<zj-orchestration id="addService" name="增加产品信息"
+				  requestObject="com.zjft.microservice.treasurybrain.productcenter.dto.ServiceDTO"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.ObjectDTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="@Transactional(rollbackFor &#x3D; Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="7unogr91hssg">
+	</zj-component>
+	<zj-component id="7unogr91hssg" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.productcenter.component.ServiceComponent.addProductInfo"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="20p9ehxy6rz0g"/>
+	</zj-component>
+	<zj-component id="20p9ehxy6rz0g" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.productcenter.component.ServiceComponent.applyForSelfProductFail"
+				  next="">
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

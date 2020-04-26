@@ -1,0 +1,21 @@
+<zj-orchestration id="groupWorkFlow" name="计划分组信息查询"
+				  requestObject="java.lang.String"
+				  returnObject="com.zjft.microservice.treasurybrain.common.dto.ObjectDTO"
+				  tempObject="java.util.ArrayList"
+				  transaction="@Transactional(rollbackFor = Exception.class)">
+	<zj-component id="start" type="start"
+				  handler="" next="ctb5g8mbvuo0">
+	</zj-component>
+	<zj-component id="ctb5g8mbvuo0" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.business.component.AddnotesPlanComponent.qryGroupTsp"
+				  next="">
+		<exit path="ok" next="end"/>
+		<exit path="fail" next="1i4kfi516u0hs"/>
+	</zj-component>
+	<zj-component id="1i4kfi516u0hs" type="activity"
+				  handler="com.zjft.microservice.treasurybrain.business.component.AddnotesPlanComponent.qryGroupTspFail"
+				  next="">
+		<exit path="fail" next="end"/>
+	</zj-component>
+
+</zj-orchestration>

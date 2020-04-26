@@ -1,0 +1,8 @@
+project("zj-clear-center-impl") {
+    dependencies {
+        compile project(":zj-clear-center:zj-clear-center-api")
+        compile project(":zj-product-center:zj-product-center-api")
+        compile project(":zj-push-server:zj-push-server-api")
+        compile project(":zj-task:zj-task-api")
+    }
+}

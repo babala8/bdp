@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.business.repository.VisitOrderPOMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.business.domain.VisitOrderDO">
+		<result column="CUSTOMER_NUMBER" property="customerNumber" jdbcType="VARCHAR"/>
+		<result column="ORDER_DATE" property="orderDate" jdbcType="VARCHAR"/>
+		<result column="ORDER_TIME_PERIOD" property="orderTimePeriod" jdbcType="DECIMAL"/>
+		<result column="ORDER_TIME" property="orderTime" jdbcType="VARCHAR"/>
+		<result column="NOTE" property="note" jdbcType="VARCHAR"/>
+		<result column="CUSTOMER_SHORT_NAME" property="customerShortName" jdbcType="VARCHAR"/>
+		<result column="STATUS" property="status" jdbcType="INTEGER"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+    CUSTOMER_NUMBER, ORDER_DATE, ORDER_TIME_PERIOD, ORDER_TIME, NOTE,STATUS
+  </sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from VISIT_ORDER
+		where CUSTOMER_NUMBER = #{customerNumber,jdbcType=VARCHAR} and ORDER_DATE = #{orderDate,jdbcType = VARCHAR}
+	</select>
+
+	<select id="qryVisitOrderByPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select t.* from
+		(select ROWNUM rn ,
+		p.CUSTOMER_NUMBER, p.ORDER_DATE, p.ORDER_TIME_PERIOD, p.ORDER_TIME, p.NOTE,p.STATUS,c.CUSTOMER_SHORT_NAME
+		from VISIT_ORDER p
+		left join CALL_CUSTOMER_TABLE c on p.CUSTOMER_NUMBER = c.CUSTOMER_NUMBER
+		<where>
+			<if test="customerNumber != null and customerNumber != ''">
+				AND p.CUSTOMER_NUMBER like CONCAT(CONCAT('%',#{customerNumber,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="orderTimePeriod != null and orderTimePeriod != ''">
+				AND p.ORDER_TIME_PERIOD = #{orderTimePeriod,jdbcType=VARCHAR}
+			</if>
+			<if test="startDate != null and startDate != ''">
+				AND p.ORDER_DATE  &gt;= #{startDate,jdbcType=VARCHAR}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND p.ORDER_DATE &lt;= #{endDate,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null and status != ''">
+				AND p.STATUS = #{status,jdbcType=INTEGER}
+			</if>
+		</where>
+		order by p.ORDER_DATE desc,p.ORDER_TIME )t
+		where t.rn &gt; #{startRow,jdbcType=NUMERIC} and t.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<select id="queryTotalRow" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from VISIT_ORDER d
+		where 1=1
+		<if test="customerNumber != null and customerNumber != ''">
+			AND d.CUSTOMER_NUMBER like CONCAT(CONCAT('%',#{customerNumber,jdbcType=VARCHAR}),'%')
+		</if>
+		<if test="orderTimePeriod != null and orderTimePeriod != ''">
+			AND d.ORDER_TIME_PERIOD = #{orderTimePeriod,jdbcType=VARCHAR}
+		</if>
+		<if test="startDate != null and startDate != ''">
+			AND d.ORDER_DATE  &gt;= #{startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND d.ORDER_DATE &lt;= #{endDate,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != ''">
+			AND d.STATUS = #{status,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<delete id="deleteByPrimaryKey" >
+    delete from VISIT_ORDER
+    where CUSTOMER_NUMBER = #{customerNumber,jdbcType=VARCHAR} and ORDER_DATE =#{orderDate,jdbcType=VARCHAR}
+  </delete>
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.business.domain.VisitOrderDO">
+    insert into VISIT_ORDER (CUSTOMER_NUMBER, ORDER_DATE, ORDER_TIME_PERIOD,
+      ORDER_TIME, NOTE,STATUS)
+    values (#{customerNumber,jdbcType=VARCHAR}, #{orderDate,jdbcType=VARCHAR}, #{orderTimePeriod,jdbcType=DECIMAL},
+      #{orderTime,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}), #{status,jdbcType=INTEGER})
+  </insert>
+	<insert id="insertSelective" parameterType="com.zjft.microservice.treasurybrain.business.domain.VisitOrderDO">
+		insert into VISIT_ORDER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="customerNumber != null">
+				CUSTOMER_NUMBER,
+			</if>
+			<if test="orderDate != null">
+				ORDER_DATE,
+			</if>
+			<if test="orderTimePeriod != null">
+				ORDER_TIME_PERIOD,
+			</if>
+			<if test="orderTime != null">
+				ORDER_TIME,
+			</if>
+			<if test="note != null">
+				NOTE,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="customerNumber != null">
+				#{customerNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="orderDate != null">
+				#{orderDate,jdbcType=VARCHAR},
+			</if>
+			<if test="orderTimePeriod != null">
+				#{orderTimePeriod,jdbcType=DECIMAL},
+			</if>
+			<if test="orderTime != null">
+				#{orderTime,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null">
+				#{note,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+			parameterType="com.zjft.microservice.treasurybrain.business.domain.VisitOrderDO">
+		update VISIT_ORDER
+		<set>
+			<if test="orderDate != null">
+				ORDER_DATE = #{orderDate,jdbcType=VARCHAR},
+			</if>
+			<if test="orderTimePeriod != null">
+				ORDER_TIME_PERIOD = #{orderTimePeriod,jdbcType=DECIMAL},
+			</if>
+			<if test="orderTime != null">
+				ORDER_TIME = #{orderTime,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null">
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where CUSTOMER_NUMBER = #{customerNumber,jdbcType=VARCHAR} and ORDER_DATE = #{oldOrderDate,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.zjft.microservice.treasurybrain.business.domain.VisitOrderDO">
+    update VISIT_ORDER
+    set ORDER_DATE = #{orderDate,jdbcType=VARCHAR},
+      ORDER_TIME_PERIOD = #{orderTimePeriod,jdbcType=DECIMAL},
+      ORDER_TIME = #{orderTime,jdbcType=VARCHAR},
+      NOTE = #{note,jdbcType=VARCHAR},
+      STATUS =  #{status,jdbcType=INTEGER}
+    where CUSTOMER_NUMBER = #{customerNumber,jdbcType=VARCHAR} and ORDER_DATE = #{orderDate,jdbcType=VARCHAR}
+  </update>
+
+	<select id="qryOrderCustomers" resultType="java.util.Map">
+		select CUSTOMER_NUMBER as "customerNumber",CUSTOMER_SHORT_NAME as "customerName" from CALL_CUSTOMER_TABLE
+	</select>
+</mapper>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.managecenter.repository.TagMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.managecenter.domain.TagInfoDO">
+		<id column="TAG_TID" property="tagTid" jdbcType="VARCHAR"/>
+		<result column="EPC_INFO" property="epcInfo" jdbcType="VARCHAR"/>
+		<result column="EPC_MEMORY_SIZE" property="epcMemorySize" jdbcType="NUMERIC"/>
+		<result column="TAG_TYPE" property="tagType" jdbcType="NUMERIC"/>
+		<result column="STATUS" property="status" jdbcType="NUMERIC"/>
+		<result column="USERDATA_MEMORY_SIZE" property="userdataMemorySize" jdbcType="NUMERIC"/>
+		<result column="NOTE" property="note" jdbcType="VARCHAR"/>
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR"/>
+		<result column="CENTER_NAME" property="centerName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+    TAG_TID, EPC_INFO, EPC_MEMORY_SIZE, TAG_TYPE, STATUS, USERDATA_MEMORY_SIZE, NOTE, CLR_CENTER_NO
+  	</sql>
+
+	<select id="queryTagListByTagTid" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List"/>,CENTER_NAME
+		from (
+		select o.*,c.Center_Name,rownum rn from TAG_INFO o
+		left join CLR_CENTER_TABLE c on c.CLR_CENTER_NO = o.CLR_CENTER_NO
+		<where>
+			<if test="tagTid!= null and tagTid!=''">
+				and TAG_TID like concat(concat('%',#{tagTid,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="tagType != null and tagType != -1">
+				and TAG_TYPE = #{tagType,jdbcType=NUMERIC}
+			</if>
+			<if test="status != null and status != -1">
+				and STATUS = #{status,jdbcType=NUMERIC}
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				and o.CLR_CENTER_NO like concat(concat('%',#{clrCenterNo,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+		)
+		where rn &gt; #{startRow} and rn &lt;= #{endRow}
+	</select>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.managecenter.po.TagInfoPO">
+		insert into TAG_INFO (
+		<include refid="Base_Column_List"/>
+		)
+		values (
+		#{tagTid,jdbcType=VARCHAR}, #{epcInfo,jdbcType=VARCHAR}, #{epcMemorySize,jdbcType=NUMERIC},
+		#{tagType,jdbcType=NUMERIC}, #{status,jdbcType=NUMERIC}, #{userdataMemorySize,jdbcType=NUMERIC},
+		#{note,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="com.zjft.microservice.treasurybrain.managecenter.po.TagInfoPO">
+		update TAG_INFO
+		<set>
+			<if test="epcInfo != null">
+				EPC_INFO = #{epcInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="epcMemorySize != null">
+				EPC_MEMORY_SIZE = #{epcMemorySize,jdbcType=NUMERIC},
+			</if>
+			<if test="tagType != null">
+				TAG_TYPE = #{tagType,jdbcType=NUMERIC},
+			</if>
+			<if test="userdataMemorySize != null">
+				USERDATA_MEMORY_SIZE = #{userdataMemorySize,jdbcType=NUMERIC},
+			</if>
+			<if test="note != null">
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+			<if test="clrCenterNo != null">
+				CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where TAG_TID = #{tagTid,jdbcType=VARCHAR}
+	</update>
+
+	<insert id="insertOrUpdate"
+			parameterType="com.zjft.microservice.treasurybrain.managecenter.po.TagInfoPO">
+		<selectKey keyProperty="count" resultType="int" order="BEFORE">
+			select count(1) count from TAG_INFO t
+			where TAG_TID = #{tagTid,jdbcType=VARCHAR}
+		</selectKey>
+		<if test="count==0">
+			insert into TAG_INFO (
+			<include refid="Base_Column_List"/>
+			)
+			values (
+			#{tagTid,jdbcType=VARCHAR}, #{epcInfo,jdbcType=VARCHAR}, #{epcMemorySize,jdbcType=NUMERIC},
+			#{tagType,jdbcType=NUMERIC}, #{status,jdbcType=NUMERIC}, #{userdataMemorySize,jdbcType=NUMERIC},
+			#{note,jdbcType=VARCHAR}, #{clrCenterNo,jdbcType=VARCHAR})
+		</if>
+		<if test="count>0">
+			update TAG_INFO
+			<set>
+				<if test="epcInfo != null">
+					EPC_INFO = #{epcInfo,jdbcType=VARCHAR},
+				</if>
+				<if test="epcMemorySize != null">
+					EPC_MEMORY_SIZE = #{epcMemorySize,jdbcType=NUMERIC},
+				</if>
+				<if test="tagType != null">
+					TAG_TYPE = #{tagType,jdbcType=NUMERIC},
+				</if>
+				<if test="userdataMemorySize != null">
+					USERDATA_MEMORY_SIZE = #{userdataMemorySize,jdbcType=NUMERIC},
+				</if>
+				<if test="note != null">
+					NOTE = #{note,jdbcType=VARCHAR},
+				</if>
+				<if test="clrCenterNo != null">
+					CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+				</if>
+			</set>
+			where TAG_TID = #{tagTid,jdbcType=VARCHAR}
+		</if>
+	</insert>
+
+	<delete id="delTagInfoByTagTid" parameterType="java.lang.String">
+    delete from TAG_INFO
+    where TAG_TID = #{tagTid,jdbcType=VARCHAR}
+   	</delete>
+
+	<select id="queryTagStatusByTagTid" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select STATUS from TAG_INFO
+		where TAG_TID = #{tagTid,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryTotalRowTag" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from TAG_INFO
+		<where>
+			<if test="tagTid!= null and tagTid!=''">
+				and TAG_TID like concat(concat('%',#{tagTid,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="tagType != null and tagType != -1">
+				and TAG_TYPE = #{tagType,jdbcType=NUMERIC}
+			</if>
+			<if test="status != null and status != -1">
+				and STATUS = #{status,jdbcType=NUMERIC}
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo != ''">
+				and CLR_CENTER_NO like concat(concat('%',#{clrCenterNo,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="queryByTagTid" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select count(1) from TAG_INFO
+		<where>
+			<if test="tagTid!= null and tagTid!=''">
+				and TAG_TID = #{tagTid,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<update id="updateStatusByTagTid">
+		update TAG_INFO t set t.status=#{status,jdbcType=NUMERIC}
+		where t.TAG_TID = #{tagTid,jdbcType=VARCHAR}
+	</update>
+
+</mapper>

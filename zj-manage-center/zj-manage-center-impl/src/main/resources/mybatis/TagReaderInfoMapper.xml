@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjft.microservice.treasurybrain.managecenter.repository.TagReaderInfoMapper">
+	<resultMap id="BaseResultMap" type="com.zjft.microservice.treasurybrain.managecenter.po.TagReaderInfoPO">
+		<id column="TAG_READER_NO" property="tagReaderNo" jdbcType="VARCHAR"/>
+		<result column="READER_TYPE" property="readerType" jdbcType="NUMERIC"/>
+		<result column="LOCATION" property="location" jdbcType="VARCHAR"/>
+		<result column="WHETHER_GPS_MODULE" property="whetherGpsModule" jdbcType="CHAR"/>
+		<result column="WHETHER_GPRS_MODULE" property="whetherGprsModule" jdbcType="CHAR"/>
+		<result column="WHETHER_WIFI_MODULE" property="whetherWifiModule" jdbcType="CHAR"/>
+		<result column="WHETHER_BARCODE_MODULE" property="whetherBarcodeModule" jdbcType="CHAR"/>
+		<result column="GPRS_VOL_THRESHOLD" property="gprsVolThreshold" jdbcType="NUMERIC"/>
+		<result column="GPRS_VOL_MAX_THRESHOLD" property="gprsVolMaxThreshold" jdbcType="NUMERIC"/>
+		<result column="GPRS_VOL_MIN_THRESHOLD" property="gprsVolMinThreshold" jdbcType="NUMERIC"/>
+		<result column="GPRS_VOL_OFFSET" property="gprsVolOffset" jdbcType="NUMERIC"/>
+		<result column="TIMING_TASK_INTERVAL" property="timingTaskInterval" jdbcType="NUMERIC"/>
+		<result column="GPRS_MONTHLY_FREE_FLOW" property="gprsMonthlyFreeFlow" jdbcType="NUMERIC"/>
+		<result column="TMK" property="tmk" jdbcType="VARCHAR"/>
+		<result column="NOTE" property="note" jdbcType="VARCHAR"/>
+		<result column="STATUS" property="status" jdbcType="NUMERIC"/>
+		<result column="CLR_CENTER_NO" property="clrCenterNo" jdbcType="VARCHAR"/>
+		<result column="SIM_MOBILE_NO" property="simNumberNo" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		TAG_READER_NO, READER_TYPE, LOCATION, WHETHER_GPS_MODULE, WHETHER_GPRS_MODULE,WHETHER_WIFI_MODULE,WHETHER_BARCODE_MODULE,GPRS_VOL_THRESHOLD,
+		GPRS_VOL_MAX_THRESHOLD,GPRS_VOL_MIN_THRESHOLD,GPRS_VOL_OFFSET,TIMING_TASK_INTERVAL,GPRS_MONTHLY_FREE_FLOW,TMK,NOTE,STATUS,CLR_CENTER_NO,
+		SIM_MOBILE_NO
+	</sql>
+
+	<insert id="insert" parameterType="com.zjft.microservice.treasurybrain.managecenter.po.TagReaderInfoPO">
+		insert into TAG_READER_INFO
+		(TAG_READER_NO, READER_TYPE, LOCATION, WHETHER_GPS_MODULE, WHETHER_GPRS_MODULE,WHETHER_WIFI_MODULE,WHETHER_BARCODE_MODULE,GPRS_VOL_THRESHOLD,
+		 GPRS_VOL_MAX_THRESHOLD,GPRS_VOL_MIN_THRESHOLD,GPRS_VOL_OFFSET,TIMING_TASK_INTERVAL,GPRS_MONTHLY_FREE_FLOW,TMK,NOTE,STATUS,CLR_CENTER_NO,
+		 SIM_MOBILE_NO
+		)
+		values (#{tagReaderNo,jdbcType=VARCHAR}, #{readerType,jdbcType=NUMERIC},
+				#{location,jdbcType=VARCHAR},#{whetherGpsModule,jdbcType=CHAR},
+				#{whetherGprsModule,jdbcType=CHAR},#{whetherWifiModule,jdbcType=CHAR},
+				#{whetherBarcodeModule,jdbcType=CHAR}, #{gprsVolThreshold,jdbcType=NUMERIC},
+				#{gprsVolMaxThreshold,jdbcType=NUMERIC},#{gprsVolMinThreshold,jdbcType=NUMERIC},
+				#{gprsVolOffset,jdbcType=NUMERIC},#{timingTaskInterval,jdbcType=NUMERIC},
+				#{gprsMonthlyFreeFlow,jdbcType=NUMERIC},#{tmk,jdbcType=VARCHAR},
+				#{note,jdbcType=NUMERIC},#{status,jdbcType=NUMERIC},
+				#{clrCenterNo,jdbcType=VARCHAR},#{simNumberNo,jdbcType=VARCHAR}
+			   )
+	</insert>
+
+	<select id="qryTotalRow" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(1) from TAG_READER_INFO o
+		<where>
+			<if test="tagReaderNo != null and tagReaderNo!=''">
+				and o.TAG_READER_NO like concat(concat('%',#{tagReaderNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="readerType != null and readerType!=''">
+				and o.READER_TYPE= #{readerType,jdbcType=NUMERIC}
+			</if>
+			<if test="location != null and location!=''">
+				and o.LOCATION like concat(concat('%',#{location,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="status != null and status!=''">
+				and o.STATUS= #{status,jdbcType=NUMERIC}
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo!=''">
+				and o.clr_Center_No like concat(concat('%',#{clrCenterNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="simMobileNo != null and simMobileNo!=''">
+				and o.sim_Mobile_No like concat(concat('%',#{simNumberNo,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="queryTagReaderInfoByPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select t.*
+		from (
+		select rownum rn,
+		<include refid="Base_Column_List"/>
+		from TAG_READER_INFO o
+		<where>
+			<if test="tagReaderNo != null and tagReaderNo !=''">
+				AND o.TAG_READER_NO like concat(concat('%',#{tagReaderNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="readerType != null and readerType !=''">
+				AND o.READER_TYPE = #{readerType,jdbcType=NUMERIC}
+			</if>
+			<if test="location != null and location !=''">
+				AND o.LOCATION like concat(concat('%',#{location,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="status != null and status !=''">
+				AND o.STATUS = #{status,jdbcType=NUMERIC}
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo !=''">
+				AND o.CLR_CENTER_NO like concat(concat('%',#{clrCenterNo,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="simNumberNo != null and simNumberNo !=''">
+				AND o.SIM_MOBILE_NO like concat(concat('%',#{simNumberNo,jdbcType=VARCHAR}),'%')
+			</if>
+		</where>
+		order by o.TAG_READER_NO ) t
+		where t.rn &gt; #{startRow,jdbcType=NUMERIC} and t.rn &lt;= #{endRow,jdbcType=NUMERIC}
+	</select>
+
+	<update id="updateByPrimaryKeySelective"
+			parameterType="com.zjft.microservice.treasurybrain.managecenter.po.TagReaderInfoPO">
+		update TAG_READER_INFO
+		<set>
+			<if test="readerType != null">
+				READER_TYPE = #{readerType,jdbcType=NUMERIC},
+			</if>
+			<if test="location != null and location!=''" >
+				LOCATION = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="whetherGpsModule != null">
+				WHETHER_GPS_MODULE = #{whetherGpsModule,jdbcType=CHAR},
+			</if>
+			<if test="whetherGprsModule != null">
+				WHETHER_GPRS_MODULE = #{whetherGprsModule,jdbcType=CHAR},
+			</if>
+			<if test="whetherWifiModule != null">
+				WHETHER_WIFI_MODULE = #{whetherWifiModule,jdbcType=CHAR},
+			</if>
+			<if test="whetherBarcodeModule != null">
+				WHETHER_BARCODE_MODULE = #{whetherBarcodeModule,jdbcType=CHAR},
+			</if>
+			<if test="gprsVolThreshold != null">
+				GPRS_VOL_THRESHOLD = #{gprsVolThreshold,jdbcType=NUMERIC},
+			</if>
+			<if test="gprsVolMaxThreshold != null">
+				GPRS_VOL_MAX_THRESHOLD = #{gprsVolMaxThreshold,jdbcType=NUMERIC},
+			</if>
+			<if test="gprsVolMinThreshold != null">
+				GPRS_VOL_MIN_THRESHOLD = #{gprsVolMinThreshold,jdbcType=NUMERIC},
+			</if>
+			<if test="gprsVolOffset != null">
+				GPRS_VOL_OFFSET = #{gprsVolOffset,jdbcType=NUMERIC},
+			</if>
+			<if test="timingTaskInterval != null">
+				TIMING_TASK_INTERVAL = #{timingTaskInterval,jdbcType=NUMERIC},
+			</if>
+			<if test="gprsMonthlyFreeFlow != null">
+				GPRS_MONTHLY_FREE_FLOW = #{gprsMonthlyFreeFlow,jdbcType=NUMERIC},
+			</if>
+			<if test="tmk != null and tmk!=''">
+				TMK = #{tmk,jdbcType=VARCHAR},
+			</if>
+			<if test="note != null and note!=''">
+				NOTE = #{note,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=NUMERIC},
+			</if>
+			<if test="clrCenterNo != null and clrCenterNo!=''">
+				CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR},
+			</if>
+			<if test="simNumberNo != null and simNumberNo!=''">
+				SIM_MOBILE_NO = #{simNumberNo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where TAG_READER_NO = #{tagReaderNo,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+			TAG_READER_INFO
+		where TAG_READER_NO = #{tagReaderNo,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="qryTagReaderNoMax" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT MAX(TAG_READER_NO)
+		FROM TAG_READER_INFO
+		WHERE CLR_CENTER_NO = #{clrCenterNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryStatusByNo" resultType="java.lang.Integer" parameterType="java.lang.String">
+		SELECT STATUS
+		FROM TAG_READER_INFO
+		WHERE TAG_READER_NO = #{tagReaderNo,jdbcType=VARCHAR}
+	</select>
+
+	<select id="qryExistsByNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(1)
+		FROM TAG_READER_INFO
+		WHERE TAG_READER_NO = #{tagReaderNo,jdbcType=VARCHAR}
+	</select>
+</mapper>
